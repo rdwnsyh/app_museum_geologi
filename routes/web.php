@@ -9,3 +9,7 @@ Route::get('/login', function () {
     return view('/login');
 });
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    
+});
+

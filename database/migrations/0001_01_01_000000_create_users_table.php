@@ -17,8 +17,9 @@ return new class extends Migration
             $table->string('password');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('nama_lengkap');
-            $table->enum('lvl_akses', ['admin', 'kurator', 'peneliti', 'pengunjung', 'staff']);
+            $table->string('asal_univ');
+            $table->integer('no_hp');
+            $table->enum('lvl_akses', ['admin', 'staff', 'peminjam', 'pengunjung']);
             $table->rememberToken();
             $table->timestamps();
         });
