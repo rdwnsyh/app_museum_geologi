@@ -1,0 +1,39 @@
+.auth-buttons {
+  position: fixed;            /* Mengatur posisi tetap pada layar */
+  top: 0;                     /* Jarak dari atas halaman */
+  right: 0;                   /* Jarak dari kanan halaman */
+  display: flex;              /* Mengatur tombol dalam baris horizontal */
+  gap: 10px;                  /* Jarak antara tombol */
+  margin: 10px;               /* Jarak sekitar tombol */
+  z-index: 1000;              /* Menjaga tombol di atas elemen lain */
+  align-items: center;
+}
+
+.auth-button {
+  width: 80px ;
+  height: 40px;
+  padding: 10px 20px;         /* Padding di dalam tombol */
+  border: none;               /* Menghapus border default */
+  border-radius: 5px;         /* Sudut tombol melengkung */
+  font-size: 16px;            /* Ukuran font dalam tombol */
+  cursor: pointer;            /* Menampilkan kursor pointer saat hover */
+  transition: background-color 0.3s; /* Animasi transisi saat hover */
+}
+
+.auth-button.login {
+  background-color: #4CAF50;  /* Warna latar belakang tombol login */
+  color: white;               /* Warna teks tombol login */
+}
+
+.auth-button.login:hover {
+  background-color: #45a049;  /* Warna latar belakang saat hover */
+}
+
+.auth-button.signup {
+  background-color: #008CBA;  /* Warna latar belakang tombol signup */
+  color: white;               /* Warna teks tombol signup */
+}
+
+.auth-button.signup:hover {
+  background-color: #007bb5;  /* Warna latar belakang saat hover */
+}

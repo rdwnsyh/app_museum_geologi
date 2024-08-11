@@ -1,0 +1,92 @@
+/* src/pages/AuthPage.css */
+.auth-page-login {
+  width: '300px';
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  height: calc(100vh); 
+  padding: 20px;
+  position: fixed;            /* Mengatur posisi tetap pada layar */
+  top: 50px;                     /* Jarak dari atas halaman */
+  left: 245px;                   /* Jarak dari kanan halaman */
+  display: flex;              /* Mengatur tombol dalam baris horizontal */
+  gap: 10px;                  /* Jarak antara tombol */
+  margin: 5px;               /* Jarak sekitar tombol */
+  z-index: 1000;              /* Menjaga tombol di atas elemen lain */
+
+}
+
+.auth-page-signup {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  height: calc(100vh); 
+  padding: 20px;
+  position: fixed;            /* Mengatur posisi tetap pada layar */
+  top: 120px;                     /* Jarak dari atas halaman */
+  left: 245px;                   /* Jarak dari kanan halaman */
+  display: flex;              /* Mengatur tombol dalam baris horizontal */
+  gap: 10px;                  /* Jarak antara tombol */
+  margin: 5px;               /* Jarak sekitar tombol */
+  z-index: 1000;              /* Menjaga tombol di atas elemen lain */
+
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 150px;
+  width: 100%;
+}
+
+.auth-form input {
+  height: 35px;
+  width: 250px;
+  padding: 2px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.auth-button {
+  width: 100px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.text {
+  margin-left: 10px;
+  font-size: 16px;
+  color: white;
+}
+
+.link {
+  color: #2980B9;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.auth-button:hover {
+  background-color: #0056b3;
+}
+
+.full-background {
+  background-image: url('../../bg4.png'); 
+  background-size: cover; /* Menutupi seluruh elemen */
+  background-position: center; /* Posisi gambar di tengah */
+  background-repeat: no-repeat; /* Menghindari pengulangan gambar */
+
+  height: 100vh; /* Tinggi elemen sesuai dengan tinggi viewport */
+  width: 100vw; /* Lebar elemen sesuai dengan lebar viewport */
+
+  display: flex; /* Menggunakan flexbox untuk tata letak */
+  align-items: center; /* Menyelaraskan elemen anak secara vertikal di tengah */
+  justify-content: left; /* Menyelaraskan elemen anak secara horizontal di tengah */
+}
+

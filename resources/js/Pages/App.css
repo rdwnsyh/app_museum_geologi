@@ -1,0 +1,51 @@
+@media (max-width: 600px) {
+  .container {
+    flex-direction: column;
+  }
+}
+
+.App {
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+  margin: auto;
+}
+
+input[type="text"] {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+li:last-child {
+  border-bottom: none;
+}
+
+.full-page-background {
+  background-image: url('../../bg3.png'); /* Ganti dengan path gambar yang sesuai */
+  background-size: cover; /* Menutupi seluruh elemen */
+  background-position: center; /* Posisi gambar di tengah */
+  background-repeat: no-repeat; /* Menghindari pengulangan gambar */
+
+  height: 100vh; /* Tinggi elemen sesuai dengan tinggi viewport */
+  width: 100vw; /* Lebar elemen sesuai dengan lebar viewport */
+
+  display: flex; /* Menggunakan flexbox untuk tata letak */
+  align-items: center; /* Menyelaraskan elemen anak secara vertikal di tengah */
+  justify-content: center; /* Menyelaraskan elemen anak secara horizontal di tengah */
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
