@@ -19,14 +19,17 @@ class PermissionSeeder extends Seeder
             'name' => 'admin'
         ],
         ['name' => 'admin']);
+
         $role_staff = Role::updateOrCreate([
             'name' => 'staff'
         ],
         ['name' => 'staff']);
+
         $role_peminjam = Role::updateOrCreate([
             'name' => 'peminjam'
         ],
         ['name' => 'peminjam']);
+
         $role_pengunjung = Role::updateOrCreate([
             'name' => 'pengunjung'
         ],
@@ -34,45 +37,39 @@ class PermissionSeeder extends Seeder
 
         $permission = Permission::updateOrCreate(
             [
-                'name' => 'view_dashboard',
+                'name' => 'manage sistem kageo',
             ],
-            ['name' => 'view_dashboard']
+            ['name' => 'manage sistem kageo']
         );
         
         $permission2 = Permission::updateOrCreate(
             [
-                'name' => 'view_dashboard',
+                'name' => 'manage data koleksi, manage inbound dan outbound, laporan dan statistika, pencarian data koleksi',
             ],
-            ['name' => 'view_dashboard']
+            ['name' => 'manage data koleksi, manage inbound dan outbound, laporan dan statistika, pencarian data koleksi']
         );
 
         $permission3 = Permission::updateOrCreate(
             [
-                'name' => 'view_dashboard',
+                'name' => 'meminjam barang, pengembalian barang',
             ],
-            ['name' => 'view_dashboard']
+            ['name' => 'meminjam barang, pengembalian barang']
         );
 
         $permission4 = Permission::updateOrCreate(
             [
-                'name' => 'view_dashboard',
+                'name' => 'pencarian',
             ],
-            ['name' => 'view_dashboard']
+            ['name' => 'pencarian']
         );
 
         $role_admin->givePermissionTo($permission);
-        $role_staff->givePermissionTo($permission);
-        $role_peminjam->givePermissionTo($permission);
-        $role_pengunjung->givePermissionTo($permission);
+        $role_staff->givePermissionTo($permission2);
+        $role_peminjam->givePermissionTo($permission3);
+        $role_pengunjung->givePermissionTo($permission4);
 
         $user = User::find(1);
-        $user2 = User::find(2);
-        $user3 = User::find(3);
-        $user4 = User::find(4);
 
-        $user->assignRole(['admin', 'staff', 'peminjam', 'pengunjung']);
-        $user2->assignRole(['staff', 'peminjam', 'pengunjung']);
-        $user3->assignRole(['peminjam']);
-        $user4->assignRole(['pengunjung']);
+        $user->assignRole('admin');
     }
 }
