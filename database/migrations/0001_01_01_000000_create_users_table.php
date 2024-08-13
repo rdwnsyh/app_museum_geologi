@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->bigIncrements('id_user');
-            $table->string('username');
+            $table->bigIncrements('id');
+            $table->string('nama_lengkap');
+            $table->string('instansi');
+            $table->string('no_hp');
+            $table->enum('role', ['admin', 'staf', 'peminjam', 'pengunjung']);
             $table->string('password');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('asal_univ');
-            $table->integer('no_hp');
-            $table->enum('lvl_akses', ['admin', 'staff', 'peminjam', 'pengunjung']);
             $table->rememberToken();
             $table->timestamps();
         });
