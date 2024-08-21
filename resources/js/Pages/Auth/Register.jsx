@@ -1,8 +1,9 @@
-import GuestLayout from "@/Layouts/GuestLayout";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
+import React, { useState } from 'react';
+import './AuthPage.css';
 import { Head, Link, useForm } from "@inertiajs/react";
 
 export default function Register() {
@@ -24,12 +25,22 @@ export default function Register() {
     };
 
     return (
-        <GuestLayout>
-            <Head title="Register" />
+        
+        <div className="bg-[url('../../bg_kageo.png')] top-85 p-60 bg-cover bg-left h-screen">
+        <div className="flex justify-left items-center h-full">
 
             <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="nama_lengkap" value="nama_lengkap" />
+
+            <div className="mt-20">
+            <img
+                src="/logokageo.png" // Logo harus berada di folder public
+                alt="Logo"
+                className="lg:w-60 lg:h-45 object-contain" // Mengatur ukuran dan menyesuaikan rasio aspek
+            />
+            </div>
+
+                <div className="mt-4">
+                    <InputLabel htmlFor="nama_lengkap"/>
 
                     <TextInput
                         id="nama_lengkap"
@@ -37,11 +48,10 @@ export default function Register() {
                         type="text"
                         value={data.nama_lengkap}
                         className="mt-1 block w-full"
+                        placeholder="Nama Lengkap"
                         autoComplete="nama_lengkap"
                         isFocused={true}
-                        onChange={(e) =>
-                            setData("nama_lengkap", e.target.value)
-                        }
+                        onChange={(e) =>setData("nama_lengkap", e.target.value)}
                         required
                     />
                     <InputError
@@ -49,8 +59,9 @@ export default function Register() {
                         className="mt-2"
                     />
                 </div>
-                <div>
-                    <InputLabel htmlFor="instansi" value="instansi" />
+
+                <div className="mt-4">
+                    <InputLabel htmlFor="instansi"/>
 
                     <TextInput
                         id="instansi"
@@ -58,6 +69,7 @@ export default function Register() {
                         type="text"
                         value={data.instansi}
                         className="mt-1 block w-full"
+                        placeholder="Instansi"
                         autoComplete="instansi"
                         isFocused={true}
                         onChange={(e) => setData("instansi", e.target.value)}
@@ -66,8 +78,9 @@ export default function Register() {
 
                     <InputError message={errors.instansi} className="mt-2" />
                 </div>
-                <div>
-                    <InputLabel htmlFor="no_hp" value="no_hp" />
+
+                <div className="mt-4">
+                    <InputLabel htmlFor="no_hp"/>
 
                     <TextInput
                         id="no_hp"
@@ -75,6 +88,7 @@ export default function Register() {
                         type="tel"
                         value={data.no_hp}
                         className="mt-1 block w-full"
+                        placeholder="Nomor Handphone"
                         autoComplete="no_hp"
                         isFocused={true}
                         onChange={(e) => setData("no_hp", e.target.value)}
@@ -85,7 +99,7 @@ export default function Register() {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="email"/>
 
                     <TextInput
                         id="email"
@@ -93,6 +107,7 @@ export default function Register() {
                         name="email"
                         value={data.email}
                         className="mt-1 block w-full"
+                        placeholder="Email"
                         autoComplete="email"
                         onChange={(e) => setData("email", e.target.value)}
                         required
@@ -102,7 +117,7 @@ export default function Register() {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                    <InputLabel htmlFor="password"/>
 
                     <TextInput
                         id="password"
@@ -110,6 +125,7 @@ export default function Register() {
                         name="password"
                         value={data.password}
                         className="mt-1 block w-full"
+                        placeholder="Password"
                         autoComplete="new-password"
                         onChange={(e) => setData("password", e.target.value)}
                         required
@@ -121,7 +137,6 @@ export default function Register() {
                 <div className="mt-4">
                     <InputLabel
                         htmlFor="password_confirmation"
-                        value="Confirm Password"
                     />
 
                     <TextInput
@@ -130,6 +145,7 @@ export default function Register() {
                         name="password_confirmation"
                         value={data.password_confirmation}
                         className="mt-1 block w-full"
+                        placeholder="Password Confirmation"
                         autoComplete="new-password"
                         onChange={(e) =>
                             setData("password_confirmation", e.target.value)
@@ -144,18 +160,24 @@ export default function Register() {
                 </div>
 
                 <div className="flex items-center justify-end mt-4">
+                Sudah memiliki akun?
                     <Link
                         href={route("login")}
-                        className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        className="underline text-sm text-blue-900 hover:text-blue-600 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
-                        Already registered?
+                        Login,
                     </Link>
 
                     <PrimaryButton className="ms-4" disabled={processing}>
                         Register
                     </PrimaryButton>
                 </div>
+                
             </form>
-        </GuestLayout>
+
+            </div>
+
+        </div>
+        
     );
 }
