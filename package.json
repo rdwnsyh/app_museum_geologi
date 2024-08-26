@@ -21,6 +21,8 @@
     },
     "dependencies": {
         "classnames": "^2.5.1",
-        "lucide-react": "^0.435.0"
+        "lodash": "^4.17.21",
+        "lucide-react": "^0.435.0",
+        "react-use": "^17.5.1"
     }
 }
