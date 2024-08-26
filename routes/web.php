@@ -14,8 +14,24 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    return Inertia::render('Dashboard/Index');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/organizations', function () {
+    return Inertia::render('Organizations/Index')->name('organizations')->middleware('auth');
+});
+
+Route::get('/contacts', function () {
+    return Inertia::render('Contacts/Index')->name('contacts')->middleware('auth');
+});
+
+Route::get('/reports', function () {
+    return Inertia::render('Reports/Index')->name('reports')->middleware('auth');
+});
+
+Route::get('/users', function () {
+    return Inertia::render('Index')->name('users')->middleware('auth');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
