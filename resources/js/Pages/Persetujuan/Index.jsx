@@ -17,7 +17,7 @@ const Index = () => {
 
     return (
         <div>
-            <h1 className="mb-8 text-3xl font-bold">Peminjaman</h1>
+            <h1 className="mb-8 text-3xl font-bold">Persetujuan</h1>
             <div className="flex items-center justify-between mb-6">
             <SearchBar /> {/* Tambahkan SearchBar di sini */}
                 {/* <FilterBar /> */}
@@ -26,7 +26,7 @@ const Index = () => {
                     // href={route("contacts.create")}
                 >
                     <span>Create</span>
-                    <span className="hidden md:inline"> Peminjaman</span>
+                    <span className="hidden md:inline"> Persetujuan</span>
                 </Link>
             </div>
             <Table
