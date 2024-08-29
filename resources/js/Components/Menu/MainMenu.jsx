@@ -7,22 +7,42 @@ export default function MainMenu({ className }) {
             <MainMenuItem
                 text="Dashboard"
                 link="dashboard"
-                icon={<CircleGauge size={20} />}
+                icon={<CircleGauge size={16} />}
             />
             <MainMenuItem
-                text="Organizations"
-                link="organizations"
-                icon={<Building size={20} />}
+                text="Storage"
+                link="storage"
+                icon={<Building size={16} />}
             />
             <MainMenuItem
-                text="Contacts"
-                link="contacts"
-                icon={<Users size={20} />}
+                text="Peminjaman"
+                link="peminjaman"
+                icon={<Users size={16} />}
             />
             <MainMenuItem
-                text="Reports"
-                link="reports"
-                icon={<Printer size={20} />}
+                text="Pengembalian"
+                link="pengembalian"
+                icon={<Printer size={16} />}
+            />
+            <MainMenuItem
+                text="KelolaKoleksi"
+                link="kelolakoleksi"
+                icon={<Printer size={16} />}
+            />
+            <MainMenuItem
+                text="Manajemen User"
+                link="manajemenuser"
+                icon={<Users size={16} />}
+            />
+            <MainMenuItem
+                text="Manajemen Admin"
+                link="manajemenadmin"
+                icon={<Printer size={16} />}
+            />
+            <MainMenuItem
+                text="Persetujuan"
+                link="persetujuan"
+                icon={<Printer size={16} />}
             />
         </div>
     );

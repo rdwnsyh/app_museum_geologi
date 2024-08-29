@@ -13,7 +13,7 @@ class PeminjamanController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Contacts/Index');
+        return Inertia::render('Peminjaman/Index');
     }
 
     /**

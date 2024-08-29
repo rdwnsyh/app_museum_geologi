@@ -32,7 +32,7 @@ li:last-child {
 }
 
 .full-page-background {
-  background-image: url('../../bg3.png'); /* Ganti dengan path gambar yang sesuai */
+  background-image: url('../../LOGOKAGEOFIKS.svg'); /* Ganti dengan path gambar yang sesuai */
   background-size: cover; /* Menutupi seluruh elemen */
   background-position: center; /* Posisi gambar di tengah */
   background-repeat: no-repeat; /* Menghindari pengulangan gambar */

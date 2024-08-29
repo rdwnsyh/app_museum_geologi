@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
-use App\Models\Pengembalian;
+use App\Models\Kelolakoleksi;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
-class PengembalianController extends Controller
+class KelolakoleksiController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render('Pengembalian/Index');
+        return Inertia::render('Kelola/Index');
     }
 
     /**
@@ -35,7 +35,7 @@ class PengembalianController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Pengembalian $pengembalian)
+    public function show(Kelolakoleksi $kelolakoleksi)
     {
         //
     }
@@ -43,7 +43,7 @@ class PengembalianController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Pengembalian $pengembalian)
+    public function edit(Kelolakoleksi $kelolakoleksi)
     {
         //
     }
@@ -51,7 +51,7 @@ class PengembalianController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Pengembalian $pengembalian)
+    public function update(Request $request, Kelolakoleksi $kelolakoleksi)
     {
         //
     }
@@ -59,7 +59,7 @@ class PengembalianController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Pengembalian $pengembalian)
+    public function destroy(Kelolakoleksi $kelolakoleksi)
     {
         //
     }

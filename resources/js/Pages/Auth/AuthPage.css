@@ -124,7 +124,7 @@
 }
 
 .logo {
-  background-image: url('../../logokageo.png');
+  background-image: url('../../LOGOKAGEOFIKS.svg');
   background-size: cover;
   background-position: center;
   height: 12vh; /* Atur tinggi sesuai kebutuhan */
@@ -132,7 +132,7 @@
 }
 
 .logo-login {
-  background-image: url('../../logokageo.png');
+  background-image: url('../../LOGOKAGEOFIKS.svg');
   background-size: cover;
   height: 12vh; /* Atur tinggi sesuai kebutuhan */
   width: 20vw;

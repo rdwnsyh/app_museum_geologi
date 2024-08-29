@@ -13,7 +13,7 @@ class StorageController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Organizations/Index');
+        return Inertia::render('Storage/Index');
     }
 
     /**

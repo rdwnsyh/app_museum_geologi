@@ -36,7 +36,7 @@ export default function Login({ status, canResetPassword }) {
             <form onSubmit={submit}>
 
             <img
-                src="/logokageo.png" // Logo harus berada di folder public
+                src="/LOGOKAGEOFIKS.svg" // Logo harus berada di folder public
                 alt="Logo"
                 className="lg:w-60 lg:h-45 object-contain" // Mengatur ukuran dan menyesuaikan rasio aspek
             />

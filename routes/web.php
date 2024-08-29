@@ -1,8 +1,13 @@
 <?php
 
 use App\Http\Controllers\PeminjamanController;
+use App\Http\Controllers\PengembalianController;
+use App\Http\Controllers\KelolakoleksiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StorageController;
+use App\Http\Controllers\ManajemenAdminController;
+use App\Http\Controllers\ManajemenUserController;
+use App\Http\Controllers\PersetujuanController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -20,18 +25,33 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard/Index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('organizations', [StorageController::class, 'index'])
-    ->name('organizations')
+Route::get('storage', [StorageController::class, 'index'])
+    ->name('storage')
     ->middleware('auth');
 
-Route::get('contacts', [PeminjamanController::class, 'index'])
-    ->name('contacts')
+Route::get('peminjaman', [PeminjamanController::class, 'index'])
+    ->name('peminjaman')
     ->middleware('auth');
 
-Route::get('reports', [StorageController::class, 'index'])
-    ->name('reports')
+Route::get('pengembalian', [PengembalianController::class, 'index'])
+    ->name('pengembalian')
     ->middleware('auth');
 
+Route::get('kelolakoleksi', [KelolakoleksiController::class, 'index'])
+    ->name('kelolakoleksi')
+    ->middleware('auth');
+
+Route::get('manajemenadmin', [ManajemenAdminController::class, 'index'])
+    ->name('manajemenadmin')
+    ->middleware('auth');
+
+Route::get('manajemenuser', [ManajemenUserController::class, 'index'])
+    ->name('manajemenuser')
+    ->middleware('auth');
+
+Route::get('persetujuan', [PersetujuanController::class, 'index'])
+    ->name('persetujuan')
+    ->middleware('auth');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

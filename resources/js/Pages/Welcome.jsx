@@ -19,7 +19,7 @@ export default function Welcome({ auth }) {
                 <header>
                     <div className="absolute inset-0 flex flex-col items-center justify-center ">
                         <img
-                            src="/logokageo.png" // Logo harus berada di folder public
+                            src="/LOGOKAGEOFIKS.svg" // Logo harus berada di folder public
                             alt="Logo"
                             className="lg:w-60 lg:h-45 mb-6" // Mengatur jarak bawah antara logo dan search bar
                         />
