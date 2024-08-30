@@ -1,12 +1,14 @@
 <?php
 
+use App\Http\Controllers\InboundController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\KelolakoleksiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StorageController;
 use App\Http\Controllers\ManajemenAdminController;
-use App\Http\Controllers\ManajemenUserController;
+use App\Http\Controllers\OutboundController;
+// use App\Http\Controllers\ManajemenUserController;
 use App\Http\Controllers\PersetujuanController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -21,42 +23,255 @@ Route::get('/', function () {
     ]);
 });
 
+// Route Dashboard
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard/Index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
+// Route Storage
 Route::get('storage', [StorageController::class, 'index'])
     ->name('storage')
     ->middleware('auth');
+// Route ke halaman create storage
+Route::get('storage/create', [StorageController::class, 'create'])
+    ->name('storage.create')
+    ->middleware('auth');
+// proses create storage
+Route::post('storage', [StorageController::class, 'store'])
+    ->name('storage.store')
+    ->middleware('auth');
+// route ke halaman edit storage
+    Route::get('storage/{storage}/edit', [StorageController::class, 'edit'])
+    ->name('storage.edit')
+    ->middleware('auth');
+// proses edit storage
+Route::put('storage/{storage}', [StorageController::class, 'update'])
+    ->name('storage.update')
+    ->middleware('auth');
+// route ke halaman hapus storage
+Route::delete('storage/{storage}', [StorageController::class, 'destroy'])
+    ->name('storage.destroy')
+    ->middleware('auth');
+// proses hapus storage
+Route::put('storage/{storage}/restore', [StorageController::class, 'restore'])
+    ->name('storage.restore')
+    ->middleware('auth');
 
+
+// Route Peminjaman
 Route::get('peminjaman', [PeminjamanController::class, 'index'])
     ->name('peminjaman')
     ->middleware('auth');
+// Route ke halaman create peminjaman
+Route::get('peminjaman/create', [PeminjamanController::class, 'create'])
+    ->name('peminjaman.create')
+    ->middleware('auth');
+// proses create peminjaman
+Route::post('peminjaman', [PeminjamanController::class, 'store'])
+    ->name('peminjaman.store')
+    ->middleware('auth');
+// route ke halaman edit peminjaman
+    Route::get('peminjaman/{peminjaman}/edit', [PeminjamanController::class, 'edit'])
+    ->name('peminjaman.edit')
+    ->middleware('auth');
+// proses edit peminjaman
+Route::put('peminjaman/{peminjaman}', [PeminjamanController::class, 'update'])
+    ->name('peminjaman.update')
+    ->middleware('auth');
+// route ke halaman hapus peminjaman
+Route::delete('peminjaman/{peminjaman}', [PeminjamanController::class, 'destroy'])
+    ->name('peminjaman.destroy')
+    ->middleware('auth');
+// proses hapus peminjaman
+Route::put('peminjaman/{peminjaman}/restore', [PeminjamanController::class, 'restore'])
+    ->name('peminjaman.restore')
+    ->middleware('auth');
 
+
+// Route Pengembalian
 Route::get('pengembalian', [PengembalianController::class, 'index'])
     ->name('pengembalian')
     ->middleware('auth');
+// Route ke halaman create pengembalian
+Route::get('pengembalian/create', [PengembalianController::class, 'create'])
+    ->name('pengembalian.create')
+    ->middleware('auth');
+// proses create pengembalian
+Route::post('pengembalian', [PengembalianController::class, 'store'])
+    ->name('pengembalian.store')
+    ->middleware('auth');
+// route ke halaman edit pengembalian
+    Route::get('pengembalian/{pengembalian}/edit', [PengembalianController::class, 'edit'])
+    ->name('pengembalian.edit')
+    ->middleware('auth');
+// proses edit pengembalian
+Route::put('pengembalian/{pengembalian}', [PengembalianController::class, 'update'])
+    ->name('pengembalian.update')
+    ->middleware('auth');
+// route ke halaman hapus pengembalian
+Route::delete('pengembalian/{pengembalian}', [PengembalianController::class, 'destroy'])
+    ->name('pengembalian.destroy')
+    ->middleware('auth');
+// proses hapus pengembalian
+Route::put('pengembalian/{pengembalian}/restore', [PengembalianController::class, 'restore'])
+    ->name('pengembalian.restore')
+    ->middleware('auth');
 
+
+// Route Outbond
+Route::get('outbound', [OutboundController::class, 'index'])
+    ->name('outbound')
+    ->middleware('auth');
+// Route ke halaman create outbound
+Route::get('outbound/create', [OutboundController::class, 'create'])
+    ->name('outbound.create')
+    ->middleware('auth');
+// proses create outbound
+Route::post('outbound', [OutboundController::class, 'store'])
+    ->name('outbound.store')
+    ->middleware('auth');
+// route ke halaman edit outbound
+    Route::get('outbound/{outbound}/edit', [OutboundController::class, 'edit'])
+    ->name('outbound.edit')
+    ->middleware('auth');
+// proses edit outbound
+Route::put('outbound/{outbound}', [OutboundController::class, 'update'])
+    ->name('outbound.update')
+    ->middleware('auth');
+// route ke halaman hapus outbound
+Route::delete('outbound/{outbound}', [OutboundController::class, 'destroy'])
+    ->name('outbound.destroy')
+    ->middleware('auth');
+// proses hapus outbound
+Route::put('outbound/{outbound}/restore', [OutboundController::class, 'restore'])
+    ->name('outbound.restore')
+    ->middleware('auth');
+
+
+// Route Inbound
+Route::get('inbound', [InboundController::class, 'index'])
+    ->name('inbound')
+    ->middleware('auth');
+// Route ke halaman create Inbound
+Route::get('inbound/create', [InboundController::class, 'create'])
+    ->name('inbound.create')
+    ->middleware('auth');
+// proses create inbound
+Route::post('inbound', [InboundController::class, 'store'])
+    ->name('inbound.store')
+    ->middleware('auth');
+// route ke halaman edit inbound
+    Route::get('inbound/{inbound}/edit', [InboundController::class, 'edit'])
+    ->name('inbound.edit')
+    ->middleware('auth');
+// proses edit inbound
+Route::put('inbound/{inbound}', [InboundController::class, 'update'])
+    ->name('inbound.update')
+    ->middleware('auth');
+// route ke halaman hapus inbound
+Route::delete('inbound/{inbound}', [InboundController::class, 'destroy'])
+    ->name('inbound.destroy')
+    ->middleware('auth');
+// proses hapus inbound
+Route::put('inbound/{inbound}/restore', [InboundController::class, 'restore'])
+    ->name('inbound.restore')
+    ->middleware('auth');
+
+
+// Route Kelola Koleksi
 Route::get('kelolakoleksi', [KelolakoleksiController::class, 'index'])
     ->name('kelolakoleksi')
     ->middleware('auth');
+// Route ke halaman create kelolakoleksi
+Route::get('kelolakoleksi/create', [KelolakoleksiController::class, 'create'])
+    ->name('kelolakoleksi.create')
+    ->middleware('auth');
+// proses create kelolakoleksi
+Route::post('kelolakoleksi', [KelolakoleksiController::class, 'store'])
+    ->name('kelolakoleksi.store')
+    ->middleware('auth');
+// route ke halaman edit kelolakoleksi
+    Route::get('kelolakoleksi/{kelolakoleksi}/edit', [KelolakoleksiController::class, 'edit'])
+    ->name('kelolakoleksi.edit')
+    ->middleware('auth');
+// proses edit kelolakoleksi
+Route::put('kelolakoleksi/{kelolakoleksi}', [KelolakoleksiController::class, 'update'])
+    ->name('kelolakoleksi.update')
+    ->middleware('auth');
+// route ke halaman hapus kelolakoleksi
+Route::delete('kelolakoleksi/{kelolakoleksi}', [KelolakoleksiController::class, 'destroy'])
+    ->name('kelolakoleksi.destroy')
+    ->middleware('auth');
+// proses hapus kelolakoleksi
+Route::put('kelolakoleksi/{kelolakoleksi}/restore', [KelolakoleksiController::class, 'restore'])
+    ->name('kelolakoleksi.restore')
+    ->middleware('auth');
 
+
+    // Manajemen Admin
 Route::get('manajemenadmin', [ManajemenAdminController::class, 'index'])
     ->name('manajemenadmin')
     ->middleware('auth');
-
-Route::get('manajemenuser', [ManajemenUserController::class, 'index'])
-    ->name('manajemenuser')
+// Route ke halaman create manajemenadmin
+Route::get('manajemenadmin/create', [ManajemenAdminController::class, 'create'])
+    ->name('manajemenadmin.create')
     ->middleware('auth');
+// proses create manajemenadmin
+Route::post('manajemenadmin', [ManajemenAdminController::class, 'store'])
+    ->name('manajemenadmin.store')
+    ->middleware('auth');
+// route ke halaman edit manajemenadmin
+    Route::get('manajemenadmin/{manajemenadmin}/edit', [ManajemenAdminController::class, 'edit'])
+    ->name('manajemenadmin.edit')
+    ->middleware('auth');
+// proses edit manajemenadmin
+Route::put('manajemenadmin/{manajemenadmin}', [ManajemenAdminController::class, 'update'])
+    ->name('manajemenadmin.update')
+    ->middleware('auth');
+// route ke halaman hapus manajemenadmin
+Route::delete('manajemenadmin/{manajemenadmin}', [ManajemenAdminController::class, 'destroy'])
+    ->name('manajemenadmin.destroy')
+    ->middleware('auth');
+// proses hapus manajemenadmin
+Route::put('manajemenadmin/{manajemenadmin}/restore', [ManajemenAdminController::class, 'restore'])
+    ->name('manajemenadmin.restore')
+    ->middleware('auth');   
 
+
+    // persetujuan
 Route::get('persetujuan', [PersetujuanController::class, 'index'])
     ->name('persetujuan')
     ->middleware('auth');
+// Route ke halaman create persetujuan
+Route::get('persetujuan/create', [PersetujuanController::class, 'create'])
+    ->name('persetujuan.create')
+    ->middleware('auth');
+// proses create persetujuan
+Route::post('persetujuan', [PersetujuanController::class, 'store'])
+    ->name('persetujuan.store')
+    ->middleware('auth');
+// route ke halaman edit persetujuan
+    Route::get('persetujuan/{persetujuan}/edit', [PersetujuanController::class, 'edit'])
+    ->name('persetujuan.edit')
+    ->middleware('auth');
+// proses edit persetujuan
+Route::put('persetujuan/{persetujuan}', [PersetujuanController::class, 'update'])
+    ->name('persetujuan.update')
+    ->middleware('auth');
+// route ke halaman hapus persetujuan
+Route::delete('persetujuan/{persetujuan}', [PersetujuanController::class, 'destroy'])
+    ->name('persetujuan.destroy')
+    ->middleware('auth');
+// proses hapus persetujuan
+Route::put('persetujuan/{persetujuan}/restore', [PersetujuanController::class, 'restore'])
+    ->name('persetujuan.restore')
+    ->middleware('auth');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+// Route::middleware('auth')->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// });
 
 require __DIR__.'/auth.php';

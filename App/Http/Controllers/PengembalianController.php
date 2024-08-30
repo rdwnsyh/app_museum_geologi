@@ -21,7 +21,7 @@ class PengembalianController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Pengembalian/Create');
     }
 
     /**

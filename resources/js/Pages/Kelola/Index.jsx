@@ -4,7 +4,7 @@ import MainLayout from "@/Layouts/MainLayout";
 // import FilterBar from "@/Components/FilterBar/FilterBar";
 // import Pagination from "@/Components/Pagination/Pagination";
 import Table from "@/Components/Table/Table";
-import SearchBar from '@/Components/SearchBar/SearchBar';
+import SearchBar from "@/Components/SearchBar/SearchBar";
 // import { Trash2 } from "lucide-react";
 
 function Index() {
@@ -18,13 +18,13 @@ function Index() {
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">Kelola Koleksi</h1>
-            
+
             <div className="flex items-center justify-between mb-6">
                 <SearchBar /> {/* Tambahkan SearchBar di sini */}
                 {/* <FilterBar /> */}
                 <Link
                     className="btn-indigo focus:outline-none"
-                    // href={route("organizations.create")}
+                    href={route("kelolakoleksi.create")}
                 >
                     <span>Create</span>
                     <span className="hidden md:inline"> Kelola Koleksi </span>

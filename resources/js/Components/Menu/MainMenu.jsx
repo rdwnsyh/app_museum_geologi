@@ -25,14 +25,19 @@ export default function MainMenu({ className }) {
                 icon={<Printer size={16} />}
             />
             <MainMenuItem
-                text="KelolaKoleksi"
-                link="kelolakoleksi"
+                text="Inbound"
+                link="inbound"
                 icon={<Printer size={16} />}
             />
             <MainMenuItem
-                text="Manajemen User"
-                link="manajemenuser"
-                icon={<Users size={16} />}
+                text="Outbound"
+                link="outbound"
+                icon={<Printer size={16} />}
+            />
+            <MainMenuItem
+                text="KelolaKoleksi"
+                link="kelolakoleksi"
+                icon={<Printer size={16} />}
             />
             <MainMenuItem
                 text="Manajemen Admin"

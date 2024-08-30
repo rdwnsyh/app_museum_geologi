@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
-use App\Models\ManajemenUser;
+use App\Models\Inbound;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
-class ManajemenUserController extends Controller
+class InboundController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render('ManajemenUser/Index');
+        return Inertia::render('Inbound/Index');
     }
 
     /**
@@ -21,7 +21,7 @@ class ManajemenUserController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Inbound/Create');
     }
 
     /**
@@ -35,7 +35,7 @@ class ManajemenUserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ManajemenUser $manajemenUser)
+    public function show(Inbound $inbound)
     {
         //
     }
@@ -43,7 +43,7 @@ class ManajemenUserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ManajemenUser $manajemenUser)
+    public function edit(Inbound $inbound)
     {
         //
     }
@@ -51,7 +51,7 @@ class ManajemenUserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ManajemenUser $manajemenUser)
+    public function update(Request $request, Inbound $inbound)
     {
         //
     }
@@ -59,7 +59,7 @@ class ManajemenUserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ManajemenUser $manajemenUser)
+    public function destroy(Inbound $inbound)
     {
         //
     }

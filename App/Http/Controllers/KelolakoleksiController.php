@@ -21,7 +21,7 @@ class KelolakoleksiController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Kelola/Create');
     }
 
     /**

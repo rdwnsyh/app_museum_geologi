@@ -21,7 +21,7 @@ class ManajemenAdminController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('ManajemenAdmin/Create');
     }
 
     /**

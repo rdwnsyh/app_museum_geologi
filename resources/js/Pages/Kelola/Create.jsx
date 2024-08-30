@@ -27,10 +27,10 @@ const Create = () => {
         <div>
             <h1 className="mb-8 text-3xl font-bold">
                 <Link
-                    href={route("organizations")}
+                    href={route("kelolakoleksi")}
                     className="text-indigo-600 hover:text-indigo-700"
                 >
-                    Organizations
+                    Kelola Koleksi
                 </Link>
                 <span className="font-medium text-indigo-600"> /</span> Create
             </h1>

@@ -3,17 +3,17 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\Models\Peminjaman;
+use App\Models\Outbound;
 use Illuminate\Http\Request;
 
-class PeminjamanController extends Controller
+class OutboundController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render('Peminjaman/Index');
+        return Inertia::render('Outbound/Index');
     }
 
     /**
@@ -21,7 +21,7 @@ class PeminjamanController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Peminjaman/Create');
+        return Inertia::render('Outbound/Create');
     }
 
     /**
@@ -35,7 +35,7 @@ class PeminjamanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Peminjaman $peminjaman)
+    public function show(Outbound $outbound)
     {
         //
     }
@@ -43,7 +43,7 @@ class PeminjamanController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Peminjaman $peminjaman)
+    public function edit(Outbound $outbound)
     {
         //
     }
@@ -51,7 +51,7 @@ class PeminjamanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Peminjaman $peminjaman)
+    public function update(Request $request, Outbound $outbound)
     {
         //
     }
@@ -59,7 +59,7 @@ class PeminjamanController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Peminjaman $peminjaman)
+    public function destroy(Outbound $outbound)
     {
         //
     }

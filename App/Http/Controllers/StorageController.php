@@ -21,7 +21,7 @@ class StorageController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Storage/Create');
     }
 
     /**
