@@ -35,7 +35,7 @@ export default function MainMenu({ className }) {
                 icon={<Printer size={16} />}
             />
             <MainMenuItem
-                text="KelolaKoleksi"
+                text="Kelola Koleksi"
                 link="kelolakoleksi"
                 icon={<Printer size={16} />}
             />
