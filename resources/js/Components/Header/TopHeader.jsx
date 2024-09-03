@@ -9,13 +9,11 @@ export default function Header() {
 
     return (
         <div className="flex items-center justify-between px-6 py-4 bg-yellow-500 md:flex-shrink-0 md:w-56 md:justify-center">
+
             <Link className="mt-1" href="/">
-                <img
-                    src="img/LOGOKAGEOFIKS.svg" // Logo harus berada di folder public
-                    alt="Logo"
-                    className="lg:w-40" // Mengatur jarak bawah antara logo dan search bar
-                />
+                <Logo className="text-white fill-current" width="120" height="28" />
             </Link>
+            
             <div className="relative md:hidden">
                 <Menu
                     color="white"

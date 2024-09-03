@@ -1,44 +1,68 @@
 import React from "react";
-import { Link, useForm } from "@inertiajs/react";
+import { Head, Link, usePage, useForm, router } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
+import DeleteButton from "@/Components/Button/DeleteButton";
 import LoadingButton from "@/Components/Button/LoadingButton";
 import TextInput from "@/Components/Form/TextInput";
 import SelectInput from "@/Components/Form/SelectInput";
+import TrashedMessage from "@/Components/Messages/TrashedMessage";
+import Table from "@/Components/Table/Table";
 import FieldGroup from "@/Components/Form/FieldGroup";
 
-const Create = () => {
-    const { data, setData, errors, post, processing } = useForm({
-        name: "",
-        email: "",
-        phone: "",
-        address: "",
-        city: "",
-        region: "",
-        country: "",
-        postal_code: "",
+const Edit = () => {
+    const { organization } = usePage().props;
+    const { data, setData, errors, put, processing } = useForm({
+        name: organization.name || "",
+        email: organization.email || "",
+        phone: organization.phone || "",
+        address: organization.address || "",
+        city: organization.city || "",
+        region: organization.region || "",
+        country: organization.country || "",
+        postal_code: organization.postal_code || "",
     });
 
     function handleSubmit(e) {
         e.preventDefault();
-        post(route("organizations.store"));
+        put(route("organizations.update", organization.id));
+    }
+
+    function destroy() {
+        if (confirm("Are you sure you want to delete this organization?")) {
+            router.delete(route("organizations.destroy", organization.id));
+        }
+    }
+
+    function restore() {
+        if (confirm("Are you sure you want to restore this organization?")) {
+            router.put(route("organizations.restore", organization.id));
+        }
     }
 
     return (
         <div>
+            <Head title={data.name} />
             <h1 className="mb-8 text-3xl font-bold">
                 <Link
-                    href={route("kelolakoleksi")}
+                    href={route("organizations")}
                     className="text-indigo-600 hover:text-indigo-700"
                 >
-                    Kelola Koleksi
+                    Organizations
                 </Link>
-                <span className="font-medium text-indigo-600"> /</span> Create
+                <span className="mx-2 font-medium text-indigo-600">/</span>
+                {data.name}
             </h1>
+            {organization.deleted_at && (
+                <TrashedMessage
+                    message="This organization has been deleted."
+                    onRestore={restore}
+                />
+            )}
             <div className="max-w-3xl overflow-hidden bg-white rounded shadow">
                 <form onSubmit={handleSubmit}>
-                    <div className="grid gap-8 p-8 lg:grid-cols">
+                    <div className="grid gap-8 p-8 lg:grid-cols-2">
                         <FieldGroup
-                            label="Kategori BMN"
+                            label="Name"
                             name="name"
                             error={errors.name}
                         >
@@ -53,12 +77,12 @@ const Create = () => {
                         </FieldGroup>
 
                         <FieldGroup
-                            label="No. Register"
+                            label="Email"
                             name="email"
                             error={errors.email}
                         >
                             <TextInput
-                                name="No. Register"
+                                name="email"
                                 type="email"
                                 error={errors.email}
                                 value={data.email}
@@ -141,9 +165,18 @@ const Create = () => {
                                     setData("country", e.target.value)
                                 }
                                 options={[
-                                    { value: "", label: "" },
-                                    { value: "CA", label: "Canada" },
-                                    { value: "US", label: "United States" },
+                                    {
+                                        value: "",
+                                        label: "",
+                                    },
+                                    {
+                                        value: "CA",
+                                        label: "Canada",
+                                    },
+                                    {
+                                        value: "US",
+                                        label: "United States",
+                                    },
                                 ]}
                             />
                         </FieldGroup>
@@ -163,28 +196,36 @@ const Create = () => {
                             />
                         </FieldGroup>
                     </div>
-                    <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">
+                    <div className="flex items-center px-8 py-4 bg-gray-100 border-t border-gray-200">
+                        {!organization.deleted_at && (
+                            <DeleteButton onDelete={destroy}>
+                                Delete Organization
+                            </DeleteButton>
+                        )}
                         <LoadingButton
                             loading={processing}
                             type="submit"
-                            className="btn-indigo"
+                            className="ml-auto btn-indigo"
                         >
-                            Create Organization
+                            Update Organization
                         </LoadingButton>
                     </div>
                 </form>
             </div>
+            <h2 className="mt-12 mb-6 text-2xl font-bold">Contacts</h2>
+            <Table
+                columns={[
+                    { label: "Name", name: "name" },
+                    { label: "City", name: "city" },
+                    { label: "Phone", name: "phone", colSpan: 2 },
+                ]}
+                rows={organization.contacts}
+                getRowDetailsUrl={(row) => route("contacts.edit", row.id)}
+            />
         </div>
     );
 };
 
-/**
- * Persistent Layout (Inertia.js)
- *
- * [Learn more](https://inertiajs.com/pages#persistent-layouts)
- */
-Create.layout = (page) => (
-    <MainLayout title="Create Organization" children={page} />
-);
+Edit.layout = (page) => <MainLayout children={page} />;
 
-export default Create;
+export default Edit;

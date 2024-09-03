@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('batuan', function (Blueprint $table) {
+            // halaman 1 admin
             $table->bigIncrements('id_batuan');
             $table->string('kategori_bmn');
             $table->string('nup_bmn');
@@ -27,6 +28,8 @@ return new class extends Migration
             $table->integer('no_lemari');
             $table->integer('no_laci');
             $table->integer('no_slot');
+
+            // halaman 2
             $table->string('kondisi');
             $table->string('nama_koleksi');
             $table->text('deskripsi_koleksi');
@@ -44,6 +47,8 @@ return new class extends Migration
             $table->string('peta');
             $table->string('skala');
             $table->string('lembar_peta');
+
+            // halaman 3
             $table->string('cara_peroleh');
             $table->year('thn_peroleh');
             $table->string('determinator');
@@ -53,6 +58,8 @@ return new class extends Migration
             $table->string('url')->nullable();
             $table->decimal('nilai_peroleh', 15, 2);
             $table->decimal('nilai_buku', 15, 2);
+
+            // halaman 4
             $table->string('gambar_satu')->nullable();
             $table->string('gambar_dua')->nullable();
             $table->string('gambar_tiga')->nullable();

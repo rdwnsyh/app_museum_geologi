@@ -36,9 +36,9 @@ const Create = () => {
             </h1>
             <div className="max-w-3xl overflow-hidden bg-white rounded shadow">
                 <form onSubmit={handleSubmit}>
-                    <div className="grid gap-8 p-8 lg:grid-cols">
+                    <div className="grid gap-8 p-8 lg:grid-cols-2">
                         <FieldGroup
-                            label="Kategori BMN"
+                            label="Name"
                             name="name"
                             error={errors.name}
                         >
@@ -53,12 +53,12 @@ const Create = () => {
                         </FieldGroup>
 
                         <FieldGroup
-                            label="No. Register"
+                            label="Email"
                             name="email"
                             error={errors.email}
                         >
                             <TextInput
-                                name="No. Register"
+                                name="email"
                                 type="email"
                                 error={errors.email}
                                 value={data.email}

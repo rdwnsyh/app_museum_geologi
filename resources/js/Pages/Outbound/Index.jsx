@@ -17,7 +17,7 @@ function Index() {
 
     return (
         <div>
-            <h1 className="mb-8 text-3xl font-bold">Kelola Koleksi</h1>
+            <h1 className="mb-8 text-3xl font-bold">Outbound</h1>
 
             <div className="flex items-center justify-between mb-6">
                 <SearchBar /> {/* Tambahkan SearchBar di sini */}
@@ -27,14 +27,14 @@ function Index() {
                     href={route("kelolakoleksi.create")}
                 >
                     <span>Create</span>
-                    <span className="hidden md:inline"> Kelola Koleksi </span>
+                    <span className="hidden md:inline"> Outbound </span>
                 </Link>
             </div>
 
             <Table
                 columns={[
                     {
-                        label: "Nomor Koleksi",
+                        label: "Name",
                         name: "name",
                         renderCell: (row) => (
                             <>
@@ -48,10 +48,9 @@ function Index() {
                             </>
                         ),
                     },
-                    { label: "Nama Koleksi", name: "city" },
-                    { label: "Tipe Koleksi", name: "phone"},
-                    { label: "Alamat Storage", name: "phone"},
-                    { label: "Aksi", name: "alamat", colSpan: 2 },
+                    { label: "City", name: "city" },
+                    { label: "Phone", name: "phone", colSpan: 2 },
+                    { label: "Alamat", name: "alamat", colSpan: 3 },
                 ]}
                 // rows={data}
                 // getRowDetailsUrl={(row) => route("organizations.edit", row.id)}
