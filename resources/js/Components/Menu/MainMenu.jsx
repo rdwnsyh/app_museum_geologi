@@ -38,6 +38,11 @@ export default function MainMenu({ className }) {
                 text="Kelola Koleksi"
                 link="kelolakoleksi"
                 icon={<Printer size={16} />}
+                submenu={[
+                    { text: "Batu", link: "kelolakoleksi/Batuan" },
+                    { text: "Fosil", link: "kelolakoleksi/fosil" },
+                    { text: "Mineral", link: "kelolakoleksi/mineral" }
+                ]}
             />
             <MainMenuItem
                 text="Manajemen Admin"

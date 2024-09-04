@@ -26,6 +26,7 @@ export default function MainMenuItem({ icon, link, text }) {
                 <div className={iconClasses}>{icon}</div>
                 <div className={textClasses}>{text}</div>
             </Link>
+           
         </div>
     );
 }
