@@ -7,6 +7,7 @@ import SelectInput from "@/Components/Form/SelectInput";
 import FieldGroup from "@/Components/Form/FieldGroup";
 
 const Create = () => {
+    
     const { data, setData, errors, post, processing } = useForm({
         // halaman 1 admin
         kategori_bmn: "",
@@ -77,6 +78,13 @@ const Create = () => {
     function handleBack() {
         setStep(step - 1);
     }
+
+    const handlePhotoChange = (event) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setData(prevData => ({ ...prevData, photo: file }));
+        }
+    };
 
     return (
         <div>
@@ -730,7 +738,7 @@ const Create = () => {
                                     />
                                 </FieldGroup>
                                 <FieldGroup
-                                    label="Gammbar Dua"
+                                    label="Gambar Dua"
                                     name="gambar_dua"
                                     error={errors.gambar_dua}
                                 >
@@ -783,6 +791,19 @@ const Create = () => {
                                         onChange={(e) =>
                                             setData("audio", e.target.value)
                                         }
+                                    />
+                                </FieldGroup>
+
+                                <FieldGroup
+                                    label="Photo"
+                                    name="photo"
+                                    error={errors.photo}
+                                >
+                                    <FileInput
+                                        name="photo"
+                                        accept="image/*"
+                                        error={errors.photo}
+                                        onChange={handlePhotoChange}
                                     />
                                 </FieldGroup>
                                

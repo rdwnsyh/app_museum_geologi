@@ -5,8 +5,10 @@ import LoadingButton from "@/Components/Button/LoadingButton";
 import TextInput from "@/Components/Form/TextInput";
 import SelectInput from "@/Components/Form/SelectInput";
 import FieldGroup from "@/Components/Form/FieldGroup";
+import FileInput from "@/Components/Form/FileInput";
 
 const Create = () => {
+    
     const { data, setData, errors, post, processing } = useForm({
         // halaman 1 admin
         kategori_bmn: "",
@@ -60,6 +62,7 @@ const Create = () => {
         gambar_tiga: "",
         vidio: "",
         audio: "",
+        photo: null,
     });
 
     const [step, setStep] = useState(1);
@@ -77,6 +80,14 @@ const Create = () => {
         setStep(step - 1);
     }
 
+    const handleFileChange = (e) => {
+        setData({
+            ...data,
+            photo: e.target.files[0], // Ambil file yang dipilih
+        });
+    };
+
+    
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">
@@ -110,6 +121,7 @@ const Create = () => {
                                         }
                                     />
                                 </FieldGroup>
+                            
                                 <FieldGroup
                                     label="Nup BMN"
                                     error={errors.nup_bmn}
@@ -791,85 +803,67 @@ const Create = () => {
 
                         {step === 4 && (
                             <>
+                                
                                 <FieldGroup
-                                    label="Gambar Satu"
-                                    name="gambar_satu"
-                                    error={errors.gambar_satu}
+                                label="Gambar 1"
+                                name="gambar_satu"
+                                error={errors.gambar_satu}
                                 >
-                                    <TextInput
+                                    <FileInput
+                                        type="file"
                                         name="gambar_satu"
                                         error={errors.gambar_satu}
                                         value={data.gambar_satu}
-                                        onChange={(e) =>
-                                            setData(
-                                                "gambar_satu",
-                                                e.target.value
-                                            )
-                                        }
+                                        onChange={handleFileChange}
                                     />
                                 </FieldGroup>
+
                                 <FieldGroup
-                                    label="Gammbar Dua"
-                                    name="gambar_dua"
-                                    error={errors.gambar_dua}
+                                label="Gambar 2"
+                                name="gambar_dua"
+                                error={errors.gambar_dua}
                                 >
-                                    <TextInput
+                                    <FileInput
+                                        type="file"
                                         name="gambar_dua"
-                                        error={errors.gambar_dua}
-                                        value={data.gambar_dua}
-                                        onChange={(e) =>
-                                            setData(
-                                                "gambar_dua",
-                                                e.target.value
-                                            )
-                                        }
+                                        onChange={handleFileChange}
                                     />
                                 </FieldGroup>
                                 <FieldGroup
-                                    label="Gambar Tiga"
-                                    name="gambar_tiga"
-                                    error={errors.gambar_tiga}
+                                label="Gambar 3"
+                                name="gambar_tiga"
+                                error={errors.gambar_tiga}
                                 >
-                                    <TextInput
+                                    <FileInput
+                                        type="file"
                                         name="gambar_tiga"
-                                        error={errors.gambar_tiga}
-                                        value={data.gambar_tiga}
-                                        onChange={(e) =>
-                                            setData(
-                                                "gambar_tiga",
-                                                e.target.value
-                                            )
-                                        }
+                                        onChange={handleFileChange}
                                     />
                                 </FieldGroup>
                                 <FieldGroup
-                                    label="Vidio"
-                                    name="vidio"
-                                    error={errors.vidio}
+                                label="Vidio"
+                                name="vidio"
+                                error={errors.vidio}
                                 >
-                                    <TextInput
+                                    <FileInput
+                                        type="file"
                                         name="vidio"
-                                        error={errors.vidio}
-                                        value={data.vidio}
-                                        onChange={(e) =>
-                                            setData("vidio", e.target.value)
-                                        }
+                                        onChange={handleFileChange}
                                     />
                                 </FieldGroup>
                                 <FieldGroup
-                                    label="Audio"
-                                    name="audio"
-                                    error={errors.audio}
+                                label="Audio"
+                                name="audio"
+                                error={errors.audio}
                                 >
-                                    <TextInput
+                                    <FileInput
+                                        type="file"
                                         name="audio"
-                                        error={errors.audio}
-                                        value={data.audio}
-                                        onChange={(e) =>
-                                            setData("audio", e.target.value)
-                                        }
+                                        onChange={handleFileChange}
                                     />
                                 </FieldGroup>
+
+                            
                             </>
                         )}
                     </div>

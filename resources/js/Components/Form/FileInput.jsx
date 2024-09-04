@@ -1,7 +1,9 @@
-import React, { useState, useRef } from "react";
-import { fileSize } from "@/utils"; // Pastikan path ini sesuai dengan struktur proyek Anda
+import React, { useState, useRef } from 'react';
+import { useForm } from '@inertiajs/inertia-react'; // Import useForm from Inertia
+import { fileSize } from '@/utils/FileSize'; // Ensure this path is correct
 
-export default function FileInput({ name, error, onChange }) {
+export default function FileInput({ name, error }) {
+    const { data, setData } = useForm({ [name]: null });
     const fileInput = useRef(null);
     const [file, setFile] = useState(null);
 
@@ -11,8 +13,7 @@ export default function FileInput({ name, error, onChange }) {
 
     function handleRemove() {
         setFile(null);
-        if (onChange) onChange(null);
-        // fileInput.current.value = ''; // Uncomment if needed
+        setData(name, null);
     }
 
     function handleChange(e) {
@@ -20,15 +21,15 @@ export default function FileInput({ name, error, onChange }) {
         const selectedFile = files[0] || null;
 
         setFile(selectedFile);
-        if (onChange) onChange(selectedFile);
+        setData(name, selectedFile);
     }
 
     return (
         <div
             className={`form-input w-full focus:outline-none focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 border-gray-300 rounded p-0 ${
                 error
-                    ? "border-red-400 focus:border-red-400 focus:ring-red-400"
-                    : ""
+                    ? 'border-red-400 focus:border-red-400 focus:ring-red-400'
+                    : ''
             }`}
         >
             <input
@@ -41,6 +42,7 @@ export default function FileInput({ name, error, onChange }) {
             {!file && (
                 <div className="p-2">
                     <BrowseButton text="Browse" onClick={handleBrowse} />
+                    input file
                 </div>
             )}
             {file && (
