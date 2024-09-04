@@ -1,5 +1,5 @@
 import MainMenuItem from "@/Components/Menu/MainMenuItem";
-import { Building, CircleGauge, Printer, Users } from "lucide-react";
+import { Building, CircleGauge, Printer, Users, HandHelping, ArchiveRestore, Warehouse, ArrowBigLeftDash, ArrowBigRightDash, Package } from "lucide-react";
 
 export default function MainMenu({ className }) {
     return (
@@ -12,32 +12,32 @@ export default function MainMenu({ className }) {
             <MainMenuItem
                 text="Storage"
                 link="storage"
-                icon={<Building size={16} />}
+                icon={<Warehouse size={16} />}
             />
             <MainMenuItem
                 text="Peminjaman"
                 link="peminjaman"
-                icon={<Users size={16} />}
+                icon={<HandHelping size={16} />}
             />
             <MainMenuItem
                 text="Pengembalian"
                 link="pengembalian"
-                icon={<Printer size={16} />}
+                icon={<ArchiveRestore size={16} />}
             />
             <MainMenuItem
                 text="Inbound"
                 link="inbound"
-                icon={<Printer size={16} />}
+                icon={<ArrowBigRightDash size={16} />}
             />
             <MainMenuItem
                 text="Outbound"
                 link="outbound"
-                icon={<Printer size={16} />}
+                icon={<ArrowBigLeftDash size={16} />}
             />
             <MainMenuItem
                 text="Kelola Koleksi"
                 link="kelolakoleksibatuan"
-                icon={<Printer size={16} />}
+                icon={<Package size={16} />}
                 submenu={[
                     { text: "Batu", link: "kelolakoleksibatuan/Batuan" },
                     { text: "Fosil", link: "kelolakoleksi/fosil" },
