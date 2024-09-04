@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\InboundController;
+use App\Http\Controllers\KelolaKoleksiBatuanController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\KelolakoleksiController;
@@ -180,32 +181,32 @@ Route::put('inbound/{inbound}/restore', [InboundController::class, 'restore'])
 
 
 // Route Kelola Koleksi
-Route::get('kelolakoleksi', [KelolakoleksiController::class, 'index'])
-    ->name('kelolakoleksi')
+Route::get('kelolakoleksibatuan', [KelolaKoleksiBatuanController::class, 'index'])
+    ->name('kelolakoleksibatuan')
     ->middleware('auth');
-// Route ke halaman create kelolakoleksi
-Route::get('kelolakoleksi/create', [KelolakoleksiController::class, 'create'])
-    ->name('kelolakoleksi.create')
+// Route ke halaman create kelolakoleksibatuan
+Route::get('kelolakoleksibatuan/create', [KelolaKoleksiBatuanController::class, 'create'])
+    ->name('kelolakoleksibatuan.create')
     ->middleware('auth');
-// proses create kelolakoleksi
-Route::post('kelolakoleksi', [KelolakoleksiController::class, 'store'])
-    ->name('kelolakoleksi.store')
+// proses create kelolakoleksibatuan
+Route::post('kelolakoleksibatuan', [KelolaKoleksiBatuanController::class, 'store'])
+    ->name('kelolakoleksibatuan.store')
     ->middleware('auth');
-// route ke halaman edit kelolakoleksi
-    Route::get('kelolakoleksi/{kelolakoleksi}/edit', [KelolakoleksiController::class, 'edit'])
-    ->name('kelolakoleksi.edit')
+// route ke halaman edit kelolakoleksibatuan
+    Route::get('kelolakoleksibatuan/{kelolakoleksibatuan}/edit', [KelolaKoleksiBatuanController::class, 'edit'])
+    ->name('kelolakoleksibatuan.edit')
     ->middleware('auth');
-// proses edit kelolakoleksi
-Route::put('kelolakoleksi/{kelolakoleksi}', [KelolakoleksiController::class, 'update'])
-    ->name('kelolakoleksi.update')
+// proses edit kelolakoleksibatuan
+Route::put('kelolakoleksibatuan/{kelolakoleksibatuan}', [KelolaKoleksiBatuanController::class, 'update'])
+    ->name('kelolakoleksibatuan.update')
     ->middleware('auth');
-// route ke halaman hapus kelolakoleksi
-Route::delete('kelolakoleksi/{kelolakoleksi}', [KelolakoleksiController::class, 'destroy'])
-    ->name('kelolakoleksi.destroy')
+// route ke halaman hapus kelolakoleksibatuan
+Route::delete('kelolakoleksibatuan/{kelolakoleksibatuan}', [KelolaKoleksiBatuanController::class, 'destroy'])
+    ->name('kelolakoleksibatuan.destroy')
     ->middleware('auth');
-// proses hapus kelolakoleksi
-Route::put('kelolakoleksi/{kelolakoleksi}/restore', [KelolakoleksiController::class, 'restore'])
-    ->name('kelolakoleksi.restore')
+// proses hapus kelolakoleksibatuan
+Route::put('kelolakoleksibatuan/{kelolakoleksibatuan}/restore', [KelolaKoleksiBatuanController::class, 'restore'])
+    ->name('kelolakoleksibatuan.restore')
     ->middleware('auth');
 
 

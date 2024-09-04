@@ -23,7 +23,7 @@ const Create = () => {
         no_lemari: "",
         no_laci: "",
         no_slot: "",
-        
+
         // halaman 2
         kondisi: "",
         nama_koleksi: "",
@@ -60,7 +60,6 @@ const Create = () => {
         gambar_tiga: "",
         vidio: "",
         audio: "",
-
     });
 
     const [step, setStep] = useState(1);
@@ -82,7 +81,7 @@ const Create = () => {
         <div>
             <h1 className="mb-8 text-3xl font-bold">
                 <Link
-                    href={route("kelolakoleksi")}
+                    href={route("kelolakoleksibatuan")}
                     className="text-indigo-600 hover:text-indigo-700"
                 >
                     Kelola Koleksi
@@ -104,7 +103,10 @@ const Create = () => {
                                         error={errors.kategori_bmn}
                                         value={data.kategori_bmn}
                                         onChange={(e) =>
-                                            setData("kategori_bmn", e.target.value)
+                                            setData(
+                                                "kategori_bmn",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -173,13 +175,19 @@ const Create = () => {
                                         error={errors.kelompok_koleksi}
                                         value={data.kelompok_koleksi}
                                         onChange={(e) =>
-                                            setData("kelompok_koleksi", e.target.value)
+                                            setData(
+                                                "kelompok_koleksi",
+                                                e.target.value
+                                            )
                                         }
                                         options={[
                                             { value: "", label: "" },
                                             { value: "BA", label: "Batuan" },
                                             { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
+                                            {
+                                                value: "SD",
+                                                label: "Sumber Daya",
+                                            },
                                         ]}
                                     />
                                 </FieldGroup>
@@ -193,13 +201,19 @@ const Create = () => {
                                         error={errors.jenis_koleksi}
                                         value={data.jenis_koleksi}
                                         onChange={(e) =>
-                                            setData("jenis_koleksi", e.target.value)
+                                            setData(
+                                                "jenis_koleksi",
+                                                e.target.value
+                                            )
                                         }
                                         options={[
                                             { value: "", label: "" },
                                             { value: "BA", label: "Batuan" },
                                             { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
+                                            {
+                                                value: "SD",
+                                                label: "Sumber Daya",
+                                            },
                                         ]}
                                     />
                                 </FieldGroup>
@@ -213,7 +227,10 @@ const Create = () => {
                                         error={errors.ruang_penyimpanan}
                                         value={data.ruang_penyimpanan}
                                         onChange={(e) =>
-                                            setData("ruang_penyimpanan", e.target.value)
+                                            setData(
+                                                "ruang_penyimpanan",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -227,7 +244,10 @@ const Create = () => {
                                         error={errors.lokasi_penyimpanan}
                                         value={data.lokasi_penyimpanan}
                                         onChange={(e) =>
-                                            setData("lokasi_penyimpanan", e.target.value)
+                                            setData(
+                                                "lokasi_penyimpanan",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -330,13 +350,19 @@ const Create = () => {
                                         error={errors.nama_koleksi}
                                         value={data.nama_koleksi}
                                         onChange={(e) =>
-                                            setData("kelompok_koleksi", e.target.value)
+                                            setData(
+                                                "kelompok_koleksi",
+                                                e.target.value
+                                            )
                                         }
                                         options={[
                                             { value: "", label: "" },
                                             { value: "BA", label: "Batuan" },
                                             { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
+                                            {
+                                                value: "SD",
+                                                label: "Sumber Daya",
+                                            },
                                         ]}
                                     />
                                 </FieldGroup>
@@ -350,13 +376,19 @@ const Create = () => {
                                         error={errors.deskripsi_koleksi}
                                         value={data.deskripsi_koleksi}
                                         onChange={(e) =>
-                                            setData("deskripsi_koleksi", e.target.value)
+                                            setData(
+                                                "deskripsi_koleksi",
+                                                e.target.value
+                                            )
                                         }
                                         options={[
                                             { value: "", label: "" },
                                             { value: "BA", label: "Batuan" },
                                             { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
+                                            {
+                                                value: "SD",
+                                                label: "Sumber Daya",
+                                            },
                                         ]}
                                     />
                                 </FieldGroup>
@@ -370,7 +402,10 @@ const Create = () => {
                                         error={errors.keterangan_koleksi}
                                         value={data.keterangan_koleksi}
                                         onChange={(e) =>
-                                            setData("keterangan_koleksi", e.target.value)
+                                            setData(
+                                                "keterangan_koleksi",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -384,7 +419,10 @@ const Create = () => {
                                         error={errors.umur_geologi}
                                         value={data.umur_geologi}
                                         onChange={(e) =>
-                                            setData("umur_geologi", e.target.value)
+                                            setData(
+                                                "umur_geologi",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -398,13 +436,19 @@ const Create = () => {
                                         error={errors.nama_formasi}
                                         value={data.nama_formasi}
                                         onChange={(e) =>
-                                            setData("nama_formasi", e.target.value)
+                                            setData(
+                                                "nama_formasi",
+                                                e.target.value
+                                            )
                                         }
                                         options={[
                                             { value: "", label: "" },
                                             { value: "BA", label: "Batuan" },
                                             { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
+                                            {
+                                                value: "SD",
+                                                label: "Sumber Daya",
+                                            },
                                         ]}
                                     />
                                 </FieldGroup>
@@ -424,7 +468,10 @@ const Create = () => {
                                             { value: "", label: "" },
                                             { value: "BA", label: "Batuan" },
                                             { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
+                                            {
+                                                value: "SD",
+                                                label: "Sumber Daya",
+                                            },
                                         ]}
                                     />
                                 </FieldGroup>
@@ -472,7 +519,10 @@ const Create = () => {
                                             { value: "", label: "" },
                                             { value: "BA", label: "Batuan" },
                                             { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
+                                            {
+                                                value: "SD",
+                                                label: "Sumber Daya",
+                                            },
                                         ]}
                                     />
                                 </FieldGroup>
@@ -492,7 +542,10 @@ const Create = () => {
                                             { value: "", label: "" },
                                             { value: "BA", label: "Batuan" },
                                             { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
+                                            {
+                                                value: "SD",
+                                                label: "Sumber Daya",
+                                            },
                                         ]}
                                     />
                                 </FieldGroup>
@@ -540,7 +593,10 @@ const Create = () => {
                                             { value: "", label: "" },
                                             { value: "BA", label: "Batuan" },
                                             { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
+                                            {
+                                                value: "SD",
+                                                label: "Sumber Daya",
+                                            },
                                         ]}
                                     />
                                 </FieldGroup>
@@ -560,7 +616,10 @@ const Create = () => {
                                             { value: "", label: "" },
                                             { value: "BA", label: "Batuan" },
                                             { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
+                                            {
+                                                value: "SD",
+                                                label: "Sumber Daya",
+                                            },
                                         ]}
                                     />
                                 </FieldGroup>
@@ -588,11 +647,13 @@ const Create = () => {
                                         error={errors.lembar_peta}
                                         value={data.lembar_peta}
                                         onChange={(e) =>
-                                            setData("lembar_peta", e.target.value)
+                                            setData(
+                                                "lembar_peta",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
-                                
                             </>
                         )}
 
@@ -608,7 +669,10 @@ const Create = () => {
                                         error={errors.cara_peroleh}
                                         value={data.cara_peroleh}
                                         onChange={(e) =>
-                                            setData("cara_peroleh", e.target.value)
+                                            setData(
+                                                "cara_peroleh",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -622,7 +686,10 @@ const Create = () => {
                                         error={errors.determinator}
                                         value={data.determinator}
                                         onChange={(e) =>
-                                            setData("determinator", e.target.value)
+                                            setData(
+                                                "determinator",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -650,7 +717,10 @@ const Create = () => {
                                         error={errors.kepemilikan_awal}
                                         value={data.kepemilikan_awal}
                                         onChange={(e) =>
-                                            setData("kepemilikan_awal", e.target.value)
+                                            setData(
+                                                "kepemilikan_awal",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -692,7 +762,10 @@ const Create = () => {
                                         error={errors.nilai_peroleh}
                                         value={data.nilai_peroleh}
                                         onChange={(e) =>
-                                            setData("nilai_peroleh", e.target.value)
+                                            setData(
+                                                "nilai_peroleh",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -706,7 +779,10 @@ const Create = () => {
                                         error={errors.nilai_buku}
                                         value={data.nilai_buku}
                                         onChange={(e) =>
-                                            setData("nilai_buku", e.target.value)
+                                            setData(
+                                                "nilai_buku",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -725,7 +801,10 @@ const Create = () => {
                                         error={errors.gambar_satu}
                                         value={data.gambar_satu}
                                         onChange={(e) =>
-                                            setData("gambar_satu", e.target.value)
+                                            setData(
+                                                "gambar_satu",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -739,7 +818,10 @@ const Create = () => {
                                         error={errors.gambar_dua}
                                         value={data.gambar_dua}
                                         onChange={(e) =>
-                                            setData("gambar_dua", e.target.value)
+                                            setData(
+                                                "gambar_dua",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -753,7 +835,10 @@ const Create = () => {
                                         error={errors.gambar_tiga}
                                         value={data.gambar_tiga}
                                         onChange={(e) =>
-                                            setData("gambar_tiga", e.target.value)
+                                            setData(
+                                                "gambar_tiga",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -785,11 +870,8 @@ const Create = () => {
                                         }
                                     />
                                 </FieldGroup>
-                               
                             </>
                         )}
-
-                        
                     </div>
                     <div className="flex items-center justify-between px-8 py-4 bg-gray-100 border-t border-gray-200">
                         {step > 1 && (
@@ -806,7 +888,7 @@ const Create = () => {
                             type="submit"
                             className="btn-indigo"
                         >
-                            {step === 4 ? "Create Organization" : "Next"}
+                            {step === 4 ? "Tambah Data" : "Next"}
                         </LoadingButton>
                     </div>
                 </form>
@@ -816,7 +898,7 @@ const Create = () => {
 };
 
 Create.layout = (page) => (
-    <MainLayout title="Create Organization" children={page} />
+    <MainLayout title="Tambah Organization" children={page} />
 );
 
 export default Create;

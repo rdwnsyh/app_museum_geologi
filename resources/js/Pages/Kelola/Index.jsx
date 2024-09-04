@@ -24,7 +24,7 @@ function Index() {
                 {/* <FilterBar /> */}
                 <Link
                     className="btn-indigo focus:outline-none"
-                    href={route("kelolakoleksi.create")}
+                    href={route("kelolakoleksibatuan.create")}
                 >
                     <span>Create</span>
                     <span className="hidden md:inline"> Kelola Koleksi </span>
@@ -49,8 +49,8 @@ function Index() {
                         ),
                     },
                     { label: "Nama Koleksi", name: "city" },
-                    { label: "Tipe Koleksi", name: "phone"},
-                    { label: "Alamat Storage", name: "phone"},
+                    { label: "Tipe Koleksi", name: "phone" },
+                    { label: "Alamat Storage", name: "phone" },
                     { label: "Aksi", name: "alamat", colSpan: 2 },
                 ]}
                 // rows={data}
