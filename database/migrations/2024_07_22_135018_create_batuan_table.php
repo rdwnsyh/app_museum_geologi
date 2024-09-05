@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('batuan', function (Blueprint $table) {
             // halaman 1 admin
-            $table->bigIncrements('id_batuan');
-            $table->string('kategori_bmn');
+            $table->bigIncrements('id');
+            $table->string('kategori_bmn')->default('6.06.01.05.005');
             $table->string('nup_bmn');
-            $table->string('tipe_bmn');
+            $table->string('tipe_bmn')->default('Batuan');
             $table->string('no_awal');
             $table->string('satuan');
             $table->string('kelompok_koleksi');
