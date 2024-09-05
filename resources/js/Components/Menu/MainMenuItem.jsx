@@ -8,13 +8,13 @@ export default function MainMenuItem({ icon, link, text }) {
     // console.log(route(link));
 
     const iconClasses = classNames({
-        "text-white": isActive,
-        "text-indigo-400 group-hover:text-white": !isActive,
+        "text-black": isActive,
+        "text-black-500 group-hover:text-blue-900": !isActive,
     });
 
     const textClasses = classNames({
-        "text-white": isActive,
-        "text-indigo-200 group-hover:text-white": !isActive,
+        "text-black": isActive,
+        "text-black-500 group-hover:text-blue-900": !isActive,
     });
 
     return (

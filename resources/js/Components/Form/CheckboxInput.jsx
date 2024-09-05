@@ -1,10 +1,7 @@
-import { ComponentProps } from "react";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-interface CheckboxInputProps extends ComponentProps<"input"> {
-    label?: string;
-}
-
-export function CheckboxInput({ label, name, ...props }: CheckboxInputProps) {
+const CheckboxInput = ({ label, name, ...props }) => {
     return (
         <label className="flex items-center select-none" htmlFor={name}>
             <input
@@ -17,4 +14,11 @@ export function CheckboxInput({ label, name, ...props }: CheckboxInputProps) {
             <span className="text-sm">{label}</span>
         </label>
     );
-}
+};
+
+CheckboxInput.propTypes = {
+    label: PropTypes.string,
+    name: PropTypes.string.isRequired,
+};
+
+export default CheckboxInput;

@@ -41,8 +41,8 @@ export default function FileInput({ name, error }) {
             />
             {!file && (
                 <div className="p-2">
-                    <BrowseButton text="Browse" onClick={handleBrowse} />
-                    input file
+                    <BrowseButton text="Pilih File" onClick={handleBrowse} />
+                    Input file 
                 </div>
             )}
             {file && (
