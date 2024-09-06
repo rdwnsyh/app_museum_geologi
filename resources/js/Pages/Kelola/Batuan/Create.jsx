@@ -90,6 +90,10 @@ const Create = () => {
         });
     };
 
+    const handleRadioChange = (e) => {
+        setSelectedValue(e.target.value);
+        setError(''); // Clear error when user changes the selection
+    };
     
     return (
         <div>
@@ -405,7 +409,7 @@ const Create = () => {
                                         value={data.nama_koleksi}
                                         onChange={(e) =>
                                             setData(
-                                                "kelompok_koleksi",
+                                                "nama_koleksi",
                                                 e.target.value
                                             )
                                         }
