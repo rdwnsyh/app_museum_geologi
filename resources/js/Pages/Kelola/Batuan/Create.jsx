@@ -12,7 +12,7 @@ import TextArea from "@/Components/Form/Textarea";
 
 const Create = () => {
     
-    const { data, setData, errors, post, processing } = useForm({
+    const { data, setData, errors, post, processing, setError } = useForm({
         // halaman 1 admin
         kategori_bmn: "",
         nup_bmn: "",
@@ -517,14 +517,12 @@ const Create = () => {
                                             )
                                         }
                                         options={[
-                                            
                                             { value: "DL", label: "Dalam Negeri" },
                                             { value: "LN", label: "Luar Negeri" },
-                                            
                                         ]}
-                                        
                                     />
                                 </FieldGroup>
+                                
                                 <FieldGroup
                                     label="Pulau"
                                     name="pulau"
@@ -723,6 +721,23 @@ const Create = () => {
                                             { value: "PG", label: "Penyelidikan Geologi" },
                                             
                                         ]}
+                                    />
+                                </FieldGroup>
+                                <FieldGroup
+                                    label="Tahun Peroleh"
+                                    name="thn_peroleh"
+                                    error={errors.thn_peroleh}
+                                >
+                                    <TextInput
+                                        name="thn_peroleh"
+                                        error={errors.thn_peroleh}
+                                        value={data.thn_peroleh}
+                                        onChange={(e) =>
+                                            setData(
+                                                "thn_peroleh",
+                                                e.target.value
+                                            )
+                                        }
                                     />
                                 </FieldGroup>
                                 <FieldGroup
