@@ -90,9 +90,10 @@ const Create = () => {
         });
     };
 
-    const handleRadioChange = (e) => {
-        setSelectedValue(e.target.value);
-        setError(''); // Clear error when user changes the selection
+    const [selectedValue, setSelectedValue] = useState('');
+
+    const handleRadioChange = (value) => {
+        setSelectedValue(value);
     };
     
     return (
@@ -247,13 +248,9 @@ const Create = () => {
                                     <RadioButton
                                         name="ruang_penyimpanan"
                                         error={errors.ruang_penyimpanan}
-                                        value={data.ruang_penyimpanan}
-                                        onChange={(e) =>
-                                            setData(
-                                                "ruang_penyimpanan",
-                                                e.target.value
-                                            )
-                                        }
+                                        selectedValue={selectedValue}
+                                        onChange={handleRadioChange}
+                                       
                                         options={[
                                             
                                             { value: "ST", label: "Storage" },
@@ -509,13 +506,9 @@ const Create = () => {
                                     <RadioButton
                                         name="ditemukan"
                                         error={errors.ditemukan}
-                                        value={data.ditemukan}
-                                        onChange={(e) =>
-                                            setData(
-                                                "ditemukan",
-                                                e.target.value
-                                            )
-                                        }
+                                        selectedValue={selectedValue}
+                                        onChange={handleRadioChange}
+
                                         options={[
                                             { value: "DL", label: "Dalam Negeri" },
                                             { value: "LN", label: "Luar Negeri" },
@@ -631,16 +624,12 @@ const Create = () => {
                                     name="peta"
                                     error={errors.peta}
                                 >
-                                    <RadioButton 
+                                     <RadioButton
                                         name="peta"
                                         error={errors.peta}
-                                        value={data.peta}
-                                        onChange={(e) =>
-                                            setData(
-                                                "peta",
-                                                e.target.value
-                                            )
-                                        }
+                                        selectedValue={selectedValue}
+                                        onChange={handleRadioChange}
+
                                         options={[
                                             
                                             { value: "RP", label: "Rupa Bumi" },

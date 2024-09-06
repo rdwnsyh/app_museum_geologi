@@ -12,7 +12,7 @@ const RadioButton = ({ name, options, selectedValue, onChange, error }) => {
                         name={name}
                         value={option.value}
                         checked={selectedValue === option.value}
-                        onChange={() => onChange(option.value)}
+                        onChange={(e) => onChange(e.target.value)}
                         className="form-radio text-indigo-600 focus:ring-indigo-600"
                     />
                     <label htmlFor={`${name}_${option.value}`} className="ml-2 text-sm">
@@ -34,6 +34,11 @@ RadioButton.propTypes = {
     selectedValue: PropTypes.string,
     onChange: PropTypes.func.isRequired,
     error: PropTypes.string,
+};
+
+RadioButton.defaultProps = {
+    selectedValue: '',
+    error: '',
 };
 
 export default RadioButton;
