@@ -9,9 +9,7 @@ import FileInput from "@/Components/Form/FileInput";
 import RadioButton from "@/Components/Form/Radiobutton";
 import TextArea from "@/Components/Form/Textarea";
 
-
 const Create = () => {
-    
     const { data, setData, errors, post, processing, setError } = useForm({
         // halaman 1 admin
         kategori_bmn: "",
@@ -65,7 +63,6 @@ const Create = () => {
         gambar_tiga: "",
         vidio: "",
         audio: "",
-       
     });
 
     const [step, setStep] = useState(1);
@@ -73,7 +70,7 @@ const Create = () => {
     function handleSubmit(e) {
         e.preventDefault();
         if (step === 4) {
-            post(route("organizations.store"));
+            post(route("kelolakoleksibatuan.store"));
         } else {
             setStep(step + 1);
         }
@@ -90,17 +87,17 @@ const Create = () => {
         });
     };
 
-    const [selectedValue, setSelectedValue] = useState('');
+    const [selectedValue, setSelectedValue] = useState("");
 
     const handleRadioChange = (value) => {
         setSelectedValue(value);
     };
-    
+
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">
                 <Link
-                    href={route("kelolakoleksibatuan")}
+                    href={route("kelolakoleksibatuan.store")}
                     className="text-indigo-600 hover:text-indigo-700"
                 >
                     Kelola Koleksi
@@ -108,8 +105,8 @@ const Create = () => {
                 <span className="font-medium text-indigo-600"> /</span> Create
             </h1>
             <div className="max-w-3xl overflow-hidden bg-white rounded shadow">
-                <form onSubmit={handleSubmit} >
-                <div className="grid gap-10 p-10 lg:grid-cols-2">
+                <form onSubmit={handleSubmit}>
+                    <div className="grid gap-10 p-10 lg:grid-cols-2">
                         {step === 1 && (
                             <>
                                 <FieldGroup
@@ -129,7 +126,7 @@ const Create = () => {
                                         }
                                     />
                                 </FieldGroup>
-                            
+
                                 <FieldGroup
                                     label="Nup BMN"
                                     error={errors.nup_bmn}
@@ -181,10 +178,7 @@ const Create = () => {
                                         error={errors.satuan}
                                         value={data.satuan}
                                         onChange={(e) =>
-                                            setData(
-                                                "satuan",
-                                                e.target.value
-                                            )
+                                            setData("satuan", e.target.value)
                                         }
                                         options={[
                                             { value: "", label: "" },
@@ -209,7 +203,6 @@ const Create = () => {
                                                 e.target.value
                                             )
                                         }
-                                       
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -234,9 +227,14 @@ const Create = () => {
                                             { value: "MI", label: "Mineral" },
                                             { value: "MF", label: "Metamorf" },
                                             { value: "MT", label: "Meteorit" },
-                                            { value: "PK", label: "Piroklasktik" },
-                                            { value: "TT", label: "Tidak Teridentifikasi" },
-                                            
+                                            {
+                                                value: "PK",
+                                                label: "Piroklasktik",
+                                            },
+                                            {
+                                                value: "TT",
+                                                label: "Tidak Teridentifikasi",
+                                            },
                                         ]}
                                     />
                                 </FieldGroup>
@@ -250,12 +248,12 @@ const Create = () => {
                                         error={errors.ruang_penyimpanan}
                                         selectedValue={selectedValue}
                                         onChange={handleRadioChange}
-                                       
                                         options={[
-                                            
                                             { value: "ST", label: "Storage" },
-                                            { value: "NS", label: "Non Storage" },
-                                            
+                                            {
+                                                value: "NS",
+                                                label: "Non Storage",
+                                            },
                                         ]}
                                     />
                                 </FieldGroup>
@@ -285,9 +283,14 @@ const Create = () => {
                                             { value: "S7", label: "Storage 7" },
                                             { value: "S8", label: "Storage 8" },
                                             { value: "S9", label: "Storage 9" },
-                                            { value: "S10", label: "Storage 10" },
-                                            { value: "S11", label: "Storage 11" },
-                                            
+                                            {
+                                                value: "S10",
+                                                label: "Storage 10",
+                                            },
+                                            {
+                                                value: "S11",
+                                                label: "Storage 11",
+                                            },
                                         ]}
                                     />
                                 </FieldGroup>
@@ -308,7 +311,6 @@ const Create = () => {
                                             { value: "L1", label: "Lantai 1" },
                                             { value: "L2", label: "Lantai 2" },
                                             { value: "L3", label: "Lantai 3" },
-                                            
                                         ]}
                                     />
                                 </FieldGroup>
@@ -388,11 +390,15 @@ const Create = () => {
                                         options={[
                                             { value: "", label: "" },
                                             { value: "B", label: "Baik" },
-                                            { value: "RR", label: "Rusak Ringan" },
-                                            { value: "RB", label: "Rusak berat" },
-                                            
+                                            {
+                                                value: "RR",
+                                                label: "Rusak Ringan",
+                                            },
+                                            {
+                                                value: "RB",
+                                                label: "Rusak berat",
+                                            },
                                         ]}
-                                    
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -410,7 +416,6 @@ const Create = () => {
                                                 e.target.value
                                             )
                                         }
-                                        
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -421,12 +426,16 @@ const Create = () => {
                                     <TextArea
                                         name="deskripsi_koleksi"
                                         value={data.deskripsi_koleksi}
-                                        onChange={(e) => setData("deskripsi_koleksi", e.target.value)}
+                                        onChange={(e) =>
+                                            setData(
+                                                "deskripsi_koleksi",
+                                                e.target.value
+                                            )
+                                        }
                                         error={errors.deskripsi_koleksi}
                                         placeholder="Masukkan Deskripsi di sini..."
                                         rows={6} // Adjust as needed
                                     />
-
                                 </FieldGroup>
                                 <FieldGroup
                                     label="Keterangan Koleksi"
@@ -436,7 +445,12 @@ const Create = () => {
                                     <TextArea
                                         name="keterangan_koleksi"
                                         value={data.keterangan_koleksi}
-                                        onChange={(e) => setData("keterangan_koleksi", e.target.value)}
+                                        onChange={(e) =>
+                                            setData(
+                                                "keterangan_koleksi",
+                                                e.target.value
+                                            )
+                                        }
                                         error={errors.keterangan_koleksi}
                                         placeholder="Masukkan Keterangan Koleksi di sini..."
                                         rows={6} // Adjust as needed
@@ -459,24 +473,74 @@ const Create = () => {
                                         }
                                         options={[
                                             { value: "", label: "" },
-                                            { value: "PR", label: "Prakambrium" },
-                                            { value: "PK", label: "Paleozoikum - Kambrium" },
-                                            { value: "PO", label: "Paleozoikum - Ordovium" },
-                                            { value: "PS", label: "Paleozoikum - Silur" },
-                                            { value: "PD", label: "Paleozoikum - Devon" },
-                                            { value: "PKR", label: "Paleozoikum - Karbo" },
-                                            { value: "PP", label: "Paleozoikum - Perem" },
-                                            { value: "MT", label: "Mesozoikum - Trias" },
-                                            { value: "MJ", label: "Mesozoikum - Jura" },
-                                            { value: "MK", label: "Mesozoikum - Kapur" },
-                                            { value: "KP", label: "Kenozoikum - Paleogen" },
-                                            { value: "KE", label: "Kenozoikum - Eosen" },
-                                            { value: "KO", label: "Kenozoikum - Oligosen" },
-                                            { value: "KM", label: "Kenozoikum - Miosen" },
-                                            { value: "KP", label: "Kenozoikum - Pliosen" },
-                                            { value: "KPT", label: "Kenozoikum - Plistosen" },
-                                            { value: "KH", label: "Kenozoikum - Holosen" },
-                                            
+                                            {
+                                                value: "PR",
+                                                label: "Prakambrium",
+                                            },
+                                            {
+                                                value: "PK",
+                                                label: "Paleozoikum - Kambrium",
+                                            },
+                                            {
+                                                value: "PO",
+                                                label: "Paleozoikum - Ordovium",
+                                            },
+                                            {
+                                                value: "PS",
+                                                label: "Paleozoikum - Silur",
+                                            },
+                                            {
+                                                value: "PD",
+                                                label: "Paleozoikum - Devon",
+                                            },
+                                            {
+                                                value: "PKR",
+                                                label: "Paleozoikum - Karbo",
+                                            },
+                                            {
+                                                value: "PP",
+                                                label: "Paleozoikum - Perem",
+                                            },
+                                            {
+                                                value: "MT",
+                                                label: "Mesozoikum - Trias",
+                                            },
+                                            {
+                                                value: "MJ",
+                                                label: "Mesozoikum - Jura",
+                                            },
+                                            {
+                                                value: "MK",
+                                                label: "Mesozoikum - Kapur",
+                                            },
+                                            {
+                                                value: "KP",
+                                                label: "Kenozoikum - Paleogen",
+                                            },
+                                            {
+                                                value: "KE",
+                                                label: "Kenozoikum - Eosen",
+                                            },
+                                            {
+                                                value: "KO",
+                                                label: "Kenozoikum - Oligosen",
+                                            },
+                                            {
+                                                value: "KM",
+                                                label: "Kenozoikum - Miosen",
+                                            },
+                                            {
+                                                value: "KP",
+                                                label: "Kenozoikum - Pliosen",
+                                            },
+                                            {
+                                                value: "KPT",
+                                                label: "Kenozoikum - Plistosen",
+                                            },
+                                            {
+                                                value: "KH",
+                                                label: "Kenozoikum - Holosen",
+                                            },
                                         ]}
                                     />
                                 </FieldGroup>
@@ -495,7 +559,6 @@ const Create = () => {
                                                 e.target.value
                                             )
                                         }
-                                    
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -508,14 +571,19 @@ const Create = () => {
                                         error={errors.ditemukan}
                                         selectedValue={selectedValue}
                                         onChange={handleRadioChange}
-
                                         options={[
-                                            { value: "DL", label: "Dalam Negeri" },
-                                            { value: "LN", label: "Luar Negeri" },
+                                            {
+                                                value: "DL",
+                                                label: "Dalam Negeri",
+                                            },
+                                            {
+                                                value: "LN",
+                                                label: "Luar Negeri",
+                                            },
                                         ]}
                                     />
                                 </FieldGroup>
-                                
+
                                 <FieldGroup
                                     label="Pulau"
                                     name="pulau"
@@ -542,8 +610,6 @@ const Create = () => {
                                         onChange={(e) =>
                                             setData("provinsi", e.target.value)
                                         }
-                                        
-
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -558,7 +624,6 @@ const Create = () => {
                                         onChange={(e) =>
                                             setData("kota", e.target.value)
                                         }
-                                        
                                     />
                                 </FieldGroup>
 
@@ -570,7 +635,9 @@ const Create = () => {
                                     <TextArea
                                         name="alamat"
                                         value={data.alamat}
-                                        onChange={(e) => setData("alamat", e.target.value)}
+                                        onChange={(e) =>
+                                            setData("alamat", e.target.value)
+                                        }
                                         error={errors.alamat}
                                         placeholder="Masukkan alamat di sini..."
                                         rows={6} // Adjust as needed
@@ -624,21 +691,20 @@ const Create = () => {
                                     name="peta"
                                     error={errors.peta}
                                 >
-                                     <RadioButton
+                                    <RadioButton
                                         name="peta"
                                         error={errors.peta}
                                         selectedValue={selectedValue}
                                         onChange={handleRadioChange}
-
                                         options={[
-                                            
                                             { value: "RP", label: "Rupa Bumi" },
                                             { value: "BL", label: "Blad" },
                                             { value: "GO", label: "Geologi" },
-                                            { value: "LU", label: "Luar Negeri" },
-                                            
+                                            {
+                                                value: "LU",
+                                                label: "Luar Negeri",
+                                            },
                                         ]}
-                                        
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -654,14 +720,11 @@ const Create = () => {
                                             setData("skala", e.target.value)
                                         }
                                         options={[
-                                            
                                             { value: "", label: "" },
                                             { value: "LI", label: "1:50.000" },
                                             { value: "RA", label: "1:100.000" },
                                             { value: "DU", label: "1:250.000" },
-                                            
                                         ]}
-                                        
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -702,13 +765,14 @@ const Create = () => {
                                             )
                                         }
                                         options={[
-                                            
                                             { value: "", label: "" },
                                             { value: "PE", label: "Pembuatan" },
                                             { value: "PM", label: "Pembelian" },
                                             { value: "HI", label: "HIbah" },
-                                            { value: "PG", label: "Penyelidikan Geologi" },
-                                            
+                                            {
+                                                value: "PG",
+                                                label: "Penyelidikan Geologi",
+                                            },
                                         ]}
                                     />
                                 </FieldGroup>
@@ -785,7 +849,9 @@ const Create = () => {
                                     <TextArea
                                         name="publikasi"
                                         value={data.publikasi}
-                                        onChange={(e) => setData("publikasi", e.target.value)}
+                                        onChange={(e) =>
+                                            setData("publikasi", e.target.value)
+                                        }
                                         error={errors.publikasi}
                                         placeholder="Masukkan Publikasi di sini..."
                                         rows={6} // Adjust as needed
@@ -844,11 +910,10 @@ const Create = () => {
 
                         {step === 4 && (
                             <>
-                                
                                 <FieldGroup
-                                label="Gambar 1"
-                                name="gambar_satu"
-                                error={errors.gambar_satu}
+                                    label="Gambar 1"
+                                    name="gambar_satu"
+                                    error={errors.gambar_satu}
                                 >
                                     <FileInput
                                         type="file"
@@ -860,9 +925,9 @@ const Create = () => {
                                 </FieldGroup>
 
                                 <FieldGroup
-                                label="Gambar 2"
-                                name="gambar_dua"
-                                error={errors.gambar_dua}
+                                    label="Gambar 2"
+                                    name="gambar_dua"
+                                    error={errors.gambar_dua}
                                 >
                                     <FileInput
                                         type="file"
@@ -871,9 +936,9 @@ const Create = () => {
                                     />
                                 </FieldGroup>
                                 <FieldGroup
-                                label="Gambar 3"
-                                name="gambar_tiga"
-                                error={errors.gambar_tiga}
+                                    label="Gambar 3"
+                                    name="gambar_tiga"
+                                    error={errors.gambar_tiga}
                                 >
                                     <FileInput
                                         type="file"
@@ -882,9 +947,9 @@ const Create = () => {
                                     />
                                 </FieldGroup>
                                 <FieldGroup
-                                label="Vidio"
-                                name="vidio"
-                                error={errors.vidio}
+                                    label="Vidio"
+                                    name="vidio"
+                                    error={errors.vidio}
                                 >
                                     <FileInput
                                         type="file"
@@ -893,9 +958,9 @@ const Create = () => {
                                     />
                                 </FieldGroup>
                                 <FieldGroup
-                                label="Audio"
-                                name="audio"
-                                error={errors.audio}
+                                    label="Audio"
+                                    name="audio"
+                                    error={errors.audio}
                                 >
                                     <FileInput
                                         type="file"
@@ -903,8 +968,6 @@ const Create = () => {
                                         onChange={handleFileChange}
                                     />
                                 </FieldGroup>
-
-                            
                             </>
                         )}
                     </div>

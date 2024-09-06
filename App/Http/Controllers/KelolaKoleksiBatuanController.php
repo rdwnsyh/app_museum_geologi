@@ -33,9 +33,9 @@ class KelolaKoleksiBatuanController extends Controller
           // Define the validation rules
     $rules = [
         // halaman 1 admin
-        'kategori_bmn' => 'required|string|max:255',
+        'kategori_bmn' => 'nullable|string|max:255',
         'nup_bmn' => 'required|string|max:255',
-        'tipe_bmn' => 'required|string|max:255',
+        'tipe_bmn' => 'nullable|string|max:255',
         'no_awal' => 'required|string|max:255',
         'satuan' => 'required|string|max:255',
         'kelompok_koleksi' => 'required|string|max:255',
@@ -60,8 +60,8 @@ class KelolaKoleksiBatuanController extends Controller
         'provinsi' => 'required|string|max:255',
         'kota' => 'required|string|max:255',
         'alamat' => 'required|string|max:255',
-        'latitude' => 'required|numeric|between:-90,90',
-        'longitude' => 'required|numeric|between:-180,180',
+        'latitude' => 'required|string|max:255',
+        'longitude' => 'required|string|max:255',
         'elevasi' => 'required|string|max:255',
         'peta' => 'required|string|max:255',
         'skala' => 'required|string|max:255',
@@ -74,7 +74,7 @@ class KelolaKoleksiBatuanController extends Controller
         'kolektor' => 'required|string|max:255',
         'kepemilikan_awal' => 'required|string|max:255',
         'publikasi' => 'nullable|string',
-        'url' => 'nullable|url|max:255',
+        'url' => 'nullable|max:255',
         'nilai_peroleh' => 'required|numeric|min:0',
         'nilai_buku' => 'required|numeric|min:0',
 

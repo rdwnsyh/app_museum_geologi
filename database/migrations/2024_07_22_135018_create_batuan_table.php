@@ -41,8 +41,8 @@ return new class extends Migration
             $table->string('provinsi');
             $table->string('kota');
             $table->string('alamat');
-            $table->decimal('latitude', 10, 7);
-            $table->decimal('longitude', 10, 7);
+            $table->string('latitude');
+            $table->string('longitude');
             $table->string('elevasi');
             $table->string('peta');
             $table->string('skala');
@@ -56,8 +56,8 @@ return new class extends Migration
             $table->string('kepemilikan_awal');
             $table->text('publikasi')->nullable();
             $table->string('url')->nullable();
-            $table->decimal('nilai_peroleh', 15, 2);
-            $table->decimal('nilai_buku', 15, 2);
+            $table->string('nilai_peroleh');
+            $table->string('nilai_buku');
 
             // halaman 4
             $table->string('gambar_satu')->nullable();
