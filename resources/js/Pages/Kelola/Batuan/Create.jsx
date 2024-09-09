@@ -87,17 +87,17 @@ const Create = () => {
         });
     };
 
-    const [selectedValue, setSelectedValue] = useState("");
-
-    const handleRadioChange = (value) => {
-        setSelectedValue(value);
-    };
+    // Fungsi untuk menangani perubahan pada radio button
+    const handleRuangPenyimpananChange = (e) =>
+        setData("ruang_penyimpanan", e.target.value);
+    const handleDitemukanChange = (e) => setData("ditemukan", e.target.value);
+    const handlePetaChange = (e) => setData("peta", e.target.value);
 
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">
                 <Link
-                    href={route("kelolakoleksibatuan.store")}
+                    href={route("kelolakoleksibatuan")}
                     className="text-indigo-600 hover:text-indigo-700"
                 >
                     Kelola Koleksi
@@ -245,9 +245,9 @@ const Create = () => {
                                 >
                                     <RadioButton
                                         name="ruang_penyimpanan"
+                                        selectedValue={data.ruang_penyimpanan}
+                                        onChange={handleRuangPenyimpananChange}
                                         error={errors.ruang_penyimpanan}
-                                        selectedValue={selectedValue}
-                                        onChange={handleRadioChange}
                                         options={[
                                             { value: "ST", label: "Storage" },
                                             {
@@ -568,9 +568,9 @@ const Create = () => {
                                 >
                                     <RadioButton
                                         name="ditemukan"
+                                        selectedValue={data.ditemukan}
+                                        onChange={handleDitemukanChange}
                                         error={errors.ditemukan}
-                                        selectedValue={selectedValue}
-                                        onChange={handleRadioChange}
                                         options={[
                                             {
                                                 value: "DL",
@@ -687,15 +687,15 @@ const Create = () => {
                                     />
                                 </FieldGroup>
                                 <FieldGroup
-                                    label="peta"
+                                    label="Peta"
                                     name="peta"
                                     error={errors.peta}
                                 >
                                     <RadioButton
                                         name="peta"
+                                        selectedValue={data.peta}
+                                        onChange={handlePetaChange}
                                         error={errors.peta}
-                                        selectedValue={selectedValue}
-                                        onChange={handleRadioChange}
                                         options={[
                                             { value: "RP", label: "Rupa Bumi" },
                                             { value: "BL", label: "Blad" },

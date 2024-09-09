@@ -1,44 +1,27 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+// components/RadioButton.jsx
+import React from "react";
 
 const RadioButton = ({ name, options, selectedValue, onChange, error }) => {
     return (
         <div>
-            {options.map(option => (
-                <div key={option.value} className="flex items-center mb-2">
+            {options.map((option) => (
+                <label key={option.value} className="block">
                     <input
                         type="radio"
-                        id={`${name}_${option.value}`}
                         name={name}
                         value={option.value}
                         checked={selectedValue === option.value}
-                        onChange={(e) => onChange(e.target.value)}
-                        className="form-radio text-indigo-600 focus:ring-indigo-600"
+                        onChange={onChange}
+                        className="mr-2"
                     />
-                    <label htmlFor={`${name}_${option.value}`} className="ml-2 text-sm">
-                        {option.label}
-                    </label>
-                </div>
+                    {option.label}
+                </label>
             ))}
-            {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+
+            {/* Tampilkan pesan error jika ada */}
+            {error && <div className="text-red-500 mt-1">{error}</div>}
         </div>
     );
-};
-
-RadioButton.propTypes = {
-    name: PropTypes.string.isRequired,
-    options: PropTypes.arrayOf(PropTypes.shape({
-        value: PropTypes.string.isRequired,
-        label: PropTypes.string.isRequired,
-    })).isRequired,
-    selectedValue: PropTypes.string,
-    onChange: PropTypes.func.isRequired,
-    error: PropTypes.string,
-};
-
-RadioButton.defaultProps = {
-    selectedValue: '',
-    error: '',
 };
 
 export default RadioButton;

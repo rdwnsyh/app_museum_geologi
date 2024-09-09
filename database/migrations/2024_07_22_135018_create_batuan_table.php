@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('batuan', function (Blueprint $table) {
             // halaman 1 admin
             $table->bigIncrements('id');
-            $table->string('kategori_bmn')->default('6.06.01.05.005');
+            $table->string('kategori_bmn')->default('6.06.01.05.005')->nullable(false);
             $table->string('nup_bmn');
-            $table->string('tipe_bmn')->default('Batuan');
+            $table->string('tipe_bmn')->default('Batuan')->nullable(false);
             $table->string('no_awal');
             $table->string('satuan');
-            $table->string('kelompok_koleksi');
+            $table->string('kelompok_koleksi')->default('Batuan')->nullable(false);
             $table->string('jenis_koleksi');
             $table->string('ruang_penyimpanan');
             $table->string('lokasi_penyimpanan');
@@ -50,7 +50,7 @@ return new class extends Migration
 
             // halaman 3
             $table->string('cara_peroleh');
-            $table->year('thn_peroleh');
+            $table->integer('thn_peroleh');
             $table->string('determinator');
             $table->string('kolektor');
             $table->string('kepemilikan_awal');
@@ -58,6 +58,7 @@ return new class extends Migration
             $table->string('url')->nullable();
             $table->string('nilai_peroleh');
             $table->string('nilai_buku');
+            // $table->string('status')->nullable();
 
             // halaman 4
             $table->string('gambar_satu')->nullable();
