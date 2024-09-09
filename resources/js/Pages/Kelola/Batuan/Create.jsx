@@ -115,6 +115,7 @@ const Create = () => {
                                     error={errors.kategori_bmn}
                                 >
                                     <TextInput
+                                        type ="text"
                                         name="kategori_bmn"
                                         error={errors.kategori_bmn}
                                         value={data.kategori_bmn}
@@ -132,6 +133,7 @@ const Create = () => {
                                     error={errors.nup_bmn}
                                 >
                                     <TextInput
+                                        type ="text"
                                         name="nup_bmn"
                                         error={errors.nup_bmn}
                                         value={data.nup_bmn}
@@ -146,6 +148,7 @@ const Create = () => {
                                     error={errors.tipe_bmn}
                                 >
                                     <TextInput
+                                        type ="text"
                                         name="tipe_bmn"
                                         error={errors.tipe_bmn}
                                         value={data.tipe_bmn}
@@ -160,6 +163,7 @@ const Create = () => {
                                     error={errors.no_awal}
                                 >
                                     <TextInput
+                                        type ="text"
                                         name="no_awal"
                                         error={errors.no_awal}
                                         value={data.no_awal}
@@ -174,6 +178,7 @@ const Create = () => {
                                     error={errors.satuan}
                                 >
                                     <SelectInput
+                                        type ="text"
                                         name="satuan"
                                         error={errors.satuan}
                                         value={data.satuan}
@@ -194,6 +199,7 @@ const Create = () => {
                                     error={errors.kelompok_koleksi}
                                 >
                                     <TextInput
+                                        type ="text"
                                         name="kelompok_koleksi"
                                         error={errors.kelompok_koleksi}
                                         value={data.kelompok_koleksi}
@@ -320,6 +326,7 @@ const Create = () => {
                                     error={errors.no_lajur}
                                 >
                                     <TextInput
+                                        type ="number"
                                         name="no_lajur"
                                         error={errors.no_lajur}
                                         value={data.no_lajur}
@@ -334,6 +341,7 @@ const Create = () => {
                                     error={errors.no_lemari}
                                 >
                                     <TextInput
+                                        type ="number"
                                         name="no_lemari"
                                         error={errors.no_lemari}
                                         value={data.no_lemari}
@@ -348,6 +356,7 @@ const Create = () => {
                                     error={errors.no_laci}
                                 >
                                     <TextInput
+                                        type ="number"
                                         name="no_laci"
                                         error={errors.no_laci}
                                         value={data.no_laci}
@@ -362,6 +371,7 @@ const Create = () => {
                                     error={errors.no_slot}
                                 >
                                     <TextInput
+                                        type ="number"
                                         name="no_slot"
                                         error={errors.no_slot}
                                         value={data.no_slot}
@@ -407,6 +417,7 @@ const Create = () => {
                                     error={errors.nama_koleksi}
                                 >
                                     <TextInput
+                                        type ="text"
                                         name="nama_koleksi"
                                         error={errors.nama_koleksi}
                                         value={data.nama_koleksi}
@@ -424,6 +435,7 @@ const Create = () => {
                                     error={errors.deskripsi_koleksi}
                                 >
                                     <TextArea
+                                        type ="text"
                                         name="deskripsi_koleksi"
                                         value={data.deskripsi_koleksi}
                                         onChange={(e) =>
@@ -443,6 +455,7 @@ const Create = () => {
                                     error={errors.keterangan_koleksi}
                                 >
                                     <TextArea
+                                        type ="text"
                                         name="keterangan_koleksi"
                                         value={data.keterangan_koleksi}
                                         onChange={(e) =>
@@ -550,6 +563,7 @@ const Create = () => {
                                     error={errors.nama_formasi}
                                 >
                                     <TextInput
+                                        type ="text"
                                         name="nama_formasi"
                                         error={errors.nama_formasi}
                                         value={data.nama_formasi}
@@ -590,6 +604,7 @@ const Create = () => {
                                     error={errors.pulau}
                                 >
                                     <TextInput
+                                        type ="text"
                                         name="pulau"
                                         error={errors.pulau}
                                         value={data.pulau}
@@ -604,6 +619,7 @@ const Create = () => {
                                     error={errors.provinsi}
                                 >
                                     <TextInput
+                                        type ="text"
                                         name="provinsi"
                                         error={errors.provinsi}
                                         value={data.provinsi}
@@ -618,6 +634,7 @@ const Create = () => {
                                     error={errors.kota}
                                 >
                                     <TextInput
+                                        type ="text"
                                         name="kota"
                                         error={errors.kota}
                                         value={data.kota}
@@ -633,6 +650,7 @@ const Create = () => {
                                     error={errors.alamat}
                                 >
                                     <TextArea
+                                        type ="text"
                                         name="alamat"
                                         value={data.alamat}
                                         onChange={(e) =>
@@ -650,6 +668,7 @@ const Create = () => {
                                     error={errors.latitude}
                                 >
                                     <TextInput
+                                        type ="text"
                                         name="latitude"
                                         error={errors.latitude}
                                         value={data.latitude}
@@ -664,6 +683,7 @@ const Create = () => {
                                     error={errors.longitude}
                                 >
                                     <TextInput
+                                        type ="text"
                                         name="longitude"
                                         error={errors.longitude}
                                         value={data.longitude}
@@ -733,6 +753,7 @@ const Create = () => {
                                     error={errors.lembar_peta}
                                 >
                                     <TextInput
+                                        type ="text"
                                         name="lembar_peta"
                                         error={errors.lembar_peta}
                                         value={data.lembar_peta}
@@ -782,6 +803,7 @@ const Create = () => {
                                     error={errors.thn_peroleh}
                                 >
                                     <TextInput
+                                        type ="year"
                                         name="thn_peroleh"
                                         error={errors.thn_peroleh}
                                         value={data.thn_peroleh}
@@ -799,6 +821,7 @@ const Create = () => {
                                     error={errors.determinator}
                                 >
                                     <TextInput
+                                        type ="text"
                                         name="determinator"
                                         error={errors.determinator}
                                         value={data.determinator}
@@ -816,6 +839,7 @@ const Create = () => {
                                     error={errors.kolektor}
                                 >
                                     <TextInput
+                                        type ="text"
                                         name="kolektor"
                                         error={errors.kolektor}
                                         value={data.kolektor}
@@ -830,6 +854,7 @@ const Create = () => {
                                     error={errors.kepemilikan_awal}
                                 >
                                     <TextInput
+                                        type ="text"
                                         name="kepemilikan_awal"
                                         error={errors.kepemilikan_awal}
                                         value={data.kepemilikan_awal}
@@ -847,6 +872,7 @@ const Create = () => {
                                     error={errors.publikasi}
                                 >
                                     <TextArea
+                                        type ="text"
                                         name="publikasi"
                                         value={data.publikasi}
                                         onChange={(e) =>
@@ -863,6 +889,7 @@ const Create = () => {
                                     error={errors.url}
                                 >
                                     <TextInput
+                                        type ="text"
                                         name="url"
                                         error={errors.url}
                                         value={data.url}
@@ -877,6 +904,7 @@ const Create = () => {
                                     error={errors.nilai_peroleh}
                                 >
                                     <TextInput
+                                        type ="text"
                                         name="nilai_peroleh"
                                         error={errors.nilai_peroleh}
                                         value={data.nilai_peroleh}
@@ -894,6 +922,7 @@ const Create = () => {
                                     error={errors.nilai_buku}
                                 >
                                     <TextInput
+                                        type ="text"
                                         name="nilai_buku"
                                         error={errors.nilai_buku}
                                         value={data.nilai_buku}
