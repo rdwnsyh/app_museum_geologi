@@ -66,6 +66,7 @@ const Create = () => {
     });
 
     const [step, setStep] = useState(1);
+    
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -88,8 +89,7 @@ const Create = () => {
     };
 
     // Fungsi untuk menangani perubahan pada radio button
-    const handleRuangPenyimpananChange = (e) =>
-        setData("ruang_penyimpanan", e.target.value);
+    const handleRuangPenyimpananChange = (e) => setData("ruang_penyimpanan", e.target.value);
     const handleDitemukanChange = (e) => setData("ditemukan", e.target.value);
     const handlePetaChange = (e) => setData("peta", e.target.value);
 
@@ -1002,21 +1002,22 @@ const Create = () => {
                     </div>
                     <div className="flex items-center justify-between px-8 py-4 bg-gray-100 border-t border-gray-200">
                         {step > 1 && (
-                            <button
-                                type="button"
-                                onClick={handleBack}
-                                className="btn-indigo"
-                            >
-                                Back
-                            </button>
+                           <button
+                           type="button"
+                           onClick={handleBack}
+                           className="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-900 transition"
+                       >
+                           Back
+                       </button>
                         )}
-                        <LoadingButton
-                            loading={processing}
-                            type="submit"
-                            className="btn-indigo"
-                        >
-                            {step === 4 ? "Tambah Data" : "Next"}
-                        </LoadingButton>
+                       <LoadingButton
+                           loading={processing}
+                           type="submit"
+                           className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-900 transition"
+                       >
+                           {step === 4 ? "Tambah Data" : "Next"}
+                       </LoadingButton>
+                       
                     </div>
                 </form>
             </div>

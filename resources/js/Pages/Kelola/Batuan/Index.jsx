@@ -6,39 +6,59 @@ import MainLayout from "@/Layouts/MainLayout";
 import Table from "@/Components/Table/Table";
 import SearchBar from "@/Components/SearchBar/SearchBar";
 // import { Trash2 } from "lucide-react";
+import { ArrowDownToLine } from 'lucide-react';
 
 function Index() {
-    // const { organizations } = usePage().props;
+    // const { batuan } = usePage().props;
 
     // const {
     //     data,
     //     meta: { links },
-    // } = organizations;
+    // } = batuan;
 
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">Kelola Koleksi</h1>
 
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-2 ">
                 <SearchBar /> {/* Tambahkan SearchBar di sini */}
                 {/* <FilterBar /> */}
+                <div className="flex items-center justify-end mb-2">
                 <Link
-                    className="btn-indigo focus:outline-none"
+                    className="bg-green-600 text-white py-2 px-4 mx-2 rounded hover:bg-green-900 transition"
                     href={route("kelolakoleksibatuan.create")}
                 >
-                    <span>Create</span>
-                    <span className="hidden md:inline"> Kelola Koleksi </span>
+                    
+                    <span className="hidden md:inline">+ Tambah</span>
                 </Link>
+                <Link
+                    className="bg-blue-600 text-white py-2 px-4 mx-2 rounded hover:bg-blue-900 transition"
+                    href={route("kelolakoleksibatuan.create")}
+                    
+                >
+                    <ArrowDownToLine className="w-4 h-4 mr-2" /> {/* Ikon di sebelah kiri teks */}
+                    <span className="hidden md:inline">Excel</span>
+                </Link>
+                <Link
+                    className="bg-blue-600 text-white py-2 px-4 mx-2 rounded hover:bg-blue-900 transition"
+                    href={route("kelolakoleksibatuan.create")}
+                >
+                    
+                    <ArrowDownToLine className="w-4 h-4 mr-2" /> {/* Ukuran kecil */}
+                    <span className="hidden md:inline">PDF</span>
+                </Link>
+                </div>
             </div>
 
             <Table
                 columns={[
+                    { label: "Nomor Koleksi", name: "nomor_koleksi" },
                     {
-                        label: "Nomor Koleksi",
-                        name: "name",
+                        label: "Nama Koleksi",
+                        name: "nama_koleksi",
                         renderCell: (row) => (
                             <>
-                                {/* {row.name}
+                                {/* {row.nama_koleksi}
                                 {row.deleted_at && (
                                     <Trash2
                                         size={16}
@@ -48,13 +68,12 @@ function Index() {
                             </>
                         ),
                     },
-                    { label: "Nama Koleksi", name: "city" },
-                    { label: "Tipe Koleksi", name: "phone" },
-                    { label: "Alamat Storage", name: "phone" },
+                    { label: "Tipe Koleksi", name: "tipe_koleksi" },
+                    { label: "Alamat Storage", name: "alamat_storage" },
                     { label: "Aksi", name: "alamat", colSpan: 2 },
                 ]}
                 // rows={data}
-                // getRowDetailsUrl={(row) => route("organizations.edit", row.id)}
+                // getRowDetailsUrl={(row) => route("batuan.edit", row.id)}
             />
             {/* <Pagination links={links} /> */}
         </div>
