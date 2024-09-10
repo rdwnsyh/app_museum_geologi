@@ -20,7 +20,7 @@ class KelolaKoleksiBatuanController extends Controller
         $dataBatuan = KelolaKoleksiBatuan::paginate(10); // Menampilkan 10 item per halaman
 
         // Kirim data ke view menggunakan Inertia
-        return Inertia::render('KelolaKoleksiBatuan/Index', [
+        return Inertia::render('Kelola/Batuan/Index', [
             'batuan' => $dataBatuan
         ]);
     }
