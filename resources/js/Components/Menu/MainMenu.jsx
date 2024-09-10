@@ -1,5 +1,5 @@
 import MainMenuItem from "@/Components/Menu/MainMenuItem";
-import { Building, CircleGauge, Printer, Users, HandHelping, ArchiveRestore, Warehouse, ArrowBigLeftDash, ArrowBigRightDash, Package } from "lucide-react";
+import { Building, CircleGauge, Printer, Users, HandHelping, ArchiveRestore, Warehouse, ArrowBigLeftDash, ArrowBigRightDash, Package, UserCog, CircleCheck } from "lucide-react";
 
 export default function MainMenu({ className }) {
     return (
@@ -47,12 +47,12 @@ export default function MainMenu({ className }) {
             <MainMenuItem
                 text="Manajemen Admin"
                 link="manajemenadmin"
-                icon={<Printer size={16} />}
+                icon={<UserCog size={16} />}
             />
             <MainMenuItem
                 text="Persetujuan"
                 link="persetujuan"
-                icon={<Printer size={16} />}
+                icon={<CircleCheck size={16} />}
             />
         </div>
     );

@@ -2,7 +2,7 @@ import { Link } from "@inertiajs/react";
 import { usePage } from "@inertiajs/react";
 import classNames from "classnames";
 
-export default function MainMenuItem({ icon, link, text }) {
+export default function MainMenuItem({ icon, link, text, submenu }) {
     const { url } = usePage();
     const isActive = route().current(link + "*");
     // console.log(route(link));
@@ -26,6 +26,20 @@ export default function MainMenuItem({ icon, link, text }) {
                 <div className={iconClasses}>{icon}</div>
                 <div className={textClasses}>{text}</div>
             </Link>
+            {submenu && (
+            <ul className="sub-menu pl-6">
+            {submenu.map((item, index) => (
+                <li key={index}>
+                <Link
+                    href={item.link}
+                    className="text-gray-600 hover:bg-indigo-50"
+                >
+                    {item.text}
+                </Link>
+                </li>
+            ))}
+            </ul>
+            )}
            
         </div>
     );
