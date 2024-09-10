@@ -87,17 +87,34 @@ class KelolaKoleksiBatuanController extends Controller
             'nilai_buku' => 'required|string|max:255',
 
             // Halaman 4
-            'gambar_satu' => 'nullable|string',
-            'gambar_dua' => 'nullable|string',
-            'gambar_tiga' => 'nullable|string',
-            'vidio' => 'nullable|string',
-            'audio' => 'nullable|string',
+            // Validasi gambar
+            'gambar_satu' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048', // Maksimal ukuran 2MB
+            'gambar_dua'  => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'gambar_tiga' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
         ], [
             'kategori_bmn.required' => 'Kategori BMN harus diisi.',
             'nup_bmn.required' => 'NUP BMN harus diisi.',
-            // tambah pesan untuk mengisi form
+             // Custom message untuk validasi gambar
+            'gambar_satu.image' => 'File harus berupa gambar.',
+            'gambar_satu.mimes' => 'Format gambar harus: jpeg, png, jpg, svg.',
+            'gambar_satu.max' => 'Ukuran gambar maksimal 2MB.',
+        // Tambahkan custom message lain jika diperlukan
         ]);
     
+
+     // Proses upload gambar
+      // Proses upload gambar
+      if ($request->hasFile('gambar_satu')) {
+        $validatedData['gambar_satu'] = $request->file('gambar_satu')->store('koleksi_batuan', 'public');
+    }
+
+    if ($request->hasFile('gambar_dua')) {
+        $validatedData['gambar_dua'] = $request->file('gambar_dua')->store('koleksi_batuan', 'public');
+    }
+
+    if ($request->hasFile('gambar_tiga')) {
+        $validatedData['gambar_tiga'] = $request->file('gambar_tiga')->store('koleksi_batuan', 'public');
+    }
 
     // Dump atau debug data yang telah divalidasi
     // dd($validatedData);

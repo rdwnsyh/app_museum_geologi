@@ -58,20 +58,39 @@ const Create = () => {
         nilai_buku: "",
 
         // halaman 4
-        gambar_satu: "",
-        gambar_dua: "",
-        gambar_tiga: "",
-        vidio: "",
-        audio: "",
+        gambar_satu: null, // Ubah dari null menjadi null
+        gambar_dua: null,
+        gambar_tiga: null,
+        vidio: null,
+        audio: null,
     });
 
     const [step, setStep] = useState(1);
-    
 
     function handleSubmit(e) {
         e.preventDefault();
+        const formData = new FormData();
+        // Menambahkan data form lainnya
+        for (const [key, value] of Object.entries(data)) {
+            if (value instanceof File) {
+                formData.append(key, value);
+            } else {
+                formData.append(key, value);
+            }
+        }
         if (step === 4) {
-            post(route("kelolakoleksibatuan.store"));
+            post(route("kelolakoleksibatuan.store"), {
+                data: formData,
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+                onSuccess: () => {
+                    // Handle success
+                },
+                onError: (errors) => {
+                    // Handle errors
+                },
+            });
         } else {
             setStep(step + 1);
         }
@@ -81,15 +100,13 @@ const Create = () => {
         setStep(step - 1);
     }
 
-    const handleFileChange = (e) => {
-        setData({
-            ...data,
-            photo: e.target.files[0], // Ambil file yang dipilih
-        });
+    const handleFileChange = (name, file) => {
+        setData(name, file);
     };
 
     // Fungsi untuk menangani perubahan pada radio button
-    const handleRuangPenyimpananChange = (e) => setData("ruang_penyimpanan", e.target.value);
+    const handleRuangPenyimpananChange = (e) =>
+        setData("ruang_penyimpanan", e.target.value);
     const handleDitemukanChange = (e) => setData("ditemukan", e.target.value);
     const handlePetaChange = (e) => setData("peta", e.target.value);
 
@@ -115,7 +132,7 @@ const Create = () => {
                                     error={errors.kategori_bmn}
                                 >
                                     <TextInput
-                                        type ="text"
+                                        type="text"
                                         name="kategori_bmn"
                                         error={errors.kategori_bmn}
                                         value={data.kategori_bmn}
@@ -133,7 +150,7 @@ const Create = () => {
                                     error={errors.nup_bmn}
                                 >
                                     <TextInput
-                                        type ="text"
+                                        type="text"
                                         name="nup_bmn"
                                         error={errors.nup_bmn}
                                         value={data.nup_bmn}
@@ -148,7 +165,7 @@ const Create = () => {
                                     error={errors.tipe_bmn}
                                 >
                                     <TextInput
-                                        type ="text"
+                                        type="text"
                                         name="tipe_bmn"
                                         error={errors.tipe_bmn}
                                         value={data.tipe_bmn}
@@ -163,7 +180,7 @@ const Create = () => {
                                     error={errors.no_awal}
                                 >
                                     <TextInput
-                                        type ="text"
+                                        type="text"
                                         name="no_awal"
                                         error={errors.no_awal}
                                         value={data.no_awal}
@@ -178,7 +195,7 @@ const Create = () => {
                                     error={errors.satuan}
                                 >
                                     <SelectInput
-                                        type ="text"
+                                        type="text"
                                         name="satuan"
                                         error={errors.satuan}
                                         value={data.satuan}
@@ -199,7 +216,7 @@ const Create = () => {
                                     error={errors.kelompok_koleksi}
                                 >
                                     <TextInput
-                                        type ="text"
+                                        type="text"
                                         name="kelompok_koleksi"
                                         error={errors.kelompok_koleksi}
                                         value={data.kelompok_koleksi}
@@ -326,7 +343,7 @@ const Create = () => {
                                     error={errors.no_lajur}
                                 >
                                     <TextInput
-                                        type ="number"
+                                        type="number"
                                         name="no_lajur"
                                         error={errors.no_lajur}
                                         value={data.no_lajur}
@@ -341,7 +358,7 @@ const Create = () => {
                                     error={errors.no_lemari}
                                 >
                                     <TextInput
-                                        type ="number"
+                                        type="number"
                                         name="no_lemari"
                                         error={errors.no_lemari}
                                         value={data.no_lemari}
@@ -356,7 +373,7 @@ const Create = () => {
                                     error={errors.no_laci}
                                 >
                                     <TextInput
-                                        type ="number"
+                                        type="number"
                                         name="no_laci"
                                         error={errors.no_laci}
                                         value={data.no_laci}
@@ -371,7 +388,7 @@ const Create = () => {
                                     error={errors.no_slot}
                                 >
                                     <TextInput
-                                        type ="number"
+                                        type="number"
                                         name="no_slot"
                                         error={errors.no_slot}
                                         value={data.no_slot}
@@ -417,7 +434,7 @@ const Create = () => {
                                     error={errors.nama_koleksi}
                                 >
                                     <TextInput
-                                        type ="text"
+                                        type="text"
                                         name="nama_koleksi"
                                         error={errors.nama_koleksi}
                                         value={data.nama_koleksi}
@@ -435,7 +452,7 @@ const Create = () => {
                                     error={errors.deskripsi_koleksi}
                                 >
                                     <TextArea
-                                        type ="text"
+                                        type="text"
                                         name="deskripsi_koleksi"
                                         value={data.deskripsi_koleksi}
                                         onChange={(e) =>
@@ -455,7 +472,7 @@ const Create = () => {
                                     error={errors.keterangan_koleksi}
                                 >
                                     <TextArea
-                                        type ="text"
+                                        type="text"
                                         name="keterangan_koleksi"
                                         value={data.keterangan_koleksi}
                                         onChange={(e) =>
@@ -563,7 +580,7 @@ const Create = () => {
                                     error={errors.nama_formasi}
                                 >
                                     <TextInput
-                                        type ="text"
+                                        type="text"
                                         name="nama_formasi"
                                         error={errors.nama_formasi}
                                         value={data.nama_formasi}
@@ -604,7 +621,7 @@ const Create = () => {
                                     error={errors.pulau}
                                 >
                                     <TextInput
-                                        type ="text"
+                                        type="text"
                                         name="pulau"
                                         error={errors.pulau}
                                         value={data.pulau}
@@ -619,7 +636,7 @@ const Create = () => {
                                     error={errors.provinsi}
                                 >
                                     <TextInput
-                                        type ="text"
+                                        type="text"
                                         name="provinsi"
                                         error={errors.provinsi}
                                         value={data.provinsi}
@@ -634,7 +651,7 @@ const Create = () => {
                                     error={errors.kota}
                                 >
                                     <TextInput
-                                        type ="text"
+                                        type="text"
                                         name="kota"
                                         error={errors.kota}
                                         value={data.kota}
@@ -650,7 +667,7 @@ const Create = () => {
                                     error={errors.alamat}
                                 >
                                     <TextArea
-                                        type ="text"
+                                        type="text"
                                         name="alamat"
                                         value={data.alamat}
                                         onChange={(e) =>
@@ -668,7 +685,7 @@ const Create = () => {
                                     error={errors.latitude}
                                 >
                                     <TextInput
-                                        type ="text"
+                                        type="text"
                                         name="latitude"
                                         error={errors.latitude}
                                         value={data.latitude}
@@ -683,7 +700,7 @@ const Create = () => {
                                     error={errors.longitude}
                                 >
                                     <TextInput
-                                        type ="text"
+                                        type="text"
                                         name="longitude"
                                         error={errors.longitude}
                                         value={data.longitude}
@@ -753,7 +770,7 @@ const Create = () => {
                                     error={errors.lembar_peta}
                                 >
                                     <TextInput
-                                        type ="text"
+                                        type="text"
                                         name="lembar_peta"
                                         error={errors.lembar_peta}
                                         value={data.lembar_peta}
@@ -803,7 +820,7 @@ const Create = () => {
                                     error={errors.thn_peroleh}
                                 >
                                     <TextInput
-                                        type ="year"
+                                        type="year"
                                         name="thn_peroleh"
                                         error={errors.thn_peroleh}
                                         value={data.thn_peroleh}
@@ -821,7 +838,7 @@ const Create = () => {
                                     error={errors.determinator}
                                 >
                                     <TextInput
-                                        type ="text"
+                                        type="text"
                                         name="determinator"
                                         error={errors.determinator}
                                         value={data.determinator}
@@ -839,7 +856,7 @@ const Create = () => {
                                     error={errors.kolektor}
                                 >
                                     <TextInput
-                                        type ="text"
+                                        type="text"
                                         name="kolektor"
                                         error={errors.kolektor}
                                         value={data.kolektor}
@@ -854,7 +871,7 @@ const Create = () => {
                                     error={errors.kepemilikan_awal}
                                 >
                                     <TextInput
-                                        type ="text"
+                                        type="text"
                                         name="kepemilikan_awal"
                                         error={errors.kepemilikan_awal}
                                         value={data.kepemilikan_awal}
@@ -872,7 +889,7 @@ const Create = () => {
                                     error={errors.publikasi}
                                 >
                                     <TextArea
-                                        type ="text"
+                                        type="text"
                                         name="publikasi"
                                         value={data.publikasi}
                                         onChange={(e) =>
@@ -889,7 +906,7 @@ const Create = () => {
                                     error={errors.url}
                                 >
                                     <TextInput
-                                        type ="text"
+                                        type="text"
                                         name="url"
                                         error={errors.url}
                                         value={data.url}
@@ -904,7 +921,7 @@ const Create = () => {
                                     error={errors.nilai_peroleh}
                                 >
                                     <TextInput
-                                        type ="text"
+                                        type="text"
                                         name="nilai_peroleh"
                                         error={errors.nilai_peroleh}
                                         value={data.nilai_peroleh}
@@ -922,7 +939,7 @@ const Create = () => {
                                     error={errors.nilai_buku}
                                 >
                                     <TextInput
-                                        type ="text"
+                                        type="text"
                                         name="nilai_buku"
                                         error={errors.nilai_buku}
                                         value={data.nilai_buku}
@@ -948,8 +965,12 @@ const Create = () => {
                                         type="file"
                                         name="gambar_satu"
                                         error={errors.gambar_satu}
-                                        value={data.gambar_satu}
-                                        onChange={handleFileChange}
+                                        onFileChange={(file) =>
+                                            handleFileChange(
+                                                "gambar_satu",
+                                                file
+                                            )
+                                        }
                                     />
                                 </FieldGroup>
 
@@ -961,9 +982,13 @@ const Create = () => {
                                     <FileInput
                                         type="file"
                                         name="gambar_dua"
-                                        onChange={handleFileChange}
+                                        error={errors.gambar_dua}
+                                        onFileChange={(file) =>
+                                            handleFileChange("gambar_dua", file)
+                                        }
                                     />
                                 </FieldGroup>
+
                                 <FieldGroup
                                     label="Gambar 3"
                                     name="gambar_tiga"
@@ -972,7 +997,13 @@ const Create = () => {
                                     <FileInput
                                         type="file"
                                         name="gambar_tiga"
-                                        onChange={handleFileChange}
+                                        error={errors.gambar_tiga}
+                                        onFileChange={(file) =>
+                                            handleFileChange(
+                                                "gambar_tiga",
+                                                file
+                                            )
+                                        }
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -1002,22 +1033,21 @@ const Create = () => {
                     </div>
                     <div className="flex items-center justify-between px-8 py-4 bg-gray-100 border-t border-gray-200">
                         {step > 1 && (
-                           <button
-                           type="button"
-                           onClick={handleBack}
-                           className="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-900 transition"
-                       >
-                           Back
-                       </button>
+                            <button
+                                type="button"
+                                onClick={handleBack}
+                                className="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-900 transition"
+                            >
+                                Back
+                            </button>
                         )}
-                       <LoadingButton
-                           loading={processing}
-                           type="submit"
-                           className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-900 transition"
-                       >
-                           {step === 4 ? "Tambah Data" : "Next"}
-                       </LoadingButton>
-                       
+                        <LoadingButton
+                            loading={processing}
+                            type="submit"
+                            className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-900 transition"
+                        >
+                            {step === 4 ? "Tambah Data" : "Next"}
+                        </LoadingButton>
                     </div>
                 </form>
             </div>

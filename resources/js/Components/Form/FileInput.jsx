@@ -1,9 +1,6 @@
-import React, { useState, useRef } from 'react';
-import { useForm } from '@inertiajs/inertia-react'; // Import useForm from Inertia
-import { fileSize } from '@/utils/FileSize'; // Ensure this path is correct
+import React, { useState, useRef } from "react";
 
-export default function FileInput({ name, error }) {
-    const { data, setData } = useForm({ [name]: null });
+export default function FileInput({ name, error, onFileChange }) {
     const fileInput = useRef(null);
     const [file, setFile] = useState(null);
 
@@ -13,7 +10,7 @@ export default function FileInput({ name, error }) {
 
     function handleRemove() {
         setFile(null);
-        setData(name, null);
+        onFileChange(null);
     }
 
     function handleChange(e) {
@@ -21,15 +18,15 @@ export default function FileInput({ name, error }) {
         const selectedFile = files[0] || null;
 
         setFile(selectedFile);
-        setData(name, selectedFile);
+        onFileChange(selectedFile);
     }
 
     return (
         <div
             className={`form-input w-full focus:outline-none focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 border-gray-300 rounded p-0 ${
                 error
-                    ? 'border-red-400 focus:border-red-400 focus:ring-red-400'
-                    : ''
+                    ? "border-red-400 focus:border-red-400 focus:ring-red-400"
+                    : ""
             }`}
         >
             <input
@@ -42,7 +39,7 @@ export default function FileInput({ name, error }) {
             {!file && (
                 <div className="p-2">
                     <BrowseButton text="Pilih File" onClick={handleBrowse} />
-                    Input file 
+                    Input file
                 </div>
             )}
             {file && (
@@ -50,7 +47,7 @@ export default function FileInput({ name, error }) {
                     <div className="flex-1 pr-1">
                         {file.name}
                         <span className="ml-1 text-xs text-gray-600">
-                            ({fileSize(file.size)})
+                            ({(file.size / 1024).toFixed(2)} KB)
                         </span>
                     </div>
                     <BrowseButton text="Remove" onClick={handleRemove} />
