@@ -66,6 +66,7 @@ return new class extends Migration
             $table->string('gambar_tiga')->nullable();
             $table->string('vidio')->nullable();
             $table->string('audio')->nullable();
+            $table->enum('status', ['ada', 'tidak ada'])->default('ada')->nullable();
             $table->timestamps();
         });        
     }
