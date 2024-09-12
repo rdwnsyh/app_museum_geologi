@@ -45,11 +45,14 @@ class KelolaKoleksiBatuanController extends Controller
             // Halaman 1
             'kategori_bmn' => 'nullable|string|max:255' ?? '6.06.01.05.005',
             'nup_bmn' => 'required|string|max:255',
+            'no_regis' => 'required|string|max:255',
+            'no_inventaris' => 'required|string|max:255',
             'tipe_bmn' => 'nullable|string|max:255' ?? 'Batuan',
             'no_awal' => 'required|string|max:255',
             'satuan' => 'required|string|max:255',
             'kelompok_koleksi' => 'nullable|string|max:255' ?? 'Batuan',
             'jenis_koleksi' => 'required|string|max:255',
+            'kode_koleksi' => 'required|string|max:255',
             'ruang_penyimpanan' => 'required|string|max:255',
             'lokasi_penyimpanan' => 'required|string|max:255',
             'lantai' => 'required|string|max:255',
@@ -99,6 +102,7 @@ class KelolaKoleksiBatuanController extends Controller
 
             // Validasi video
             'video' => 'nullable|mimes:mp4,avi,mov|max:10240', // Maksimal 10MB
+            'status' => 'nullable|in:ada,tidak ada',
         ], [
             'kategori_bmn.required' => 'Kategori BMN harus diisi.',
             'nup_bmn.required' => 'NUP BMN harus diisi.',
@@ -113,9 +117,8 @@ class KelolaKoleksiBatuanController extends Controller
         ]);
     
 
-     // Proses upload gambar
       // Proses upload gambar
-      if ($request->hasFile('gambar_satu')) {
+    if ($request->hasFile('gambar_satu')) {
         $validatedData['gambar_satu'] = $request->file('gambar_satu')->store('koleksi_batuan', 'public');
     }
 
@@ -158,7 +161,7 @@ class KelolaKoleksiBatuanController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(KelolaKoleksiBatuan $kelolaKoleksiBatuan)
+    public function edit(KelolaKoleksiBatuan $kelolaKoleksiBatuan): Response
     {
         // Menampilkan halaman edit dengan data yang diambil
         return Inertia::render('Kelola/Batuan/Edit', [
@@ -169,17 +172,20 @@ class KelolaKoleksiBatuanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, KelolaKoleksiBatuan $kelolaKoleksiBatuan)
+    public function update(Request $request, KelolaKoleksiBatuan $kelolaKoleksiBatuan): RedirectResponse
     {
          // Validasi data input termasuk gambar, audio, dan video
          $validatedData = $request->validate([
             'kategori_bmn' => 'nullable|string|max:255' ?? '6.06.01.05.005',
             'nup_bmn' => 'required|string|max:255',
+            'no_regis' => 'required|string|max:255',
+            'no_inventaris' => 'required|string|max:255',
             'tipe_bmn' => 'nullable|string|max:255' ?? 'Batuan',
             'no_awal' => 'required|string|max:255',
             'satuan' => 'required|string|max:255',
             'kelompok_koleksi' => 'nullable|string|max:255' ?? 'Batuan',
             'jenis_koleksi' => 'required|string|max:255',
+            'kode_koleksi' => 'required|string|max:255',
             'ruang_penyimpanan' => 'required|string|max:255',
             'lokasi_penyimpanan' => 'required|string|max:255',
             'lantai' => 'required|string|max:255',
@@ -209,7 +215,7 @@ class KelolaKoleksiBatuanController extends Controller
 
             // Halaman 3
             'cara_peroleh' => 'required|string|max:255',
-            'thn_peroleh' => 'required|integer|min:1900',
+            'thn_peroleh' => 'required|integer|min:1000',
             'determinator' => 'required|string|max:255',
             'kolektor' => 'required|string|max:255',
             'kepemilikan_awal' => 'required|string|max:255',
@@ -291,7 +297,7 @@ class KelolaKoleksiBatuanController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(KelolaKoleksiBatuan $kelolaKoleksiBatuan)
+    public function destroy(KelolaKoleksiBatuan $kelolaKoleksiBatuan): RedirectResponse
     {
          // Hapus gambar, audio, dan video jika ada
          if ($kelolaKoleksiBatuan->gambar_satu) {
