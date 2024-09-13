@@ -9,10 +9,10 @@ class KelolaKoleksiSumberDayaGeologi extends Model
 {
     use HasFactory;
 
-     // Define the table name (optional if it follows Laravel's naming convention)
+      // Specify the table name
     protected $table = 'sumber_daya_geologi';
 
-    // Specify which fields are mass assignable (fillable)
+    // Specify the fields that are mass assignable
     protected $fillable = [
         // halaman 1
         // 'kategori_bmn',
@@ -69,6 +69,32 @@ class KelolaKoleksiSumberDayaGeologi extends Model
         'gambar_tiga',
         'vidio',
         'audio',
-        'status',
+        // 'status',
     ];
+
+    // Accessors for images (if needed, customize to get the full URL)
+    public function getGambarSatuUrlAttribute()
+    {
+        return $this->gambar_satu ? asset('storage/' . $this->gambar_satu) : null;
+    }
+
+    public function getGambarDuaUrlAttribute()
+    {
+        return $this->gambar_dua ? asset('storage/' . $this->gambar_dua) : null;
+    }
+
+    public function getGambarTigaUrlAttribute()
+    {
+        return $this->gambar_tiga ? asset('storage/' . $this->gambar_tiga) : null;
+    }
+
+    public function getVidioUrlAttribute()
+    {
+        return $this->vidio ? asset('storage/' . $this->vidio) : null;
+    }
+
+    public function getAudioUrlAttribute()
+    {
+        return $this->audio ? asset('storage/' . $this->audio) : null;
+    }
 }

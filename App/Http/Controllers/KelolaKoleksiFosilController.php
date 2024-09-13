@@ -49,37 +49,37 @@ class KelolaKoleksiFosilController extends Controller
         'satuan' => 'required|string|max:255',
         'kelompok_koleksi' => 'nullable|string|max:255' ?? 'Fosil',
         'jenis_koleksi' => 'required|string|max:255',
-        'sub_jenis_koleksi' => 'nullable|string|max:255',
-        'kode_jenis_koleksi' => 'nullable|string|max:255',
+        'kode_koleksi' => 'required|string|max:255',
         'ruang_penyimpanan' => 'required|string|max:255',
         'lokasi_penyimpanan' => 'required|string|max:255',
         'lantai' => 'required|string|max:255',
-        'lajur' => 'required|integer',
-        'laci' => 'required|integer',
-        'slot' => 'required|integer',
+        'no_lajur' => 'required|integer',
+        'no_kemari' => 'required|integer',
+        'no_laci' => 'required|integer',
+        'no_slot' => 'required|integer',
 
         // halaman 2
         'kondisi' => 'required|string|max:255',
         'nama_koleksi' => 'required|string|max:255',
         'deskripsi_koleksi' => 'required|string',
-        'keterangan' => 'nullable|string',
+        'keterangan_koleksi' => 'nullable|string',
         'umur_geologi' => 'required|string|max:255',
         'nama_formasi' => 'required|string|max:255',
         'ditemukan' => 'required|string|max:255',
         'pulau' => 'required|string|max:255',
         'provinsi' => 'required|string|max:255',
         'kota' => 'required|string|max:255',
-        'determinator' => 'required|string|max:255',
-        'latitude' => 'nullable|numeric',
-        'longitude' => 'nullable|numeric',
-        'elevasi' => 'nullable|integer',
-        'peta' => 'nullable|string|max:255',
-        'skala' => 'nullable|string|max:255',
-        'lembar_peta' => 'nullable|string|max:255',
+        'latitude' => 'required|string|max:255',
+        'longitude' => 'required|string|max:255',
+        'elevasi' => 'required|string|max:255',
+        'peta' => 'required|string|max:255',
+        'skala' => 'required|string|max:255',
+        'lembar_peta' => 'required|string|max:255',
 
         // halaman 3
         'cara_peroleh' => 'required|string|max:255',
         'thn_peroleh' => 'required|integer|min:1000',
+        'determinator' => 'required|string|max:255',
         'kolektor' => 'required|string|max:255',
         'kepemilikan_awal' => 'required|string|max:255',
         'publikasi' => 'nullable|string',
@@ -167,24 +167,24 @@ class KelolaKoleksiFosilController extends Controller
      */
     public function update(Request $request, KelolaKoleksiFosil $kelolaKoleksiFosil): RedirectResponse
     {
-        // Validate the input data
+        // Validasi input
     $validatedData = $request->validate([
         // halaman 1
         'kategori_bmn' => 'nullable|string|max:255' ?? '6.06.01.06.001',
         'no_reg' => 'required|string|max:255',
-        'tipe_bmn' => 'nullable|string|in:Fosil' ?? 'Fosil',
+        'tipe_bmn' => 'nullable|string|max:255' ?? 'Fosil',
         'no_inventaris' => 'required|string|max:255',
         'satuan' => 'required|string|max:255',
-        'kelompok_koleksi' => 'required|string|in:Fosil' ?? 'Fosil',
+        'kelompok_koleksi' => 'nullable|string|max:255' ?? 'Fosil',
         'jenis_koleksi' => 'required|string|max:255',
-        'sub_jenis_koleksi' => 'nullable|string|max:255',
-        'kode_jenis_koleksi' => 'nullable|string|max:255',
+        'kode_koleksi' => 'required|string|max:255',
         'ruang_penyimpanan' => 'required|string|max:255',
         'lokasi_penyimpanan' => 'required|string|max:255',
-        'no_lantai' => 'required|string|max:255',
-        'no_lajur' => 'required|string|max:255',
-        'no_laci' => 'required|string|max:255',
-        'no_slot' => 'required|string|max:255',
+        'lantai' => 'required|string|max:255',
+        'no_lajur' => 'required|integer',
+        'no_kemari' => 'required|integer',
+        'no_laci' => 'required|integer',
+        'no_slot' => 'required|integer',
 
         // halaman 2
         'kondisi' => 'required|string|max:255',
@@ -197,7 +197,6 @@ class KelolaKoleksiFosilController extends Controller
         'pulau' => 'required|string|max:255',
         'provinsi' => 'required|string|max:255',
         'kota' => 'required|string|max:255',
-        'determinator' => 'required|string|max:255',
         'latitude' => 'required|string|max:255',
         'longitude' => 'required|string|max:255',
         'elevasi' => 'required|string|max:255',
@@ -208,6 +207,7 @@ class KelolaKoleksiFosilController extends Controller
         // halaman 3
         'cara_peroleh' => 'required|string|max:255',
         'thn_peroleh' => 'required|integer|min:1000',
+        'determinator' => 'required|string|max:255',
         'kolektor' => 'required|string|max:255',
         'kepemilikan_awal' => 'required|string|max:255',
         'publikasi' => 'nullable|string',
@@ -215,21 +215,15 @@ class KelolaKoleksiFosilController extends Controller
         'nilai_peroleh' => 'required|string|max:255',
         'nilai_buku' => 'required|string|max:255',
 
-        // Halaman 4
-        // Validasi gambar
-        'gambar_satu' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048', // Maksimal ukuran 2MB
-        'gambar_dua'  => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+        // halaman 4
+        'gambar_satu' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+        'gambar_dua' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
         'gambar_tiga' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
-
-        // Validasi audio
-        'audio' => 'nullable|mimes:mp3,wav,ogg|max:5120', // Maksimal 5MB
-
-        // Validasi video
-        'video' => 'nullable|mimes:mp4,avi,mov|max:10240', // Maksimal 10MB
+        'audio' => 'nullable|mimes:mp3,wav,ogg|max:5120',
+        'video' => 'nullable|mimes:mp4,avi,mov|max:10240',
     ], [
         'kategori_bmn.required' => 'Kategori BMN harus diisi.',
         'nup_bmn.required' => 'NUP BMN harus diisi.',
-         // Custom message untuk validasi gambar
         'gambar_satu.image' => 'File harus berupa gambar.',
         'gambar_satu.mimes' => 'Format gambar harus: jpeg, png, jpg, svg.',
         'gambar_satu.max' => 'Ukuran gambar maksimal 2MB.',
@@ -239,44 +233,45 @@ class KelolaKoleksiFosilController extends Controller
         'video.max' => 'Ukuran maksimal file video adalah 10MB.',
     ]);
 
-    // Proses upload gambar, audio, dan video
+    // Proses upload gambar jika ada
     if ($request->hasFile('gambar_satu')) {
-        // Hapus gambar lama jika ada
         if ($kelolaKoleksiFosil->gambar_satu) {
-            Storage::delete($kelolaKoleksiFosil->gambar_satu);
+            Storage::disk('public')->delete($kelolaKoleksiFosil->gambar_satu);
         }
-        $validatedData['gambar_satu'] = $request->file('gambar_satu')->store('koleksi_fosil');
+        $validatedData['gambar_satu'] = $request->file('gambar_satu')->store('koleksi_fosil', 'public');
     }
 
     if ($request->hasFile('gambar_dua')) {
         if ($kelolaKoleksiFosil->gambar_dua) {
-            Storage::delete($kelolaKoleksiFosil->gambar_dua);
+            Storage::disk('public')->delete($kelolaKoleksiFosil->gambar_dua);
         }
-        $validatedData['gambar_dua'] = $request->file('gambar_dua')->store('koleksi_fosil');
+        $validatedData['gambar_dua'] = $request->file('gambar_dua')->store('koleksi_fosil', 'public');
     }
 
     if ($request->hasFile('gambar_tiga')) {
         if ($kelolaKoleksiFosil->gambar_tiga) {
-            Storage::delete($kelolaKoleksiFosil->gambar_tiga);
+            Storage::disk('public')->delete($kelolaKoleksiFosil->gambar_tiga);
         }
-        $validatedData['gambar_tiga'] = $request->file('gambar_tiga')->store('koleksi_fosil');
+        $validatedData['gambar_tiga'] = $request->file('gambar_tiga')->store('koleksi_fosil', 'public');
     }
 
+    // Proses upload audio jika ada
     if ($request->hasFile('audio')) {
         if ($kelolaKoleksiFosil->audio) {
-            Storage::delete($kelolaKoleksiFosil->audio);
+            Storage::disk('public')->delete($kelolaKoleksiFosil->audio);
         }
         $validatedData['audio'] = $request->file('audio')->store('koleksi_fosil/audio');
     }
 
+    // Proses upload video jika ada
     if ($request->hasFile('video')) {
         if ($kelolaKoleksiFosil->video) {
-            Storage::delete($kelolaKoleksiFosil->video);
+            Storage::disk('public')->delete($kelolaKoleksiFosil->video);
         }
         $validatedData['video'] = $request->file('video')->store('koleksi_fosil/video');
     }
 
-    // Update the existing record
+    // Update data dalam database
     $kelolaKoleksiFosil->update($validatedData);
 
     return redirect()->route('kelolakoleksifosil')->with('success', 'Data koleksi fosil berhasil diperbarui.');
@@ -286,33 +281,35 @@ class KelolaKoleksiFosilController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(KelolaKoleksiFosil $kelolaKoleksiFosil): RedirectResponse
-    {
-         // Hapus gambar, audio, dan video jika ada
-        if ($kelolaKoleksiFosil->gambar_satu) {
-            Storage::delete($kelolaKoleksiFosil->gambar_satu);
-        }
-
-        if ($kelolaKoleksiFosil->gambar_dua) {
-            Storage::delete($kelolaKoleksiFosil->gambar_dua);
-        }
-
-        if ($kelolaKoleksiFosil->gambar_tiga) {
-            Storage::delete($kelolaKoleksiFosil->gambar_tiga);
-        }
-
-        if ($kelolaKoleksiFosil->audio) {
-            Storage::delete($kelolaKoleksiFosil->audio);
-        }
-
-        if ($kelolaKoleksiFosil->video) {
-            Storage::delete($kelolaKoleksiFosil->video);
-        }
-
-        // Hapus data dari database
-        $kelolaKoleksiFosil->delete();
-
-        // Redirect ke halaman indeks dengan pesan sukses
-        return redirect()->route('kelolakoleksifosil')
-            ->with('success', 'Data koleksi fosil berhasil dihapus.');
+{
+    // Hapus file gambar jika ada
+    if ($kelolaKoleksiFosil->gambar_satu) {
+        Storage::disk('public')->delete($kelolaKoleksiFosil->gambar_satu);
     }
+
+    if ($kelolaKoleksiFosil->gambar_dua) {
+        Storage::disk('public')->delete($kelolaKoleksiFosil->gambar_dua);
+    }
+
+    if ($kelolaKoleksiFosil->gambar_tiga) {
+        Storage::disk('public')->delete($kelolaKoleksiFosil->gambar_tiga);
+    }
+
+    // Hapus file audio jika ada
+    if ($kelolaKoleksiFosil->audio) {
+        Storage::disk('public')->delete($kelolaKoleksiFosil->audio);
+    }
+
+    // Hapus file video jika ada
+    if ($kelolaKoleksiFosil->video) {
+        Storage::disk('public')->delete($kelolaKoleksiFosil->video);
+    }
+
+    // Hapus data dari database
+    $kelolaKoleksiFosil->delete();
+
+    // Redirect kembali dengan pesan sukses
+    return redirect()->route('kelolakoleksifosil')->with('success', 'Data koleksi fosil berhasil dihapus.');
+}
+
 }

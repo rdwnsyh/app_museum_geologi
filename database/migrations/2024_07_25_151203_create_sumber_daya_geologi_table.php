@@ -12,14 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sumber_daya_geologi', function (Blueprint $table) {
-            // halaman 1 47 field
+            // halaman 1
             $table->bigIncrements('id');
             $table->string('kategori_bmn')->default('6.02.02.99.999')->nullable(false);
             $table->string('nup_bmn');
-            // tambah field
             $table->string('no_regis');
             $table->string('no_inventaris');
-
             $table->string('tipe_bmn')->default('Sumber Daya Geologi')->nullable(false); 
             $table->string('no_awal');
             $table->string('satuan');
