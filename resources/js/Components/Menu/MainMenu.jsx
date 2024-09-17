@@ -1,3 +1,4 @@
+import React from "react";
 import MainMenuItem from "@/Components/Menu/MainMenuItem";
 import { 
     CircleGauge, 
@@ -46,12 +47,12 @@ export default function MainMenu({ className }) {
             />
             <MainMenuItem
                 text="Kelola Koleksi"
-                link="kelolakoleksibatuan" 
+                link="kelolakoleksibatuan"
                 icon={<Package size={14} />}
                 submenu={[
-                    { text: "Batu dan Mineral", link: "kelolakoleksibatuan/batuan" }, 
-                    { text: "Fosil", link: "kelolakoleksibatuan/fosil" },
-                    { text: "Sumber Daya Geologi", link: "kelolakoleksibatuan/sumberdayageologi" },
+                    { text: "Batu dan Mineral", link: "kelolakoleksibatuan" },
+                    { text: "Fosil", link: "kelolakoleksifosil" },
+                    { text: "Sumber Daya Geologi", link: "kelolakoleksisumberdayageologi" },
                 ]}
             />
             <MainMenuItem

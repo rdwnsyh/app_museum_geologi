@@ -6,10 +6,18 @@ import SearchBar from "@/Components/SearchBar/SearchBar";
 import Pagination from "@/Components/Pagination/Pagination";
 import { ArrowDownToLine } from "lucide-react";
 
+// Define the handleDelete function if you plan to use it
+const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this item?")) {
+        // Implement deletion logic here
+        console.log(`Delete item with id: ${id}`);
+    }
+};
+
 function Index() {
     const { fosil } = usePage().props;
 
-    // Pastikan bahwa batuan dan meta tersedia sebelum diakses
+    // Ensure that fosil and meta are available before accessing them
     const data = fosil?.data || [];
     const links = fosil?.meta?.links || [];
 
@@ -17,25 +25,25 @@ function Index() {
         <div>
             <h1 className="mb-8 text-3xl font-bold">Kelola Koleksi Fosil</h1>
 
-            <div className="flex items-center justify-between mb-2 ">
-                <SearchBar /> {/* Tambahkan SearchBar di sini */}
-                <div className="flex items-center justify-end mb-2">
+            <div className="flex items-center justify-between mb-4">
+                <SearchBar /> {/* Add SearchBar here */}
+                <div className="flex items-center space-x-2">
                     <Link
-                        className="bg-green-600 text-white py-2 px-4 mx-2 rounded hover:bg-green-900 transition flex items-center"
+                        className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-900 transition flex items-center"
                         href={route("kelolakoleksibatuan.create")}
                     >
                         <span className="hidden md:inline">+ Tambah</span>
                     </Link>
                     <Link
-                        className="bg-blue-600 text-white py-2 px-4 mx-2 rounded hover:bg-blue-900 transition flex items-center"
-                        href="#"
+                        className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-900 transition flex items-center"
+                        href={route("kelolakoleksibatuan.export", { format: 'excel' })}
                     >
                         <ArrowDownToLine className="w-4 h-4 mr-2" />
                         <span className="hidden md:inline">Excel</span>
                     </Link>
                     <Link
-                        className="bg-blue-600 text-white py-2 px-4 mx-2 rounded hover:bg-blue-900 transition flex items-center"
-                        href="#"
+                        className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-900 transition flex items-center"
+                        href={route("kelolakoleksibatuan.export", { format: 'pdf' })}
                     >
                         <ArrowDownToLine className="w-4 h-4 mr-2" />
                         <span className="hidden md:inline">PDF</span>
@@ -43,7 +51,7 @@ function Index() {
                 </div>
             </div>
 
-            {/* Tabel untuk menampilkan data koleksi */}
+            {/* Table to display collection data */}
             <Table
                 columns={[
                     { label: "Nomor Koleksi", name: "id" },
@@ -55,24 +63,21 @@ function Index() {
                         name: "aksi",
                         renderCell: (row) => (
                             <div className="flex space-x-2">
-
-                                {/* Button Hapus */}
+                                {/* Button for detailed info */}
                                 <button
                                     onClick={() => handleDelete(row.id)}
-                                    className="bg-green-600 text-white py-1 px-3 rounded hover:bg-red-900 transition"
+                                    className="bg-green-600 text-white py-1 px-3 rounded hover:bg-green-800 transition"
                                 >
                                     Info Lengkap
                                 </button>
                                 
-                                {/* Button Edit */}
+                                {/* Button for editing */}
                                 <Link
                                     href={route("kelolakoleksibatuan.edit", row.id)}
-                                    className="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-700 transition"
+                                    className="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-600 transition"
                                 >
                                     Edit
                                 </Link>
-            
-                                
                             </div>
                         ),
                     },

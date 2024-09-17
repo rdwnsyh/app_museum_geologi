@@ -13,8 +13,10 @@ function Index() {
     const links = batuan?.meta?.links || [];
 
     const handleDelete = (id) => {
-        // Implementasikan logika penghapusan di sini
-        console.log(`Hapus item dengan id: ${id}`);
+        if (window.confirm("Are you sure you want to delete this item?")) {
+            // Implement deletion logic here
+            console.log(`Delete item with id: ${id}`);
+        }
     };
 
     return (

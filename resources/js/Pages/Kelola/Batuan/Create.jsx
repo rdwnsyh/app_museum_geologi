@@ -14,11 +14,18 @@ const Create = () => {
         // halaman 1 admin
         kategori_bmn: "",
         nup_bmn: "",
+        // tambah field
+        no_regis: "",
+        no_inventaris: "",
+
         tipe_bmn: "",
         no_awal: "",
         satuan: "",
         kelompok_koleksi: "",
         jenis_koleksi: "",
+        // tambah field
+        kode_koleksi: "",
+
         ruang_penyimpanan: "",
         lokasi_penyimpanan: "",
         lantai: "",
@@ -159,6 +166,41 @@ const Create = () => {
                                         }
                                     />
                                 </FieldGroup>
+
+                                <FieldGroup
+                                    label="Nomor Registrasi"
+                                    name="no_regis"
+                                    error={errors.no_regis}
+                                >
+                                    <TextInput
+                                        type="number"
+                                        name="no_regis"
+                                        error={errors.no_regis}
+                                        value={data.no_regis}
+                                        onChange={(e) =>
+                                            setData(
+                                                "no_regis",
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                </FieldGroup>
+
+                                <FieldGroup
+                                    label="Nomor Inventaris"
+                                    error={errors.no_inventaris}
+                                >
+                                    <TextInput
+                                        type="text"
+                                        name="no_inventaris"
+                                        error={errors.no_inventaris}
+                                        value={data.no_inventaris}
+                                        onChange={(e) =>
+                                            setData("no_inventaris", e.target.value)
+                                        }
+                                    />
+                                </FieldGroup>
+
                                 <FieldGroup
                                     label="Tipe BMN"
                                     name="tipe_bmn"
@@ -261,6 +303,23 @@ const Create = () => {
                                         ]}
                                     />
                                 </FieldGroup>
+
+                                <FieldGroup
+                                    label="Kode Koleksi"
+                                    name="kode_koleksi"
+                                    error={errors.kode_koleksi}
+                                >
+                                    <TextInput
+                                        type="number"
+                                        name="kode_koleksi"
+                                        error={errors.kode_koleksi}
+                                        value={data.kode_koleksi}
+                                        onChange={(e) =>
+                                            setData("kode_koleksi", e.target.value)
+                                        }
+                                    />
+                                </FieldGroup>
+
                                 <FieldGroup
                                     label="Ruang Penyimpanan"
                                     name="ruang_penyimpanan"
