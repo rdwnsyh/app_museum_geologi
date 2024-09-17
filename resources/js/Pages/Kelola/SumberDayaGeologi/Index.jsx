@@ -4,32 +4,27 @@ import MainLayout from "@/Layouts/MainLayout";
 import Table from "@/Components/Table/Table";
 import SearchBar from "@/Components/SearchBar/SearchBar";
 import Pagination from "@/Components/Pagination/Pagination";
-import { ArrowDownToLine, Plus } from "lucide-react";
+import { ArrowDownToLine } from "lucide-react";
 
 function Index() {
     const { batuan } = usePage().props;
-    
+
+    // Pastikan bahwa batuan dan meta tersedia sebelum diakses
     const data = batuan?.data || [];
     const links = batuan?.meta?.links || [];
-
-    const handleDelete = (id) => {
-        // Implementasikan logika penghapusan di sini
-        console.log(`Hapus item dengan id: ${id}`);
-    };
 
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">Kelola Koleksi</h1>
 
-            <div className="flex items-center justify-between mb-2">
-                <SearchBar />
+            <div className="flex items-center justify-between mb-2 ">
+                <SearchBar /> {/* Tambahkan SearchBar di sini */}
                 <div className="flex items-center justify-end mb-2">
                     <Link
-                        className="bg-green-600 text-white py-2 px-2 mx-2 rounded hover:bg-green-900 transition flex items-center"
+                        className="bg-green-600 text-white py-2 px-4 mx-2 rounded hover:bg-green-900 transition flex items-center"
                         href={route("kelolakoleksibatuan.create")}
                     >
-                        <Plus className="w-4 h-4 mr-2" />
-                        <span className="hidden md:inline">Tambah</span>
+                        <span className="hidden md:inline">+ Tambah</span>
                     </Link>
                     <Link
                         className="bg-blue-600 text-white py-2 px-4 mx-2 rounded hover:bg-blue-900 transition flex items-center"
@@ -48,6 +43,7 @@ function Index() {
                 </div>
             </div>
 
+            {/* Tabel untuk menampilkan data koleksi */}
             <Table
                 columns={[
                     { label: "Nomor Koleksi", name: "id" },
@@ -59,18 +55,24 @@ function Index() {
                         name: "aksi",
                         renderCell: (row) => (
                             <div className="flex space-x-2">
+
+                                {/* Button Hapus */}
                                 <button
                                     onClick={() => handleDelete(row.id)}
                                     className="bg-green-600 text-white py-1 px-3 rounded hover:bg-red-900 transition"
                                 >
                                     Info Lengkap
                                 </button>
+                                
+                                {/* Button Edit */}
                                 <Link
                                     href={route("kelolakoleksibatuan.edit", row.id)}
                                     className="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-700 transition"
                                 >
                                     Edit
                                 </Link>
+            
+                                
                             </div>
                         ),
                     },
@@ -81,11 +83,15 @@ function Index() {
                 }
             />
 
+            {/* Pagination Links */}
             {links.length > 0 && <Pagination links={links} />}
         </div>
     );
 }
 
+/**
+ * Persistent Layout (Inertia.js)
+ */
 Index.layout = (page) => <MainLayout title="Kelola Koleksi">{page}</MainLayout>;
 
 export default Index;

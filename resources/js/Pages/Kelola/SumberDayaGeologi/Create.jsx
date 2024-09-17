@@ -1,73 +1,61 @@
-import React from "react";
-import { Head, Link, usePage, useForm, router } from "@inertiajs/react";
+import React, { useState } from "react";
+import { Link, useForm } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
-import DeleteButton from "@/Components/Button/DeleteButton";
 import LoadingButton from "@/Components/Button/LoadingButton";
 import TextInput from "@/Components/Form/TextInput";
 import SelectInput from "@/Components/Form/SelectInput";
-import TrashedMessage from "@/Components/Messages/TrashedMessage";
-import Table from "@/Components/Table/Table";
 import FieldGroup from "@/Components/Form/FieldGroup";
+import FileInput from "@/Components/Form/FileInput";
+import RadioButton from "@/Components/Form/Radiobutton";
+import TextArea from "@/Components/Form/Textarea";
 
-const Edit = () => {
-    const { Batuan } = usePage().props;
-    // const { data, setData, errors, put, processing } = useForm({
-    //     name: organization.name || "",
-    //     email: organization.email || "",
-    //     phone: organization.phone || "",
-    //     address: organization.address || "",
-    //     city: organization.city || "",
-    //     region: organization.region || "",
-    //     country: organization.country || "",
-    //     postal_code: organization.postal_code || "",
-    // });
-
+const Create = () => {
     const { data, setData, errors, post, processing, setError } = useForm({
         // halaman 1 admin
-        kategori_bmn: Batuan.kategori_bmn || "",
-        nup_bmn: Batuan.nup_bmn || "",
-        tipe_bmn: Batuan.tipe_bmn || "",
-        no_awal: Batuan.no_awal || "",
-        satuan: Batuan.satuan || "",
-        kelompok_koleksi: Batuan. kelompok_koleksi || "",
-        jenis_koleksi: Batuan.jenis_koleksi || "",
-        ruang_penyimpanan: Batuan.ruang_penyimpanan || "",
-        lokasi_penyimpanan: Batuan.lokasi_penyimpanan || "",
-        lantai: Batuan.lantai || "",
-        no_lajur: Batuan.no_lajur || "",
-        no_lemari: Batuan.no_lemari || "",
-        no_laci: Batuan.no_laci ||"",
-        no_slot: Batuan.no_slot || "",
+        kategori_bmn: "",
+        nup_bmn: "",
+        tipe_bmn: "",
+        no_awal: "",
+        satuan: "",
+        kelompok_koleksi: "",
+        jenis_koleksi: "",
+        ruang_penyimpanan: "",
+        lokasi_penyimpanan: "",
+        lantai: "",
+        no_lajur: "",
+        no_lemari: "",
+        no_laci: "",
+        no_slot: "",
 
         // halaman 2
-        kondisi: Batuan.kondisi || "",
-        nama_koleksi: Batuan.nama_koleksi || "",
-        deskripsi_koleksi: Batuan.deskripsi_koleksi || "",
-        keterangan_koleksi: Batuan.keterangan_koleksi || "",
-        umur_geologi: Batuan.umur_geologi || "",
-        nama_formasi: Batuan.nama_formasi || "",
-        ditemukan: Batuan.ditemukan || "",
-        pulau: Batuan.pulau ||"",
-        provinsi: Batuan.provinsi || "",
-        kota: Batuan.kota || "",
-        alamat: Batuan.alamat || "",
-        latitude: Batuan.latitude || "",
-        longitude: Batuan.longitude || "",
-        elevasi: Batuan.elevasi || "",
-        peta: Batuan.peta || "",
-        skala: Batuan.skala || "",
-        lembar_peta: Batuan.lembar_peta || "",
+        kondisi: "",
+        nama_koleksi: "",
+        deskripsi_koleksi: "",
+        keterangan_koleksi: "",
+        umur_geologi: "",
+        nama_formasi: "",
+        ditemukan: "",
+        pulau: "",
+        provinsi: "",
+        kota: "",
+        alamat: "",
+        latitude: "",
+        longitude: "",
+        elevasi: "",
+        peta: "",
+        skala: "",
+        lembar_peta: "",
 
         // halaman 3
-        cara_peroleh: Batuan.cara_peroleh || "",
-        thn_peroleh: Batuan.thn_peroleh || "",
-        determinator: Batuan.determinator || "",
-        kolektor: Batuan.kolektor || "",
-        kepemilikan_awal: Batuan.kepemilikan_awal || "",
-        publikasi: Batuan.publikasi || "",
-        url: Batuan.url || "",
-        nilai_peroleh: Batuan.nilai_peroleh || "",
-        nilai_buku: Batuan.nilai_buku || "",
+        cara_peroleh: "",
+        thn_peroleh: "",
+        determinator: "",
+        kolektor: "",
+        kepemilikan_awal: "",
+        publikasi: "",
+        url: "",
+        nilai_peroleh: "",
+        nilai_buku: "",
 
         // halaman 4
         gambar_satu: null, // Ubah dari null menjadi null
@@ -77,45 +65,65 @@ const Edit = () => {
         audio: null,
     });
 
+    const [step, setStep] = useState(1);
+
     function handleSubmit(e) {
         e.preventDefault();
-        put(route("Batuan.update", Batuan.id));
-    }
-
-    function destroy() {
-        if (confirm("Are you sure you want to delete this organization?")) {
-            router.delete(route("Batuan.destroy", Batuan.id));
+        const formData = new FormData();
+        // Menambahkan data form lainnya
+        for (const [key, value] of Object.entries(data)) {
+            if (value instanceof File) {
+                formData.append(key, value);
+            } else {
+                formData.append(key, value);
+            }
+        }
+        if (step === 4) {
+            post(route("kelolakoleksibatuan.store"), {
+                data: formData,
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+                onSuccess: () => {
+                    // Handle success
+                },
+                onError: (errors) => {
+                    // Handle errors
+                },
+            });
+        } else {
+            setStep(step + 1);
         }
     }
 
-    function restore() {
-        if (confirm("Are you sure you want to restore this Batuan?")) {
-            router.put(route("Batuan.restore", Batuan.id));
-        }
+    function handleBack() {
+        setStep(step - 1);
     }
+
+    const handleFileChange = (name, file) => {
+        setData(name, file);
+    };
+
+    // Fungsi untuk menangani perubahan pada radio button
+    const handleRuangPenyimpananChange = (e) =>
+        setData("ruang_penyimpanan", e.target.value);
+    const handleDitemukanChange = (e) => setData("ditemukan", e.target.value);
+    const handlePetaChange = (e) => setData("peta", e.target.value);
 
     return (
         <div>
-            <Head title={data.name} />
             <h1 className="mb-8 text-3xl font-bold">
                 <Link
-                    href={route("organizations")}
+                    href={route("kelolakoleksibatuan")}
                     className="text-indigo-600 hover:text-indigo-700"
                 >
-                    Organizations
+                    Kelola Koleksi
                 </Link>
-                <span className="mx-2 font-medium text-indigo-600">/</span>
-                {data.name}
+                <span className="font-medium text-indigo-600"> /</span> Create
             </h1>
-            {organization.deleted_at && (
-                <TrashedMessage
-                    message="This organization has been deleted."
-                    onRestore={restore}
-                />
-            )}
             <div className="max-w-3xl overflow-hidden bg-white rounded shadow">
                 <form onSubmit={handleSubmit}>
-                <div className="grid gap-10 p-10 lg:grid-cols-2">
+                    <div className="grid gap-10 p-10 lg:grid-cols-2">
                         {step === 1 && (
                             <>
                                 <FieldGroup
@@ -1023,38 +1031,32 @@ const Edit = () => {
                             </>
                         )}
                     </div>
-                    <div className="flex items-center px-8 py-4 bg-gray-100 border-t border-gray-200">
-                        {!organization.deleted_at && (
-                            <DeleteButton onDelete={destroy}>
-                                Delete Batuan
-                            </DeleteButton>
+                    <div className="flex items-center justify-between px-8 py-4 bg-gray-100 border-t border-gray-200">
+                        {step > 1 && (
+                            <button
+                                type="button"
+                                onClick={handleBack}
+                                className="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-900 transition"
+                            >
+                                Back
+                            </button>
                         )}
                         <LoadingButton
                             loading={processing}
                             type="submit"
-                            className="ml-auto btn-indigo"
+                            className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-900 transition"
                         >
-                            Update Batuan
+                            {step === 4 ? "Tambah Data" : "Next"}
                         </LoadingButton>
                     </div>
                 </form>
             </div>
-            <h2 className="mt-12 mb-6 text-2xl font-bold">Contacts</h2>
-            <Table
-                columns={[
-                    { label: "Nomor Koleksi", name: "id" },
-                    { label: "Nama Koleksi", name: "nama_koleksi" },
-                    { label: "Tipe Koleksi", name: "tipe_bmn" },
-                    { label: "Alamat Storage", name: "alamat" },
-                    
-                ]}
-                rows={Batuan.Batuan}
-                getRowDetailsUrl={(row) => route("Batuan.edit", row.id)}
-            />
         </div>
     );
 };
 
-Edit.layout = (page) => <MainLayout children={page} />;
+Create.layout = (page) => (
+    <MainLayout title="Tambah Organization" children={page} />
+);
 
-export default Edit;
+export default Create;
