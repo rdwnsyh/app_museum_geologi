@@ -17,57 +17,64 @@ const Edit = () => {
 
     const { data, setData, errors, post, processing, setError } = useForm({
         // halaman 1 admin
-        kategori_bmn: "",
-        nup_bmn: "",
-        tipe_bmn: "",
-        no_awal: "",
-        satuan: "",
-        kelompok_koleksi: "",
-        jenis_koleksi: "",
-        ruang_penyimpanan: "",
-        lokasi_penyimpanan: "",
-        lantai: "",
-        no_lajur: "",
-        no_lemari: "",
-        no_laci: "",
-        no_slot: "",
+        kategori_bmn: batuan.kategori_bmn || "",
+        nup_bmn: batuan.nup_bmn || "",
+         // tambah field
+         no_regis: batuan.no_regis || "",
+         no_inventaris: batuan.no_inventaris || "",
+ 
+        tipe_bmn: batuan.tipe_bmn || "",
+        no_awal: batuan.no_awal || "",
+        satuan: batuan.satuan || "",
+        kelompok_koleksi: batuan.kelompok_koleksi || "",
+        jenis_koleksi: batuan.jenis_koleksi || "",
+        // tambah field
+        kode_koleksi: batuan.kode_koleksi || "",
+
+        ruang_penyimpanan: batuan.ruang_penyimpanan || "",
+        lokasi_penyimpanan: batuan.lokasi_penyimpanan || "",
+        lantai: batuan.lantai || "",
+        no_lajur: batuan.no_lajur || "",
+        no_lemari: batuan.no_lemari || "",
+        no_laci: batuan.no_laci || "",
+        no_slot: batuan.no_slot || "",
 
         // halaman 2
-        kondisi: "",
-        nama_koleksi: "",
-        deskripsi_koleksi: "",
-        keterangan_koleksi: "",
-        umur_geologi: "",
-        nama_formasi: "",
-        ditemukan: "",
-        pulau: "",
-        provinsi: "",
-        kota: "",
-        alamat: "",
-        latitude: "",
-        longitude: "",
-        elevasi: "",
-        peta: "",
-        skala: "",
-        lembar_peta: "",
+        kondisi: batuan.kondisi || "",
+        nama_koleksi: batuan.nama_koleksi || "",
+        deskripsi_koleksi: batuan.deskripsi_koleksi || "",
+        keterangan_koleksi: batuan.keterangan_koleksi || "",
+        umur_geologi: batuan.umur_geologi || "",
+        nama_formasi: batuan.nama_formasi || "",
+        ditemukan: batuan.ditemukan || "",
+        pulau: batuan.pulau || "",
+        provinsi: batuan.provinsi || "",
+        kota: batuan.kota || "",
+        alamat: batuan.alamat || "",
+        latitude: batuan.latitude || "",
+        longitude: batuan.longitude || "",
+        elevasi: batuan.elevasi || "",
+        peta: batuan.peta || "",
+        skala: batuan.skala || "",
+        lembar_peta: batuan.lembar_peta || "",
 
         // halaman 3
-        cara_peroleh: "",
-        thn_peroleh: "",
-        determinator: "",
-        kolektor: "",
-        kepemilikan_awal: "",
-        publikasi: "",
-        url: "",
-        nilai_peroleh: "",
-        nilai_buku: "",
+        cara_peroleh: batuan.cara_peroleh || "",
+        thn_peroleh: batuan.thn_peroleh || "",
+        determinator: batuan.determinator || "",
+        kolektor: batuan.kolektor || "",
+        kepemilikan_awal: batuan.kepemilikan_awal || "",
+        publikasi: batuan.publikasi || "",
+        url: batuan.url || "",
+        nilai_peroleh: batuan.nilai_peroleh || "",
+        nilai_buku: batuan.nilai_buku || "",
 
         // halaman 4
-        gambar_satu: null, // Ubah dari null menjadi null
-        gambar_dua: null,
-        gambar_tiga: null,
-        vidio: null,
-        audio: null,
+        gambar_satu: batuan.gambar_satu || null, // Ubah dari null menjadi null
+        gambar_dua: batuan.gambar_dua || null,
+        gambar_tiga: batuan.gambar_tiga || null,
+        vidio: batuan.vidio || null,
+        audio: batuan.audio || null,
     });
 
     const [step, setStep] = useState(1);
@@ -135,7 +142,7 @@ const Edit = () => {
 
     return (
         <div>
-            <Head title={data.nama_koleksi} />
+            <Head title={data.kategori_bmn} />
             <h1 className="mb-8 text-3xl font-bold">
                 <Link
                     href={route("kelolakoleksibatuan")}
@@ -144,7 +151,7 @@ const Edit = () => {
                     Kelola Koleksi Bantuan
                 </Link>
                 <span className="mx-2 font-medium text-indigo-600">/</span>
-                {data.nama_koleksi}
+                {data.kategori_bmn}
             </h1>
             {batuan?.deleted_at && (
                 <TrashedMessage
@@ -191,6 +198,41 @@ const Edit = () => {
                                         }
                                     />
                                 </FieldGroup>
+
+                                <FieldGroup
+                                    label="Nomor Registrasi"
+                                    name="no_regis"
+                                    error={errors.no_regis}
+                                >
+                                    <TextInput
+                                        type="number"
+                                        name="no_regis"
+                                        error={errors.no_regis}
+                                        value={data.no_regis}
+                                        onChange={(e) =>
+                                            setData(
+                                                "no_regis",
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                </FieldGroup>
+
+                                <FieldGroup
+                                    label="Nomor Inventaris"
+                                    error={errors.no_inventaris}
+                                >
+                                    <TextInput
+                                        type="text"
+                                        name="no_inventaris"
+                                        error={errors.no_inventaris}
+                                        value={data.no_inventaris}
+                                        onChange={(e) =>
+                                            setData("no_inventaris", e.target.value)
+                                        }
+                                    />
+                                </FieldGroup>
+
                                 <FieldGroup
                                     label="Tipe BMN"
                                     name="tipe_bmn"
@@ -293,6 +335,23 @@ const Edit = () => {
                                         ]}
                                     />
                                 </FieldGroup>
+
+                                <FieldGroup
+                                    label="Kode Koleksi"
+                                    name="kode_koleksi"
+                                    error={errors.kode_koleksi}
+                                >
+                                    <TextInput
+                                        type="number"
+                                        name="kode_koleksi"
+                                        error={errors.kode_koleksi}
+                                        value={data.kode_koleksi}
+                                        onChange={(e) =>
+                                            setData("kode_koleksi", e.target.value)
+                                        }
+                                    />
+                                </FieldGroup>
+
                                 <FieldGroup
                                     label="Ruang Penyimpanan"
                                     name="ruang_penyimpanan"
