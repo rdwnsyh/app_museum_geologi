@@ -52,7 +52,7 @@ function Index() {
 
             <Table
                 columns={[
-                    { label: "Nomor Koleksi", name: "id" },
+                    { label: "Koleksi Batuan", name: "id" },
                     { label: "Nama Koleksi", name: "nama_koleksi" },
                     { label: "Tipe Koleksi", name: "tipe_bmn" },
                     { label: "Alamat Storage", name: "alamat" },
@@ -61,18 +61,24 @@ function Index() {
                         name: "aksi",
                         renderCell: (row) => (
                             <div className="flex space-x-2">
-                                <button
-                                    onClick={() => handleDelete(row.id)}
-                                    className="bg-green-600 text-white py-1 px-3 rounded hover:bg-red-900 transition"
+                                 <Link
+                                    href={route("kelolakoleksibatuan.edit", row.id)} // Change to show details
+                                    className="bg-green-600 text-white py-1 px-3 rounded hover:bg-green-700 transition"
                                 >
                                     Info Lengkap
-                                </button>
+                                </Link>
                                 <Link
                                     href={route("kelolakoleksibatuan.edit", row.id)}
                                     className="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-700 transition"
                                 >
                                     Edit
                                 </Link>
+                                <button
+                                    onClick={() => handleDelete(row.id)}
+                                    className="bg-red-600 text-white py-1 px-3 rounded hover:bg-red-900 transition"
+                                >
+                                    Delete
+                                </button>
                             </div>
                         ),
                     },

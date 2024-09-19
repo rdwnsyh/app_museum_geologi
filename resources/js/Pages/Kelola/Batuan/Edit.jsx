@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Head, Link, usePage, useForm, router } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
-import DeleteButton from "@/Components/Button/DeleteButton";
+// import DeleteButton from "@/Components/Button/DeleteButton";
 import LoadingButton from "@/Components/Button/LoadingButton";
 import TextInput from "@/Components/Form/TextInput";
 import SelectInput from "@/Components/Form/SelectInput";
@@ -13,145 +13,128 @@ import RadioButton from "@/Components/Form/Radiobutton";
 import TextArea from "@/Components/Form/Textarea";
 
 const Edit = () => {
-    const { batuan } = usePage().props;
+    const { batuan } = usePage().props || {};
+    console.log(batuan);
 
-    const { data, setData, errors, post, processing, setError } = useForm({
-        // halaman 1 admin
-        kategori_bmn: batuan.kategori_bmn || "",
-        nup_bmn: batuan.nup_bmn || "",
-         // tambah field
-         no_regis: batuan.no_regis || "",
-         no_inventaris: batuan.no_inventaris || "",
- 
-        tipe_bmn: batuan.tipe_bmn || "",
-        no_awal: batuan.no_awal || "",
-        satuan: batuan.satuan || "",
-        kelompok_koleksi: batuan.kelompok_koleksi || "",
-        jenis_koleksi: batuan.jenis_koleksi || "",
-        // tambah field
-        kode_koleksi: batuan.kode_koleksi || "",
+    const { data, setData, errors, post, put, processing, setError } = useForm({
 
-        ruang_penyimpanan: batuan.ruang_penyimpanan || "",
-        lokasi_penyimpanan: batuan.lokasi_penyimpanan || "",
-        lantai: batuan.lantai || "",
-        no_lajur: batuan.no_lajur || "",
-        no_lemari: batuan.no_lemari || "",
-        no_laci: batuan.no_laci || "",
-        no_slot: batuan.no_slot || "",
+        //halaman 1
+        id: batuan?.id || '',
+        kategori_bmn: batuan?.kategori_bmn || '',
+        nup_bmn: batuan?.nup_bmn || '',
+        no_regis: batuan?.no_regis || '',
+        no_inventaris: batuan?.no_inventaris || '',
+        tipe_bmn: batuan?.tipe_bmn || '',
+        no_awal: batuan?.no_awal || '',
+        satuan: batuan?.satuan || '',
+        kelompok_koleksi: batuan?.kelompok_koleksi || '',
+        jenis_koleksi: batuan?.jenis_koleksi || '',
+        kode_koleksi: batuan?.kode_koleksi || '',
+        ruang_penyimpanan: batuan?.ruang_penyimpanan || '',
+        lokasi_penyimpanan: batuan?.lokasi_penyimpanan || '',
+        lantai: batuan?.lantai || '',
+        no_lajur: batuan?.no_lajur || '',
+        no_lemari: batuan?.no_lemari || '',
+        no_laci: batuan?.no_laci || '',
+        no_slot: batuan?.no_slot || '',
 
-        // halaman 2
-        kondisi: batuan.kondisi || "",
-        nama_koleksi: batuan.nama_koleksi || "",
-        deskripsi_koleksi: batuan.deskripsi_koleksi || "",
-        keterangan_koleksi: batuan.keterangan_koleksi || "",
-        umur_geologi: batuan.umur_geologi || "",
-        nama_formasi: batuan.nama_formasi || "",
-        ditemukan: batuan.ditemukan || "",
-        pulau: batuan.pulau || "",
-        provinsi: batuan.provinsi || "",
-        kota: batuan.kota || "",
-        alamat: batuan.alamat || "",
-        latitude: batuan.latitude || "",
-        longitude: batuan.longitude || "",
-        elevasi: batuan.elevasi || "",
-        peta: batuan.peta || "",
-        skala: batuan.skala || "",
-        lembar_peta: batuan.lembar_peta || "",
+        //halaman 2
+        kondisi: batuan?.kondisi || '',
+        nama_koleksi: batuan?.nama_koleksi || '',
+        deskripsi_koleksi: batuan?.deskripsi_koleksi || '',
+        keterangan_koleksi: batuan?.keterangan_koleksi || '',
+        umur_geologi: batuan?.umur_geologi || '',
+        nama_formasi: batuan?.nama_formasi || '',
+        ditemukan: batuan?.ditemukan || '',
+        pulau: batuan?.pulau || '',
+        provinsi: batuan?.provinsi || '',
+        kota: batuan?.kota || '',
+        alamat: batuan?.alamat || '',
+        latitude: batuan?.latitude || '',
+        longitude: batuan?.longitude || '',
+        elevasi: batuan?.elevasi || '',
+        peta: batuan?.peta || '',
+        skala: batuan?.skala || '',
+        lembar_peta: batuan?.lembar_peta || '',
 
-        // halaman 3
-        cara_peroleh: batuan.cara_peroleh || "",
-        thn_peroleh: batuan.thn_peroleh || "",
-        determinator: batuan.determinator || "",
-        kolektor: batuan.kolektor || "",
-        kepemilikan_awal: batuan.kepemilikan_awal || "",
-        publikasi: batuan.publikasi || "",
-        url: batuan.url || "",
-        nilai_peroleh: batuan.nilai_peroleh || "",
-        nilai_buku: batuan.nilai_buku || "",
+        //halaman 3
+        cara_peroleh: batuan?.cara_peroleh || '',
+        thn_peroleh: batuan?.thn_peroleh || '',
+        determinator: batuan?.determinator || '',
+        kolektor: batuan?.kolektor || '',
+        kepemilikan_awal: batuan?.kepemilikan_awal || '',
+        publikasi: batuan?.publikasi || '',
+        url: batuan?.url || '',
+        nilai_peroleh: batuan?.nilai_peroleh || '',
+        nilai_buku: batuan?.nilai_buku || '',
 
-        // halaman 4
-        gambar_satu: batuan.gambar_satu || null, // Ubah dari null menjadi null
-        gambar_dua: batuan.gambar_dua || null,
-        gambar_tiga: batuan.gambar_tiga || null,
-        vidio: batuan.vidio || null,
-        audio: batuan.audio || null,
+        //halaman 4
+        gambar_satu: batuan?.gambar_satu || null,
+        gambar_dua: batuan?.gambar_dua || null,
+        gambar_tiga: batuan?.gambar_tiga || null,
+        vidio: batuan?.vidio || null,
+        audio: batuan?.audio || null,
     });
 
     const [step, setStep] = useState(1);
 
-    function handleSubmit(e) {
+    const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData();
-        // Menambahkan data form lainnya
         for (const [key, value] of Object.entries(data)) {
-            if (value instanceof File) {
-                formData.append(key, value);
-            } else {
-                formData.append(key, value);
-            }
+            formData.append(key, value instanceof File ? value : value);
         }
+    
         if (step === 4) {
-            post(route("kelolakoleksibatuan.store"), {
-                data: formData,
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
+            put(route("batuan.update", batuan?.id), formData, {
                 onSuccess: () => {
                     // Handle success
                 },
                 onError: (errors) => {
-                    // Handle errors
+                    setError(errors);
                 },
             });
         } else {
             setStep(step + 1);
         }
-    }
+    };
+    
+    const handleBack = () => {
+        setStep(step - 1);
+    };
 
     const handleFileChange = (name, file) => {
         setData(name, file);
     };
 
-    // Fungsi untuk menangani perubahan pada radio button
-    const handleRuangPenyimpananChange = (e) =>
-        setData("ruang_penyimpanan", e.target.value);
+    const handleRuangPenyimpananChange = (e) => setData("ruang_penyimpanan", e.target.value);
     const handleDitemukanChange = (e) => setData("ditemukan", e.target.value);
     const handlePetaChange = (e) => setData("peta", e.target.value);
 
+    // const destroy = () => {
+    //     if (confirm("Are you sure you want to delete this Batuan?")) {
+    //         router.delete(route("batuan.destroy", batuan.id));
+    //     }
+    // };
 
-    function handleBack() {
-        setStep(step - 1);
-    }
-
-    function handleSubmit(e) {
-        e.preventDefault();
-        put(route("batuan.update", batuan.id));
-    }
-
-    function destroy() {
-        if (confirm("Are you sure you want to delete this Batuan?")) {
-            router.delete(route("Batuan.destroy", batuan.id));
-        }
-    }
-
-    function restore() {
+    const restore = () => {
         if (confirm("Are you sure you want to restore this Batuan?")) {
-            router.put(route("Batuan.restore", batuan.id));
+            router.put(route("batuan.restore", batuan.id));
         }
-    }
+    };
 
     return (
         <div>
-            <Head title={data.kategori_bmn} />
+            <Head title={`edit ${batuan?.nama_koleksi}`} />
             <h1 className="mb-8 text-3xl font-bold">
                 <Link
                     href={route("kelolakoleksibatuan")}
                     className="text-indigo-600 hover:text-indigo-700"
                 >
-                    Kelola Koleksi Bantuan
+                    Edit Kelola Koleksi Bantuan
                 </Link>
                 <span className="mx-2 font-medium text-indigo-600">/</span>
-                {data.kategori_bmn}
+                {batuan?.nama_koleksi}
             </h1>
             {batuan?.deleted_at && (
                 <TrashedMessage
@@ -165,12 +148,31 @@ const Edit = () => {
                 <div className="grid gap-10 p-10 lg:grid-cols-2">
                         {step === 1 && (
                             <>
+                              <FieldGroup
+                                    label="Koleksi Batuan"
+                                    name="id"
+                                    error={errors.id}
+                                >
+                                    <TextInput
+                                        id="id" 
+                                        name="id"
+                                        error={errors.id}
+                                        value={data.id}
+                                        onChange={(e) =>
+                                            setData(
+                                                "id",
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                </FieldGroup>
                                 <FieldGroup
                                     label="Kategori BMN"
                                     name="kategori_bmn"
                                     error={errors.kategori_bmn}
                                 >
                                     <TextInput
+                                        //id="kategori_bmn"     
                                         type="text"
                                         name="kategori_bmn"
                                         error={errors.kategori_bmn}
@@ -186,9 +188,11 @@ const Edit = () => {
 
                                 <FieldGroup
                                     label="Nup BMN"
+                                    name="nup_bmn"
                                     error={errors.nup_bmn}
                                 >
                                     <TextInput
+                                        //id="nup_bmn"
                                         type="text"
                                         name="nup_bmn"
                                         error={errors.nup_bmn}
@@ -205,6 +209,7 @@ const Edit = () => {
                                     error={errors.no_regis}
                                 >
                                     <TextInput
+                                        //id="no_regis"
                                         type="number"
                                         name="no_regis"
                                         error={errors.no_regis}
@@ -220,9 +225,11 @@ const Edit = () => {
 
                                 <FieldGroup
                                     label="Nomor Inventaris"
+                                    name="no_inventaris"
                                     error={errors.no_inventaris}
                                 >
                                     <TextInput
+                                        //id="no_inventaris"
                                         type="text"
                                         name="no_inventaris"
                                         error={errors.no_inventaris}
@@ -239,6 +246,7 @@ const Edit = () => {
                                     error={errors.tipe_bmn}
                                 >
                                     <TextInput
+                                        //id="tipe_bmn"
                                         type="text"
                                         name="tipe_bmn"
                                         error={errors.tipe_bmn}
@@ -254,6 +262,7 @@ const Edit = () => {
                                     error={errors.no_awal}
                                 >
                                     <TextInput
+                                        //id="no_awal"
                                         type="text"
                                         name="no_awal"
                                         error={errors.no_awal}
@@ -269,6 +278,7 @@ const Edit = () => {
                                     error={errors.satuan}
                                 >
                                     <SelectInput
+                                        //id="satuan"
                                         type="text"
                                         name="satuan"
                                         error={errors.satuan}
@@ -290,6 +300,7 @@ const Edit = () => {
                                     error={errors.kelompok_koleksi}
                                 >
                                     <TextInput
+                                        //id="kelompok_koleksi"
                                         type="text"
                                         name="kelompok_koleksi"
                                         error={errors.kelompok_koleksi}
@@ -308,6 +319,7 @@ const Edit = () => {
                                     error={errors.jenis_koleksi}
                                 >
                                     <SelectInput
+                                        //id="jenis_koleksi" 
                                         name="jenis_koleksi"
                                         error={errors.jenis_koleksi}
                                         value={data.jenis_koleksi}
@@ -342,6 +354,7 @@ const Edit = () => {
                                     error={errors.kode_koleksi}
                                 >
                                     <TextInput
+                                        //id="kode_koleksi"
                                         type="number"
                                         name="kode_koleksi"
                                         error={errors.kode_koleksi}
@@ -358,25 +371,31 @@ const Edit = () => {
                                     error={errors.ruang_penyimpanan}
                                 >
                                     <RadioButton
+                                        id="storage"
                                         name="ruang_penyimpanan"
-                                        selectedValue={data.ruang_penyimpanan}
+                                        value="ST"  // Nilai untuk Storage
+                                        checked={data.ruang_penyimpanan === "ST"}  // Menetapkan checked berdasarkan state
+                                        onChange={handleRuangPenyimpananChange}  // Handler untuk perubahan
+                                        label="Storage"
+                                    />
+                                    <RadioButton
+                                        id="non-storage"
+                                        name="ruang_penyimpanan"
+                                        value="NS"  // Nilai untuk Non Storage
+                                        checked={data.ruang_penyimpanan === "NS"}  // Menetapkan checked berdasarkan state
                                         onChange={handleRuangPenyimpananChange}
-                                        error={errors.ruang_penyimpanan}
-                                        options={[
-                                            { value: "ST", label: "Storage" },
-                                            {
-                                                value: "NS",
-                                                label: "Non Storage",
-                                            },
-                                        ]}
+                                        label="Non Storage"
                                     />
                                 </FieldGroup>
+
+
                                 <FieldGroup
                                     label="Lokasi Penyimpanan"
                                     name="lokasi_penyimpanan"
                                     error={errors.lokasi_penyimpanan}
                                 >
                                     <SelectInput
+                                        //id="lokasi_penyimpanan"
                                         name="lokasi_penyimpanan"
                                         error={errors.lokasi_penyimpanan}
                                         value={data.lokasi_penyimpanan}
@@ -414,6 +433,7 @@ const Edit = () => {
                                     error={errors.lantai}
                                 >
                                     <SelectInput
+                                        //id="lantai"
                                         name="lantai"
                                         error={errors.lantai}
                                         value={data.lantai}
@@ -434,6 +454,7 @@ const Edit = () => {
                                     error={errors.no_lajur}
                                 >
                                     <TextInput
+                                        //id="no_lajur"
                                         type="number"
                                         name="no_lajur"
                                         error={errors.no_lajur}
@@ -449,6 +470,7 @@ const Edit = () => {
                                     error={errors.no_lemari}
                                 >
                                     <TextInput
+                                        //id="no_lemari"
                                         type="number"
                                         name="no_lemari"
                                         error={errors.no_lemari}
@@ -464,6 +486,7 @@ const Edit = () => {
                                     error={errors.no_laci}
                                 >
                                     <TextInput
+                                        //id="no_laci"
                                         type="number"
                                         name="no_laci"
                                         error={errors.no_laci}
@@ -479,6 +502,7 @@ const Edit = () => {
                                     error={errors.no_slot}
                                 >
                                     <TextInput
+                                        //id="no_slot"
                                         type="number"
                                         name="no_slot"
                                         error={errors.no_slot}
@@ -499,6 +523,7 @@ const Edit = () => {
                                     error={errors.kondisi}
                                 >
                                     <SelectInput
+                                        //id="kondisi"
                                         name="kondisi"
                                         error={errors.kondisi}
                                         value={data.kondisi}
@@ -525,6 +550,7 @@ const Edit = () => {
                                     error={errors.nama_koleksi}
                                 >
                                     <TextInput
+                                        //id="nama_koleksi"
                                         type="text"
                                         name="nama_koleksi"
                                         error={errors.nama_koleksi}
@@ -543,6 +569,7 @@ const Edit = () => {
                                     error={errors.deskripsi_koleksi}
                                 >
                                     <TextArea
+                                        //id="deskripsi_koleksi"
                                         type="text"
                                         name="deskripsi_koleksi"
                                         value={data.deskripsi_koleksi}
@@ -563,6 +590,7 @@ const Edit = () => {
                                     error={errors.keterangan_koleksi}
                                 >
                                     <TextArea
+                                        //id="keterangan_koleksi"
                                         type="text"
                                         name="keterangan_koleksi"
                                         value={data.keterangan_koleksi}
@@ -583,6 +611,7 @@ const Edit = () => {
                                     error={errors.umur_geologi}
                                 >
                                     <SelectInput
+                                        //id="umur_geologi"
                                         name="umur_geologi"
                                         error={errors.umur_geologi}
                                         value={data.umur_geologi}
@@ -671,6 +700,7 @@ const Edit = () => {
                                     error={errors.nama_formasi}
                                 >
                                     <TextInput
+                                        //id="nama_formasi"
                                         type="text"
                                         name="nama_formasi"
                                         error={errors.nama_formasi}
@@ -688,22 +718,21 @@ const Edit = () => {
                                     name="ditemukan"
                                     error={errors.ditemukan}
                                 >
-                                    <RadioButton
-                                        name="ditemukan"
-                                        selectedValue={data.ditemukan}
-                                        onChange={handleDitemukanChange}
-                                        error={errors.ditemukan}
-                                        options={[
-                                            {
-                                                value: "DL",
-                                                label: "Dalam Negeri",
-                                            },
-                                            {
-                                                value: "LN",
-                                                label: "Luar Negeri",
-                                            },
-                                        ]}
-                                    />
+                                    {[
+                                        { value: "DL", label: "Dalam Negeri" },
+                                        { value: "LN", label: "Luar Negeri" },
+                                    ].map(option => (
+                                        <RadioButton
+                                            key={option.value}
+                                            id={option.value} // Unique id for each radio button
+                                            name="ditemukan"
+                                            value={option.value}
+                                            checked={data.ditemukan === option.value} // Check if this option is selected
+                                            onChange={handleDitemukanChange} // Change handler
+                                            label={option.label}
+                                            error={errors.ditemukan} // Pass error if present
+                                        />
+                                    ))}
                                 </FieldGroup>
 
                                 <FieldGroup
@@ -712,6 +741,7 @@ const Edit = () => {
                                     error={errors.pulau}
                                 >
                                     <TextInput
+                                        //id="pulau" 
                                         type="text"
                                         name="pulau"
                                         error={errors.pulau}
@@ -727,6 +757,7 @@ const Edit = () => {
                                     error={errors.provinsi}
                                 >
                                     <TextInput
+                                        //id="provinsi"
                                         type="text"
                                         name="provinsi"
                                         error={errors.provinsi}
@@ -742,6 +773,7 @@ const Edit = () => {
                                     error={errors.kota}
                                 >
                                     <TextInput
+                                        //id="kota" 
                                         type="text"
                                         name="kota"
                                         error={errors.kota}
@@ -758,6 +790,7 @@ const Edit = () => {
                                     error={errors.alamat}
                                 >
                                     <TextArea
+                                        //id="alamat"
                                         type="text"
                                         name="alamat"
                                         value={data.alamat}
@@ -776,6 +809,7 @@ const Edit = () => {
                                     error={errors.latitude}
                                 >
                                     <TextInput
+                                        //id="latitude"
                                         type="text"
                                         name="latitude"
                                         error={errors.latitude}
@@ -791,6 +825,7 @@ const Edit = () => {
                                     error={errors.longitude}
                                 >
                                     <TextInput
+                                        //id="longitude"
                                         type="text"
                                         name="longitude"
                                         error={errors.longitude}
@@ -806,6 +841,8 @@ const Edit = () => {
                                     error={errors.elevasi}
                                 >
                                     <TextInput
+                                        //id="elevasi"
+                                        type="text"
                                         name="elevasi"
                                         error={errors.elevasi}
                                         value={data.elevasi}
@@ -819,21 +856,23 @@ const Edit = () => {
                                     name="peta"
                                     error={errors.peta}
                                 >
-                                    <RadioButton
-                                        name="peta"
-                                        selectedValue={data.peta}
-                                        onChange={handlePetaChange}
-                                        error={errors.peta}
-                                        options={[
-                                            { value: "RP", label: "Rupa Bumi" },
-                                            { value: "BL", label: "Blad" },
-                                            { value: "GO", label: "Geologi" },
-                                            {
-                                                value: "LU",
-                                                label: "Luar Negeri",
-                                            },
-                                        ]}
-                                    />
+                                    {[
+                                        { value: "RP", label: "Rupa Bumi" },
+                                        { value: "BL", label: "Blad" },
+                                        { value: "GO", label: "Geologi" },
+                                        { value: "LU", label: "Luar Negeri" },
+                                    ].map(option => (
+                                        <RadioButton
+                                            key={option.value}
+                                            id={option.value} // Unique id for each radio button
+                                            name="peta"
+                                            value={option.value}
+                                            checked={data.peta === option.value} // Check if this option is selected
+                                            onChange={handlePetaChange} // Change handler
+                                            label={option.label}
+                                            error={errors.peta} // Pass error if present
+                                        />
+                                    ))}
                                 </FieldGroup>
                                 <FieldGroup
                                     label="Skala"
@@ -841,6 +880,7 @@ const Edit = () => {
                                     error={errors.skala}
                                 >
                                     <SelectInput
+                                        //id="skala"
                                         name="skala"
                                         error={errors.skala}
                                         value={data.skala}
@@ -861,6 +901,7 @@ const Edit = () => {
                                     error={errors.lembar_peta}
                                 >
                                     <TextInput
+                                        //id="lembar_peta"
                                         type="text"
                                         name="lembar_peta"
                                         error={errors.lembar_peta}
@@ -884,6 +925,7 @@ const Edit = () => {
                                     error={errors.cara_peroleh}
                                 >
                                     <SelectInput
+                                        //id="cara_peroleh"
                                         name="cara_peroleh"
                                         error={errors.cara_peroleh}
                                         value={data.cara_peroleh}
@@ -911,6 +953,7 @@ const Edit = () => {
                                     error={errors.thn_peroleh}
                                 >
                                     <TextInput
+                                        //id="thn_peroleh"
                                         type="year"
                                         name="thn_peroleh"
                                         error={errors.thn_peroleh}
@@ -929,6 +972,7 @@ const Edit = () => {
                                     error={errors.determinator}
                                 >
                                     <TextInput
+                                        //id="determinator"
                                         type="text"
                                         name="determinator"
                                         error={errors.determinator}
@@ -947,6 +991,7 @@ const Edit = () => {
                                     error={errors.kolektor}
                                 >
                                     <TextInput
+                                        //id="kolektor"
                                         type="text"
                                         name="kolektor"
                                         error={errors.kolektor}
@@ -962,6 +1007,7 @@ const Edit = () => {
                                     error={errors.kepemilikan_awal}
                                 >
                                     <TextInput
+                                        //id="kepemilikan_awal"
                                         type="text"
                                         name="kepemilikan_awal"
                                         error={errors.kepemilikan_awal}
@@ -980,6 +1026,7 @@ const Edit = () => {
                                     error={errors.publikasi}
                                 >
                                     <TextArea
+                                        //id="publikasi"
                                         type="text"
                                         name="publikasi"
                                         value={data.publikasi}
@@ -997,6 +1044,7 @@ const Edit = () => {
                                     error={errors.url}
                                 >
                                     <TextInput
+                                        //id="url"
                                         type="text"
                                         name="url"
                                         error={errors.url}
@@ -1012,6 +1060,7 @@ const Edit = () => {
                                     error={errors.nilai_peroleh}
                                 >
                                     <TextInput
+                                        //id="nilai_peroleh"
                                         type="text"
                                         name="nilai_peroleh"
                                         error={errors.nilai_peroleh}
@@ -1030,6 +1079,7 @@ const Edit = () => {
                                     error={errors.nilai_buku}
                                 >
                                     <TextInput
+                                        //id="nilai_buku"
                                         type="text"
                                         name="nilai_buku"
                                         error={errors.nilai_buku}
@@ -1053,6 +1103,7 @@ const Edit = () => {
                                     error={errors.gambar_satu}
                                 >
                                     <FileInput
+                                        //id="gambar_satu"
                                         type="file"
                                         name="gambar_satu"
                                         error={errors.gambar_satu}
@@ -1071,6 +1122,7 @@ const Edit = () => {
                                     error={errors.gambar_dua}
                                 >
                                     <FileInput
+                                        //id="gambar_dua"
                                         type="file"
                                         name="gambar_dua"
                                         error={errors.gambar_dua}
@@ -1086,6 +1138,7 @@ const Edit = () => {
                                     error={errors.gambar_tiga}
                                 >
                                     <FileInput
+                                        //id="gambar_tiga"
                                         type="file"
                                         name="gambar_tiga"
                                         error={errors.gambar_tiga}
@@ -1103,6 +1156,7 @@ const Edit = () => {
                                     error={errors.vidio}
                                 >
                                     <FileInput
+                                        //id="vidio"
                                         type="file"
                                         name="vidio"
                                         onChange={handleFileChange}
@@ -1114,6 +1168,7 @@ const Edit = () => {
                                     error={errors.audio}
                                 >
                                     <FileInput
+                                        //id="audio"
                                         type="file"
                                         name="audio"
                                         onChange={handleFileChange}
@@ -1134,25 +1189,23 @@ const Edit = () => {
                             </button>
                         )}
 
-                         {/* Submit Button */}
-                         <LoadingButton
+                        {/* Delete Button */}
+                        {/* {!batuan?.deleted_at && (
+                            <DeleteButton onDelete={destroy}>
+                                Delete Batuan
+                            </DeleteButton>
+                        )} */}
+
+                        {/* Submit Button */}
+                        <LoadingButton
                             loading={processing}
                             type="submit"
                             className="ml-auto bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-900 transition"
                         >
-                            {step === 4 ? "Tambah Data" : "Next"}
+                            {step === 4 ? "Submit" : "Next"}
                         </LoadingButton>
-
-                        {batuan?.deleted_at && (
-                            <TrashedMessage
-                                message="This kelola koleksi batuan has been deleted."
-                                onRestore={restore}
-                            />
-                        )}
-
-
-                        
                     </div>
+
 
                     {/* <div className="flex items-center px-8 py-4 bg-gray-100 border-t border-gray-200">
                         {!batuan.deleted_at && (
@@ -1178,9 +1231,10 @@ const Edit = () => {
                     { label: "Tipe Koleksi", name: "tipe_bmn" },
                     { label: "Alamat Storage", name: "alamat" },
                 ]}
-                rows={batuan?.batuan || []}  
+                rows={batuan?.batuan || []}
                 getRowDetailsUrl={(row) => route("Batuan.edit", row.id)}
             />
+
 
         </div>
     );

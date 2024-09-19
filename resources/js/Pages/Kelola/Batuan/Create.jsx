@@ -11,6 +11,7 @@ import TextArea from "@/Components/Form/Textarea";
 
 const Create = () => {
     const { data, setData, errors, post, processing, setError } = useForm({
+        id: "",
         // halaman 1 admin
         kategori_bmn: "",
         nup_bmn: "",
@@ -112,8 +113,7 @@ const Create = () => {
     };
 
     // Fungsi untuk menangani perubahan pada radio button
-    const handleRuangPenyimpananChange = (e) =>
-        setData("ruang_penyimpanan", e.target.value);
+    const handleRuangPenyimpananChange = (e) => setData("ruang_penyimpanan", e.target.value);
     const handleDitemukanChange = (e) => setData("ditemukan", e.target.value);
     const handlePetaChange = (e) => setData("peta", e.target.value);
 
@@ -133,6 +133,25 @@ const Create = () => {
                     <div className="grid gap-10 p-10 lg:grid-cols-2">
                         {step === 1 && (
                             <>
+                                <FieldGroup
+                                    label="Koleksi Batuan"
+                                    name="id"
+                                    error={errors.id}
+                                >
+                                    <TextInput
+                                        id="id"
+                                        name="id"
+                                        error={errors.id}
+                                        value={data.id}
+                                        onChange={(e) =>
+                                            setData(
+                                                "id",
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                </FieldGroup>
+                                
                                 <FieldGroup
                                     label="Kategori BMN"
                                     name="kategori_bmn"
@@ -339,6 +358,7 @@ const Create = () => {
                                         ]}
                                     />
                                 </FieldGroup>
+
                                 <FieldGroup
                                     label="Lokasi Penyimpanan"
                                     name="lokasi_penyimpanan"
@@ -1103,7 +1123,7 @@ const Create = () => {
                         <LoadingButton
                             loading={processing}
                             type="submit"
-                            className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-900 transition"
+                            className="ml-auto bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-900 transition"
                         >
                             {step === 4 ? "Tambah Data" : "Next"}
                         </LoadingButton>
