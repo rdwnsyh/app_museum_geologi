@@ -14,11 +14,11 @@ class KelolaKoleksiBatuan extends Model
 
      // Tentukan atribut mana yang dapat ditetapkan secara massal
         protected $fillable = [
-        // 'kategori_bmn',
+        'kategori_bmn',
         'nup_bmn', 'no_regis', 'no_inventaris',
-        // 'tipe_bmn', 
+        'tipe_bmn', 
         'no_awal', 'satuan',
-        // 'kelompok_koleksi',
+        'kelompok_koleksi',
         'jenis_koleksi', 'kode_koleksi', 'ruang_penyimpanan', 
         'lokasi_penyimpanan', 'lantai', 'no_lajur', 'no_lemari', 'no_laci', 'no_slot',
         'kondisi', 'nama_koleksi', 'deskripsi_koleksi', 'keterangan_koleksi', 

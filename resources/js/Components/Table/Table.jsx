@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "@inertiajs/react";
 import get from "lodash/get";
 import { ChevronRight } from "lucide-react";
 
@@ -39,28 +38,13 @@ export default function Table({ columns = [], rows = [], getRowDetailsUrl }) {
                         >
                             {columns.map((column) => (
                                 <td key={column.name} className="border-t">
-                                    <Link
-                                        tabIndex={-1}
-                                        href={getRowDetailsUrl?.(row) || ""}
-                                        className="flex items-center px-6 py-4 focus:text-indigo focus:outline-none"
-                                    >
+                                    <div className="flex items-center px-6 py-4">
                                         {column.renderCell?.(row) ||
                                             get(row, column.name) ||
                                             "N/A"}
-                                    </Link>
+                                    </div>
                                 </td>
                             ))}
-                            <td className="w-px border-t">
-                                <Link
-                                    href={getRowDetailsUrl?.(row) || "#"}
-                                    className="flex items-center px-4 focus:outline-none"
-                                >
-                                    <ChevronRight
-                                        size={24}
-                                        className="text-gray-400"
-                                    />
-                                </Link>
-                            </td>
                         </tr>
                     ))}
                 </tbody>

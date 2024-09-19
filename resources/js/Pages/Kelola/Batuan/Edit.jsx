@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Head, Link, usePage, useForm, router } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
 // import DeleteButton from "@/Components/Button/DeleteButton";
@@ -13,67 +13,66 @@ import RadioButton from "@/Components/Form/Radiobutton";
 import TextArea from "@/Components/Form/Textarea";
 
 const Edit = () => {
-    const { batuan } = usePage().props || {};
-    console.log(batuan);
+    const { koleksibatuan } = usePage().props || {}; // Mengambil data yang dikirim dari controller
+    console.log(koleksibatuan);
 
     const { data, setData, errors, post, put, processing, setError } = useForm({
-
         //halaman 1
-        id: batuan?.id || '',
-        kategori_bmn: batuan?.kategori_bmn || '',
-        nup_bmn: batuan?.nup_bmn || '',
-        no_regis: batuan?.no_regis || '',
-        no_inventaris: batuan?.no_inventaris || '',
-        tipe_bmn: batuan?.tipe_bmn || '',
-        no_awal: batuan?.no_awal || '',
-        satuan: batuan?.satuan || '',
-        kelompok_koleksi: batuan?.kelompok_koleksi || '',
-        jenis_koleksi: batuan?.jenis_koleksi || '',
-        kode_koleksi: batuan?.kode_koleksi || '',
-        ruang_penyimpanan: batuan?.ruang_penyimpanan || '',
-        lokasi_penyimpanan: batuan?.lokasi_penyimpanan || '',
-        lantai: batuan?.lantai || '',
-        no_lajur: batuan?.no_lajur || '',
-        no_lemari: batuan?.no_lemari || '',
-        no_laci: batuan?.no_laci || '',
-        no_slot: batuan?.no_slot || '',
+        id: koleksibatuan?.id || "",
+        kategori_bmn: koleksibatuan?.kategori_bmn || "",
+        nup_bmn: koleksibatuan?.nup_bmn || "",
+        no_regis: koleksibatuan?.no_regis || "",
+        no_inventaris: koleksibatuan?.no_inventaris || "",
+        tipe_bmn: koleksibatuan?.tipe_bmn || "",
+        no_awal: koleksibatuan?.no_awal || "",
+        satuan: koleksibatuan?.satuan || "",
+        kelompok_koleksi: koleksibatuan?.kelompok_koleksi || "",
+        jenis_koleksi: koleksibatuan?.jenis_koleksi || "",
+        kode_koleksi: koleksibatuan?.kode_koleksi || "",
+        ruang_penyimpanan: koleksibatuan?.ruang_penyimpanan || "",
+        lokasi_penyimpanan: koleksibatuan?.lokasi_penyimpanan || "",
+        lantai: koleksibatuan?.lantai || "",
+        no_lajur: koleksibatuan?.no_lajur || "",
+        no_lemari: koleksibatuan?.no_lemari || "",
+        no_laci: koleksibatuan?.no_laci || "",
+        no_slot: koleksibatuan?.no_slot || "",
 
         //halaman 2
-        kondisi: batuan?.kondisi || '',
-        nama_koleksi: batuan?.nama_koleksi || '',
-        deskripsi_koleksi: batuan?.deskripsi_koleksi || '',
-        keterangan_koleksi: batuan?.keterangan_koleksi || '',
-        umur_geologi: batuan?.umur_geologi || '',
-        nama_formasi: batuan?.nama_formasi || '',
-        ditemukan: batuan?.ditemukan || '',
-        pulau: batuan?.pulau || '',
-        provinsi: batuan?.provinsi || '',
-        kota: batuan?.kota || '',
-        alamat: batuan?.alamat || '',
-        latitude: batuan?.latitude || '',
-        longitude: batuan?.longitude || '',
-        elevasi: batuan?.elevasi || '',
-        peta: batuan?.peta || '',
-        skala: batuan?.skala || '',
-        lembar_peta: batuan?.lembar_peta || '',
+        kondisi: koleksibatuan?.kondisi || "",
+        nama_koleksi: koleksibatuan?.nama_koleksi || "",
+        deskripsi_koleksi: koleksibatuan?.deskripsi_koleksi || "",
+        keterangan_koleksi: koleksibatuan?.keterangan_koleksi || "",
+        umur_geologi: koleksibatuan?.umur_geologi || "",
+        nama_formasi: koleksibatuan?.nama_formasi || "",
+        ditemukan: koleksibatuan?.ditemukan || "",
+        pulau: koleksibatuan?.pulau || "",
+        provinsi: koleksibatuan?.provinsi || "",
+        kota: koleksibatuan?.kota || "",
+        alamat: koleksibatuan?.alamat || "",
+        latitude: koleksibatuan?.latitude || "",
+        longitude: koleksibatuan?.longitude || "",
+        elevasi: koleksibatuan?.elevasi || "",
+        peta: koleksibatuan?.peta || "",
+        skala: koleksibatuan?.skala || "",
+        lembar_peta: koleksibatuan?.lembar_peta || "",
 
         //halaman 3
-        cara_peroleh: batuan?.cara_peroleh || '',
-        thn_peroleh: batuan?.thn_peroleh || '',
-        determinator: batuan?.determinator || '',
-        kolektor: batuan?.kolektor || '',
-        kepemilikan_awal: batuan?.kepemilikan_awal || '',
-        publikasi: batuan?.publikasi || '',
-        url: batuan?.url || '',
-        nilai_peroleh: batuan?.nilai_peroleh || '',
-        nilai_buku: batuan?.nilai_buku || '',
+        cara_peroleh: koleksibatuan?.cara_peroleh || "",
+        thn_peroleh: koleksibatuan?.thn_peroleh || "",
+        determinator: koleksibatuan?.determinator || "",
+        kolektor: koleksibatuan?.kolektor || "",
+        kepemilikan_awal: koleksibatuan?.kepemilikan_awal || "",
+        publikasi: koleksibatuan?.publikasi || "",
+        url: koleksibatuan?.url || "",
+        nilai_peroleh: koleksibatuan?.nilai_peroleh || "",
+        nilai_buku: koleksibatuan?.nilai_buku || "",
 
         //halaman 4
-        gambar_satu: batuan?.gambar_satu || null,
-        gambar_dua: batuan?.gambar_dua || null,
-        gambar_tiga: batuan?.gambar_tiga || null,
-        vidio: batuan?.vidio || null,
-        audio: batuan?.audio || null,
+        gambar_satu: koleksibatuan?.gambar_satu || null,
+        gambar_dua: koleksibatuan?.gambar_dua || null,
+        gambar_tiga: koleksibatuan?.gambar_tiga || null,
+        vidio: koleksibatuan?.vidio || null,
+        audio: koleksibatuan?.audio || null,
     });
 
     const [step, setStep] = useState(1);
@@ -84,21 +83,25 @@ const Edit = () => {
         for (const [key, value] of Object.entries(data)) {
             formData.append(key, value instanceof File ? value : value);
         }
-    
+
         if (step === 4) {
-            put(route("batuan.update", batuan?.id), formData, {
-                onSuccess: () => {
-                    // Handle success
-                },
-                onError: (errors) => {
-                    setError(errors);
-                },
-            });
+            put(
+                route("kelolakoleksibatuan.update", koleksibatuan?.id),
+                formData,
+                {
+                    onSuccess: () => {
+                        // Handle success
+                    },
+                    onError: (errors) => {
+                        setError(errors);
+                    },
+                }
+            );
         } else {
             setStep(step + 1);
         }
     };
-    
+
     const handleBack = () => {
         setStep(step - 1);
     };
@@ -107,7 +110,8 @@ const Edit = () => {
         setData(name, file);
     };
 
-    const handleRuangPenyimpananChange = (e) => setData("ruang_penyimpanan", e.target.value);
+    const handleRuangPenyimpananChange = (e) =>
+        setData("ruang_penyimpanan", e.target.value);
     const handleDitemukanChange = (e) => setData("ditemukan", e.target.value);
     const handlePetaChange = (e) => setData("peta", e.target.value);
 
@@ -117,15 +121,15 @@ const Edit = () => {
     //     }
     // };
 
-    const restore = () => {
-        if (confirm("Are you sure you want to restore this Batuan?")) {
-            router.put(route("batuan.restore", batuan.id));
-        }
-    };
+    // const restore = () => {
+    //     if (confirm("Are you sure you want to restore this Batuan?")) {
+    //         router.put(route("batuan.restore", batuan.id));
+    //     }
+    // };
 
     return (
         <div>
-            <Head title={`edit ${batuan?.nama_koleksi}`} />
+            <Head title={`edit ${koleksibatuan?.nup_bmn}`} />
             <h1 className="mb-8 text-3xl font-bold">
                 <Link
                     href={route("kelolakoleksibatuan")}
@@ -134,49 +138,25 @@ const Edit = () => {
                     Edit Kelola Koleksi Bantuan
                 </Link>
                 <span className="mx-2 font-medium text-indigo-600">/</span>
-                {batuan?.nama_koleksi}
+                {koleksibatuan?.nup_bmn}
             </h1>
-            {batuan?.deleted_at && (
-                <TrashedMessage
-                    message="This kelola koleksi batuan has been deleted."
-                    onRestore={restore}
-                />
-            )}
 
             <div className="max-w-3xl overflow-hidden bg-white rounded shadow">
                 <form onSubmit={handleSubmit}>
-                <div className="grid gap-10 p-10 lg:grid-cols-2">
+                    <div className="grid gap-10 p-10 lg:grid-cols-2">
                         {step === 1 && (
                             <>
-                              <FieldGroup
-                                    label="Koleksi Batuan"
-                                    name="id"
-                                    error={errors.id}
-                                >
-                                    <TextInput
-                                        id="id" 
-                                        name="id"
-                                        error={errors.id}
-                                        value={data.id}
-                                        onChange={(e) =>
-                                            setData(
-                                                "id",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                </FieldGroup>
                                 <FieldGroup
                                     label="Kategori BMN"
                                     name="kategori_bmn"
                                     error={errors.kategori_bmn}
                                 >
                                     <TextInput
-                                        //id="kategori_bmn"     
+                                        id="kategori_bmn"
                                         type="text"
                                         name="kategori_bmn"
                                         error={errors.kategori_bmn}
-                                        value={data.kategori_bmn}
+                                        value={data.kategori_bmn || ""} // Fallback jika null
                                         onChange={(e) =>
                                             setData(
                                                 "kategori_bmn",
@@ -215,10 +195,7 @@ const Edit = () => {
                                         error={errors.no_regis}
                                         value={data.no_regis}
                                         onChange={(e) =>
-                                            setData(
-                                                "no_regis",
-                                                e.target.value
-                                            )
+                                            setData("no_regis", e.target.value)
                                         }
                                     />
                                 </FieldGroup>
@@ -235,7 +212,10 @@ const Edit = () => {
                                         error={errors.no_inventaris}
                                         value={data.no_inventaris}
                                         onChange={(e) =>
-                                            setData("no_inventaris", e.target.value)
+                                            setData(
+                                                "no_inventaris",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -319,7 +299,7 @@ const Edit = () => {
                                     error={errors.jenis_koleksi}
                                 >
                                     <SelectInput
-                                        //id="jenis_koleksi" 
+                                        //id="jenis_koleksi"
                                         name="jenis_koleksi"
                                         error={errors.jenis_koleksi}
                                         value={data.jenis_koleksi}
@@ -360,7 +340,10 @@ const Edit = () => {
                                         error={errors.kode_koleksi}
                                         value={data.kode_koleksi}
                                         onChange={(e) =>
-                                            setData("kode_koleksi", e.target.value)
+                                            setData(
+                                                "kode_koleksi",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -373,21 +356,24 @@ const Edit = () => {
                                     <RadioButton
                                         id="storage"
                                         name="ruang_penyimpanan"
-                                        value="ST"  // Nilai untuk Storage
-                                        checked={data.ruang_penyimpanan === "ST"}  // Menetapkan checked berdasarkan state
-                                        onChange={handleRuangPenyimpananChange}  // Handler untuk perubahan
+                                        value="ST" // Nilai untuk Storage
+                                        checked={
+                                            data.ruang_penyimpanan === "ST"
+                                        } // Menetapkan checked berdasarkan state
+                                        onChange={handleRuangPenyimpananChange} // Handler untuk perubahan
                                         label="Storage"
                                     />
                                     <RadioButton
                                         id="non-storage"
                                         name="ruang_penyimpanan"
-                                        value="NS"  // Nilai untuk Non Storage
-                                        checked={data.ruang_penyimpanan === "NS"}  // Menetapkan checked berdasarkan state
+                                        value="NS" // Nilai untuk Non Storage
+                                        checked={
+                                            data.ruang_penyimpanan === "NS"
+                                        } // Menetapkan checked berdasarkan state
                                         onChange={handleRuangPenyimpananChange}
                                         label="Non Storage"
                                     />
                                 </FieldGroup>
-
 
                                 <FieldGroup
                                     label="Lokasi Penyimpanan"
@@ -721,13 +707,15 @@ const Edit = () => {
                                     {[
                                         { value: "DL", label: "Dalam Negeri" },
                                         { value: "LN", label: "Luar Negeri" },
-                                    ].map(option => (
+                                    ].map((option) => (
                                         <RadioButton
                                             key={option.value}
                                             id={option.value} // Unique id for each radio button
                                             name="ditemukan"
                                             value={option.value}
-                                            checked={data.ditemukan === option.value} // Check if this option is selected
+                                            checked={
+                                                data.ditemukan === option.value
+                                            } // Check if this option is selected
                                             onChange={handleDitemukanChange} // Change handler
                                             label={option.label}
                                             error={errors.ditemukan} // Pass error if present
@@ -741,7 +729,7 @@ const Edit = () => {
                                     error={errors.pulau}
                                 >
                                     <TextInput
-                                        //id="pulau" 
+                                        //id="pulau"
                                         type="text"
                                         name="pulau"
                                         error={errors.pulau}
@@ -773,7 +761,7 @@ const Edit = () => {
                                     error={errors.kota}
                                 >
                                     <TextInput
-                                        //id="kota" 
+                                        //id="kota"
                                         type="text"
                                         name="kota"
                                         error={errors.kota}
@@ -861,7 +849,7 @@ const Edit = () => {
                                         { value: "BL", label: "Blad" },
                                         { value: "GO", label: "Geologi" },
                                         { value: "LU", label: "Luar Negeri" },
-                                    ].map(option => (
+                                    ].map((option) => (
                                         <RadioButton
                                             key={option.value}
                                             id={option.value} // Unique id for each radio button
@@ -1107,6 +1095,7 @@ const Edit = () => {
                                         type="file"
                                         name="gambar_satu"
                                         error={errors.gambar_satu}
+                                        value={data.gambar_satu}
                                         onFileChange={(file) =>
                                             handleFileChange(
                                                 "gambar_satu",
@@ -1126,6 +1115,7 @@ const Edit = () => {
                                         type="file"
                                         name="gambar_dua"
                                         error={errors.gambar_dua}
+                                        value={data.gambar_dua}
                                         onFileChange={(file) =>
                                             handleFileChange("gambar_dua", file)
                                         }
@@ -1142,6 +1132,7 @@ const Edit = () => {
                                         type="file"
                                         name="gambar_tiga"
                                         error={errors.gambar_tiga}
+                                        value={data.gambar_tiga}
                                         onFileChange={(file) =>
                                             handleFileChange(
                                                 "gambar_tiga",
@@ -1206,7 +1197,6 @@ const Edit = () => {
                         </LoadingButton>
                     </div>
 
-
                     {/* <div className="flex items-center px-8 py-4 bg-gray-100 border-t border-gray-200">
                         {!batuan.deleted_at && (
                             <DeleteButton onDelete={destroy}>
@@ -1223,19 +1213,6 @@ const Edit = () => {
                     </div> */}
                 </form>
             </div>
-            <h2 className="mt-12 mb-6 text-2xl font-bold">Kelola Koleksi Batuan</h2>
-            <Table
-                columns={[
-                    { label: "Nomor Koleksi", name: "id" },
-                    { label: "Nama Koleksi", name: "nama_koleksi" },
-                    { label: "Tipe Koleksi", name: "tipe_bmn" },
-                    { label: "Alamat Storage", name: "alamat" },
-                ]}
-                rows={batuan?.batuan || []}
-                getRowDetailsUrl={(row) => route("Batuan.edit", row.id)}
-            />
-
-
         </div>
     );
 };

@@ -8,7 +8,7 @@ import { ArrowDownToLine, Plus } from "lucide-react";
 
 function Index() {
     const { batuan } = usePage().props;
-    
+
     const data = batuan?.data || [];
     const links = batuan?.meta?.links || [];
 
@@ -61,18 +61,16 @@ function Index() {
                         name: "aksi",
                         renderCell: (row) => (
                             <div className="flex space-x-2">
-                                 <Link
-                                    href={route("kelolakoleksibatuan.edit", row.id)} // Change to show details
-                                    className="bg-green-600 text-white py-1 px-3 rounded hover:bg-green-700 transition"
-                                >
-                                    Info Lengkap
-                                </Link>
                                 <Link
-                                    href={route("kelolakoleksibatuan.edit", row.id)}
+                                    href={route(
+                                        "kelolakoleksibatuan.edit",
+                                        row.id
+                                    )} // Mengarahkan ke halaman edit dengan ID
                                     className="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-700 transition"
                                 >
                                     Edit
                                 </Link>
+
                                 <button
                                     onClick={() => handleDelete(row.id)}
                                     className="bg-red-600 text-white py-1 px-3 rounded hover:bg-red-900 transition"
@@ -84,9 +82,6 @@ function Index() {
                     },
                 ]}
                 rows={data}
-                getRowDetailsUrl={(row) =>
-                    route("kelolakoleksibatuan.edit", row.id)
-                }
             />
 
             {links.length > 0 && <Pagination links={links} />}

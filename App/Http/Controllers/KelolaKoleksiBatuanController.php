@@ -165,7 +165,8 @@ class KelolaKoleksiBatuanController extends Controller
     {
         // Menampilkan halaman edit dengan data yang diambil
         return Inertia::render('Kelola/Batuan/Edit', [
-            'koleksibatuan' => $kelolaKoleksiBatuan
+            'koleksibatuan' =>  ($kelolaKoleksiBatuan)
+            // dd($kelolaKoleksiBatuan)
         ]);
     }
 

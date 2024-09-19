@@ -113,7 +113,8 @@ const Create = () => {
     };
 
     // Fungsi untuk menangani perubahan pada radio button
-    const handleRuangPenyimpananChange = (e) => setData("ruang_penyimpanan", e.target.value);
+    const handleRuangPenyimpananChange = (e) =>
+        setData("ruang_penyimpanan", e.target.value);
     const handleDitemukanChange = (e) => setData("ditemukan", e.target.value);
     const handlePetaChange = (e) => setData("peta", e.target.value);
 
@@ -133,25 +134,6 @@ const Create = () => {
                     <div className="grid gap-10 p-10 lg:grid-cols-2">
                         {step === 1 && (
                             <>
-                                <FieldGroup
-                                    label="Koleksi Batuan"
-                                    name="id"
-                                    error={errors.id}
-                                >
-                                    <TextInput
-                                        id="id"
-                                        name="id"
-                                        error={errors.id}
-                                        value={data.id}
-                                        onChange={(e) =>
-                                            setData(
-                                                "id",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                </FieldGroup>
-                                
                                 <FieldGroup
                                     label="Kategori BMN"
                                     name="kategori_bmn"
@@ -192,15 +174,12 @@ const Create = () => {
                                     error={errors.no_regis}
                                 >
                                     <TextInput
-                                        type="number"
+                                        type="text"
                                         name="no_regis"
                                         error={errors.no_regis}
                                         value={data.no_regis}
                                         onChange={(e) =>
-                                            setData(
-                                                "no_regis",
-                                                e.target.value
-                                            )
+                                            setData("no_regis", e.target.value)
                                         }
                                     />
                                 </FieldGroup>
@@ -215,7 +194,10 @@ const Create = () => {
                                         error={errors.no_inventaris}
                                         value={data.no_inventaris}
                                         onChange={(e) =>
-                                            setData("no_inventaris", e.target.value)
+                                            setData(
+                                                "no_inventaris",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -329,12 +311,15 @@ const Create = () => {
                                     error={errors.kode_koleksi}
                                 >
                                     <TextInput
-                                        type="number"
+                                        type="text"
                                         name="kode_koleksi"
                                         error={errors.kode_koleksi}
                                         value={data.kode_koleksi}
                                         onChange={(e) =>
-                                            setData("kode_koleksi", e.target.value)
+                                            setData(
+                                                "kode_koleksi",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
