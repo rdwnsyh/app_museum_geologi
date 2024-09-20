@@ -11,7 +11,6 @@ import TextArea from "@/Components/Form/Textarea";
 
 const Create = () => {
     const { data, setData, errors, post, processing, setError } = useForm({
-        id: "",
         // halaman 1 admin
         kategori_bmn: "",
         nup_bmn: "",
@@ -108,6 +107,7 @@ const Create = () => {
         setStep(step - 1);
     }
 
+    // Fungsi untuk menangani perubahan file
     const handleFileChange = (name, file) => {
         setData(name, file);
     };
@@ -130,7 +130,7 @@ const Create = () => {
                 <span className="font-medium text-indigo-600"> /</span> Create
             </h1>
             <div className="max-w-3xl overflow-hidden bg-white rounded shadow">
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} encType="multipart/form-data">
                     <div className="grid gap-10 p-10 lg:grid-cols-2">
                         {step === 1 && (
                             <>
@@ -1026,7 +1026,6 @@ const Create = () => {
                                     error={errors.gambar_satu}
                                 >
                                     <FileInput
-                                        type="file"
                                         name="gambar_satu"
                                         error={errors.gambar_satu}
                                         onFileChange={(file) =>
@@ -1044,7 +1043,6 @@ const Create = () => {
                                     error={errors.gambar_dua}
                                 >
                                     <FileInput
-                                        type="file"
                                         name="gambar_dua"
                                         error={errors.gambar_dua}
                                         onFileChange={(file) =>
@@ -1059,7 +1057,6 @@ const Create = () => {
                                     error={errors.gambar_tiga}
                                 >
                                     <FileInput
-                                        type="file"
                                         name="gambar_tiga"
                                         error={errors.gambar_tiga}
                                         onFileChange={(file) =>
@@ -1070,26 +1067,32 @@ const Create = () => {
                                         }
                                     />
                                 </FieldGroup>
+
                                 <FieldGroup
                                     label="Vidio"
                                     name="vidio"
                                     error={errors.vidio}
                                 >
                                     <FileInput
-                                        type="file"
                                         name="vidio"
-                                        onChange={handleFileChange}
+                                        error={errors.vidio}
+                                        onFileChange={(file) =>
+                                            handleFileChange("vidio", file)
+                                        }
                                     />
                                 </FieldGroup>
+
                                 <FieldGroup
                                     label="Audio"
                                     name="audio"
                                     error={errors.audio}
                                 >
                                     <FileInput
-                                        type="file"
                                         name="audio"
-                                        onChange={handleFileChange}
+                                        error={errors.audio}
+                                        onFileChange={(file) =>
+                                            handleFileChange("audio", file)
+                                        }
                                     />
                                 </FieldGroup>
                             </>

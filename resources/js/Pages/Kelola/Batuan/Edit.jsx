@@ -18,7 +18,7 @@ const Edit = () => {
 
     const { data, setData, errors, post, put, processing, setError } = useForm({
         //halaman 1
-        id: koleksibatuan?.id || "",
+        // id: koleksibatuan?.id || "",
         kategori_bmn: koleksibatuan?.kategori_bmn || "",
         nup_bmn: koleksibatuan?.nup_bmn || "",
         no_regis: koleksibatuan?.no_regis || "",
@@ -77,68 +77,65 @@ const Edit = () => {
 
     const [step, setStep] = useState(1);
 
-    const handleSubmit = (e) => {
+    function handleSubmit(e) {
         e.preventDefault();
         const formData = new FormData();
+        // Menambahkan data form yang akan diperbarui
         for (const [key, value] of Object.entries(data)) {
-            formData.append(key, value instanceof File ? value : value);
+            if (value instanceof File) {
+                formData.append(key, value);
+            } else {
+                formData.append(key, value);
+            }
         }
-
+        // Jika pada langkah terakhir (step 4), lakukan update data
         if (step === 4) {
-            put(
-                route("kelolakoleksibatuan.update", koleksibatuan?.id),
-                formData,
-                {
-                    onSuccess: () => {
-                        // Handle success
-                    },
-                    onError: (errors) => {
-                        setError(errors);
-                    },
-                }
-            );
+            put(route("kelolakoleksibatuan.update", koleksibatuan.id), {
+                data: formData,
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+                onSuccess: () => {
+                    // Tindakan setelah sukses update
+                },
+                onError: (errors) => {
+                    // Tindakan setelah terjadi error
+                },
+            });
         } else {
+            // Jika bukan langkah terakhir, lanjut ke langkah berikutnya
             setStep(step + 1);
         }
-    };
+    }
 
-    const handleBack = () => {
+    function handleBack() {
+        // Mengatur navigasi untuk kembali ke step sebelumnya
         setStep(step - 1);
-    };
+    }
 
+    // Fungsi untuk menangani perubahan file
     const handleFileChange = (name, file) => {
         setData(name, file);
     };
 
+    // Fungsi untuk menangani perubahan pada radio button
     const handleRuangPenyimpananChange = (e) =>
         setData("ruang_penyimpanan", e.target.value);
     const handleDitemukanChange = (e) => setData("ditemukan", e.target.value);
     const handlePetaChange = (e) => setData("peta", e.target.value);
 
-    // const destroy = () => {
-    //     if (confirm("Are you sure you want to delete this Batuan?")) {
-    //         router.delete(route("batuan.destroy", batuan.id));
-    //     }
-    // };
-
-    // const restore = () => {
-    //     if (confirm("Are you sure you want to restore this Batuan?")) {
-    //         router.put(route("batuan.restore", batuan.id));
-    //     }
-    // };
-
     return (
         <div>
-            <Head title={`edit ${koleksibatuan?.nup_bmn}`} />
+            <Head title={`edit ${koleksibatuan?.nama_koleksi}`} />
             <h1 className="mb-8 text-3xl font-bold">
                 <Link
                     href={route("kelolakoleksibatuan")}
                     className="text-indigo-600 hover:text-indigo-700"
                 >
-                    Edit Kelola Koleksi Bantuan
+                    Edit Koleksi Bantuan
                 </Link>
                 <span className="mx-2 font-medium text-indigo-600">/</span>
-                {koleksibatuan?.nup_bmn}
+                {koleksibatuan?.nama_koleksi}
             </h1>
 
             <div className="max-w-3xl overflow-hidden bg-white rounded shadow">
@@ -354,24 +351,17 @@ const Edit = () => {
                                     error={errors.ruang_penyimpanan}
                                 >
                                     <RadioButton
-                                        id="storage"
                                         name="ruang_penyimpanan"
-                                        value="ST" // Nilai untuk Storage
-                                        checked={
-                                            data.ruang_penyimpanan === "ST"
-                                        } // Menetapkan checked berdasarkan state
-                                        onChange={handleRuangPenyimpananChange} // Handler untuk perubahan
-                                        label="Storage"
-                                    />
-                                    <RadioButton
-                                        id="non-storage"
-                                        name="ruang_penyimpanan"
-                                        value="NS" // Nilai untuk Non Storage
-                                        checked={
-                                            data.ruang_penyimpanan === "NS"
-                                        } // Menetapkan checked berdasarkan state
+                                        options={[
+                                            { value: "ST", label: "Storage" },
+                                            {
+                                                value: "NS",
+                                                label: "Non Storage",
+                                            },
+                                        ]}
+                                        selectedValue={data.ruang_penyimpanan}
                                         onChange={handleRuangPenyimpananChange}
-                                        label="Non Storage"
+                                        error={errors.ruang_penyimpanan}
                                     />
                                 </FieldGroup>
 
@@ -704,25 +694,23 @@ const Edit = () => {
                                     name="ditemukan"
                                     error={errors.ditemukan}
                                 >
-                                    {[
-                                        { value: "DL", label: "Dalam Negeri" },
-                                        { value: "LN", label: "Luar Negeri" },
-                                    ].map((option) => (
-                                        <RadioButton
-                                            key={option.value}
-                                            id={option.value} // Unique id for each radio button
-                                            name="ditemukan"
-                                            value={option.value}
-                                            checked={
-                                                data.ditemukan === option.value
-                                            } // Check if this option is selected
-                                            onChange={handleDitemukanChange} // Change handler
-                                            label={option.label}
-                                            error={errors.ditemukan} // Pass error if present
-                                        />
-                                    ))}
+                                    <RadioButton
+                                        name="ditemukan"
+                                        options={[
+                                            {
+                                                value: "DL",
+                                                label: "Dalam Negeri",
+                                            },
+                                            {
+                                                value: "LN",
+                                                label: "Luar Negeri",
+                                            },
+                                        ]}
+                                        selectedValue={data.ditemukan}
+                                        onChange={handleDitemukanChange}
+                                        error={errors.ditemukan}
+                                    />
                                 </FieldGroup>
-
                                 <FieldGroup
                                     label="Pulau"
                                     name="pulau"
@@ -839,29 +827,29 @@ const Edit = () => {
                                         }
                                     />
                                 </FieldGroup>
+
                                 <FieldGroup
                                     label="Peta"
                                     name="peta"
                                     error={errors.peta}
                                 >
-                                    {[
-                                        { value: "RP", label: "Rupa Bumi" },
-                                        { value: "BL", label: "Blad" },
-                                        { value: "GO", label: "Geologi" },
-                                        { value: "LU", label: "Luar Negeri" },
-                                    ].map((option) => (
-                                        <RadioButton
-                                            key={option.value}
-                                            id={option.value} // Unique id for each radio button
-                                            name="peta"
-                                            value={option.value}
-                                            checked={data.peta === option.value} // Check if this option is selected
-                                            onChange={handlePetaChange} // Change handler
-                                            label={option.label}
-                                            error={errors.peta} // Pass error if present
-                                        />
-                                    ))}
+                                    <RadioButton
+                                        name="peta"
+                                        options={[
+                                            { value: "RP", label: "Rupa Bumi" },
+                                            { value: "BL", label: "Blad" },
+                                            { value: "GO", label: "Geologi" },
+                                            {
+                                                value: "LU",
+                                                label: "Luar Negeri",
+                                            },
+                                        ]}
+                                        selectedValue={data.peta}
+                                        onChange={handlePetaChange}
+                                        error={errors.peta}
+                                    />
                                 </FieldGroup>
+
                                 <FieldGroup
                                     label="Skala"
                                     name="skala"
@@ -1091,17 +1079,18 @@ const Edit = () => {
                                     error={errors.gambar_satu}
                                 >
                                     <FileInput
-                                        //id="gambar_satu"
                                         type="file"
                                         name="gambar_satu"
                                         error={errors.gambar_satu}
-                                        value={data.gambar_satu}
                                         onFileChange={(file) =>
                                             handleFileChange(
                                                 "gambar_satu",
                                                 file
                                             )
                                         }
+                                        existingFile={
+                                            koleksibatuan?.gambar_satu
+                                        } // Assuming this is the file name
                                     />
                                 </FieldGroup>
 
@@ -1111,14 +1100,13 @@ const Edit = () => {
                                     error={errors.gambar_dua}
                                 >
                                     <FileInput
-                                        //id="gambar_dua"
                                         type="file"
                                         name="gambar_dua"
                                         error={errors.gambar_dua}
-                                        value={data.gambar_dua}
                                         onFileChange={(file) =>
                                             handleFileChange("gambar_dua", file)
                                         }
+                                        existingFile={koleksibatuan?.gambar_dua}
                                     />
                                 </FieldGroup>
 
@@ -1128,41 +1116,50 @@ const Edit = () => {
                                     error={errors.gambar_tiga}
                                 >
                                     <FileInput
-                                        //id="gambar_tiga"
                                         type="file"
                                         name="gambar_tiga"
                                         error={errors.gambar_tiga}
-                                        value={data.gambar_tiga}
                                         onFileChange={(file) =>
                                             handleFileChange(
                                                 "gambar_tiga",
                                                 file
                                             )
                                         }
+                                        existingFile={
+                                            koleksibatuan?.gambar_tiga
+                                        }
                                     />
                                 </FieldGroup>
+
                                 <FieldGroup
                                     label="Vidio"
                                     name="vidio"
                                     error={errors.vidio}
                                 >
                                     <FileInput
-                                        //id="vidio"
                                         type="file"
                                         name="vidio"
-                                        onChange={handleFileChange}
+                                        error={errors.vidio}
+                                        onFileChange={(file) =>
+                                            handleFileChange("vidio", file)
+                                        }
+                                        existingFile={koleksibatuan?.vidio}
                                     />
                                 </FieldGroup>
+
                                 <FieldGroup
                                     label="Audio"
                                     name="audio"
                                     error={errors.audio}
                                 >
                                     <FileInput
-                                        //id="audio"
                                         type="file"
                                         name="audio"
-                                        onChange={handleFileChange}
+                                        error={errors.audio}
+                                        onFileChange={(file) =>
+                                            handleFileChange("audio", file)
+                                        }
+                                        existingFile={koleksibatuan?.audio}
                                     />
                                 </FieldGroup>
                             </>

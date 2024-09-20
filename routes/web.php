@@ -193,11 +193,11 @@ Route::post('kelolakoleksibatuan', [KelolaKoleksiBatuanController::class, 'store
     ->name('kelolakoleksibatuan.store')
     ->middleware('auth');
 // route ke halaman edit kelolakoleksibatuan
-    Route::get('kelolakoleksibatuan/{kelolakoleksibatuan}/edit', [KelolaKoleksiBatuanController::class, 'edit'])
+    Route::get('kelolakoleksibatuan/{koleksibatuan}/edit', [KelolaKoleksiBatuanController::class, 'edit'])
     ->name('kelolakoleksibatuan.edit')
     ->middleware('auth');
 // proses edit kelolakoleksibatuan
-Route::put('kelolakoleksibatuan/{kelolakoleksibatuan}', [KelolaKoleksiBatuanController::class, 'update'])
+Route::put('kelolakoleksibatuan/{koleksibatuan}', [KelolaKoleksiBatuanController::class, 'update'])
     ->name('kelolakoleksibatuan.update')
     ->middleware('auth');
 // route ke halaman hapus kelolakoleksibatuan

@@ -1,21 +1,36 @@
 import React from "react";
 
-const RadioButton = ({ id, name, value, checked, onChange, label, error }) => {
+const RadioButton = ({
+    name,
+    options = [],
+    selectedValue,
+    onChange,
+    error,
+}) => {
+    // Jika options tidak didefinisikan, gunakan array kosong
     return (
-        <label className="block">
-            <input
-                type="radio"
-                id={id}
-                name={name}
-                value={value}
-                checked={checked}
-                onChange={onChange}
-                className="mr-2"
-            />
-            {label}
+        <div>
+            {options.length > 0 ? (
+                options.map((option) => (
+                    <label key={option.value} className="block">
+                        <input
+                            type="radio"
+                            name={name}
+                            value={option.value}
+                            checked={selectedValue === option.value}
+                            onChange={onChange}
+                            className="mr-2"
+                        />
+                        {option.label}
+                    </label>
+                ))
+            ) : (
+                <div>Tidak ada opsi tersedia</div>
+            )}
+
             {/* Tampilkan pesan error jika ada */}
             {error && <div className="text-red-500 mt-1">{error}</div>}
-        </label>
+        </div>
     );
 };
 
