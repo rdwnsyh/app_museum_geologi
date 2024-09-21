@@ -19,11 +19,11 @@ class KelolaKoleksiBatuanController extends Controller
     public function index(): Response
     {
          // Ambil data dari tabel batuan dengan pagination
-        $dataBatuan = KelolaKoleksiBatuan::paginate(10); // Menampilkan 10 item per halaman
+        $koleksibatuan = KelolaKoleksiBatuan::paginate(10); // Menampilkan 10 item per halaman
 
         // Kirim data ke view menggunakan Inertia
         return Inertia::render('Kelola/Batuan/Index', [
-            'batuan' => $dataBatuan
+            'koleksibatuan' => $koleksibatuan
         ]);
     }
 
@@ -101,7 +101,7 @@ class KelolaKoleksiBatuanController extends Controller
             'audio' => 'nullable|mimes:mp3,wav,ogg|max:5120', // Maksimal 5MB
 
             // Validasi video
-            'video' => 'nullable|mimes:mp4,avi,mov|max:10240', // Maksimal 10MB
+            'vidio' => 'nullable|mimes:mp4,avi,mov|max:10240', // Maksimal 10MB
             'status' => 'nullable|in:ada,tidak ada',
         ], [
             'kategori_bmn.required' => 'Kategori BMN harus diisi.',
@@ -112,8 +112,8 @@ class KelolaKoleksiBatuanController extends Controller
             'gambar_satu.max' => 'Ukuran gambar maksimal 2MB.',
             'audio.mimes' => 'Format file audio harus berupa mp3, wav, atau ogg.',
             'audio.max' => 'Ukuran maksimal file audio adalah 5MB.',
-            'video.mimes' => 'Format file video harus berupa mp4, avi, atau mov.',
-            'video.max' => 'Ukuran maksimal file video adalah 10MB.',
+            'vidio.mimes' => 'Format file i harus berupa mp4, avi, atau mov.',
+            'vidio.max' => 'Ukuran maksimal file video adalah 10MB.',
         ]);
     
 
@@ -169,6 +169,9 @@ class KelolaKoleksiBatuanController extends Controller
             'koleksibatuan' => $koleksibatuan
             // dd($kelolaKoleksiBatuan)
         ]);
+
+         // Mengambil URL file dari storage
+    
     }
 
     /**
@@ -176,8 +179,8 @@ class KelolaKoleksiBatuanController extends Controller
      */
     public function update(Request $request, KelolaKoleksiBatuan $koleksibatuan): RedirectResponse
 {
-    // Validasi data input termasuk gambar, audio, dan video
-    $rules = [
+    // Validasi data
+    $validatedData = $request->validate([
         'kategori_bmn' => 'nullable|string|max:255',
         'nup_bmn' => 'required|string|max:255',
         'no_regis' => 'required|string|max:255',
@@ -227,94 +230,104 @@ class KelolaKoleksiBatuanController extends Controller
         'nilai_buku' => 'required|string|max:255',
 
         // Halaman 4: Validasi gambar, audio, dan video
-        'gambar_satu' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
-        'gambar_dua' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
-        'gambar_tiga' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
-        'audio' => 'nullable|mimes:mp3,wav,ogg|max:5120',
-        'video' => 'nullable|mimes:mp4,avi,mov|max:10240',
-    ];
+        // 'gambar_satu' => 'image|mimes:jpeg,png,jpg,svg|max:2048',
+        // 'gambar_dua' => 'image|mimes:jpeg,png,jpg,svg|max:2048',
+        // 'gambar_tiga' => 'image|mimes:jpeg,png,jpg,svg|max:2048',
+        // 'audio' => 'mimes:mp3,wav,ogg|max:5120',
+        // 'vidio' => 'mimes:mp4,avi,mov|max:10240',
+        // 'gambar_satu' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        // 'gambar_dua' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        // 'gambar_tiga' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        // 'audio' => 'mimes:mp3,wav|max:5120', // Max 10MB
+        // 'vidio' => 'mimes:mp4,mov,avi|max:10240', // Max 50MB
+    ]);
 
-    // Validasi data
-    $validatedData = $request->validate($rules);
-
-    // Proses upload gambar
     if ($request->hasFile('gambar_satu')) {
+        // Delete the existing file if present
         if ($koleksibatuan->gambar_satu) {
-            Storage::delete($koleksibatuan->gambar_satu);
+            Storage::disk('public')->delete($koleksibatuan->gambar_satu);
         }
-        $validatedData['gambar_satu'] = $request->file('gambar_satu')->store('koleksi_batuan');
+        // Store the new file and save its path
+        $validatedData['gambar_satu'] = $request->file('gambar_satu')->store('koleksi_batuan', 'public');
     }
-
+    
     if ($request->hasFile('gambar_dua')) {
+        // Delete the existing file if present
         if ($koleksibatuan->gambar_dua) {
-            Storage::delete($koleksibatuan->gambar_dua);
+            Storage::disk('public')->delete($koleksibatuan->gambar_dua);
         }
-        $validatedData['gambar_dua'] = $request->file('gambar_dua')->store('koleksi_batuan');
+        // Store the new file and save its path
+        $validatedData['gambar_dua'] = $request->file('gambar_dua')->store('koleksi_batuan', 'public');
     }
-
+    
     if ($request->hasFile('gambar_tiga')) {
+        // Delete the existing file if present
         if ($koleksibatuan->gambar_tiga) {
-            Storage::delete($koleksibatuan->gambar_tiga);
+            Storage::disk('public')->delete($koleksibatuan->gambar_tiga);
         }
-        $validatedData['gambar_tiga'] = $request->file('gambar_tiga')->store('koleksi_batuan');
+        // Store the new file and save its path
+        $validatedData['gambar_tiga'] = $request->file('gambar_tiga')->store('koleksi_batuan', 'public');
     }
-
-    // Proses upload audio
+    
     if ($request->hasFile('audio')) {
+        // Delete the existing file if present
         if ($koleksibatuan->audio) {
-            Storage::delete($koleksibatuan->audio);
+            Storage::disk('public')->delete($koleksibatuan->audio);
         }
-        $validatedData['audio'] = $request->file('audio')->store('koleksi_batuan/audio');
+        // Store the new audio file in a dedicated directory
+        $validatedData['audio'] = $request->file('audio')->store('koleksi_batuan/audio', 'public');
     }
-
-    // Proses upload video
-    if ($request->hasFile('video')) {
-        if ($koleksibatuan->video) {
-            Storage::delete($koleksibatuan->video);
+    
+    if ($request->hasFile('vidio')) { // Make sure to use the correct name 'vidio' or 'video'
+        // Delete the existing file if present
+        if ($koleksibatuan->vidio) {
+            Storage::disk('public')->delete($koleksibatuan->vidio);
         }
-        $validatedData['video'] = $request->file('video')->store('koleksi_batuan/video');
+        // Store the new video file in a dedicated directory
+        $validatedData['vidio'] = $request->file('vidio')->store('koleksi_batuan/video', 'public');
     }
 
     // Update data ke database
-    KelolaKoleksiBatuan::where('id', $koleksibatuan->id)->update($validatedData);
+    $koleksibatuan->update($validatedData);
+    // dd($koleksibatuan);
 
-    // Redirect ke halaman index dengan pesan sukses
+    // Redirect ke halaman yang diinginkan
     return redirect()->route('kelolakoleksibatuan')
         ->with('success', 'Data koleksi batuan berhasil diperbarui.');
 }
 
 
+
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(KelolaKoleksiBatuan $kelolaKoleksiBatuan): RedirectResponse
+    public function destroy(KelolaKoleksiBatuan $koleksibatuan): RedirectResponse
     {
-         // Hapus gambar, audio, dan video jika ada
-         if ($kelolaKoleksiBatuan->gambar_satu) {
-            Storage::delete($kelolaKoleksiBatuan->gambar_satu);
+            // Hapus file gambar, video, dan audio yang terkait jika ada
+        if ($koleksibatuan->gambar_satu) {
+            Storage::disk('public')->delete($koleksibatuan->gambar_satu);
         }
-
-        if ($kelolaKoleksiBatuan->gambar_dua) {
-            Storage::delete($kelolaKoleksiBatuan->gambar_dua);
+    
+        if ($koleksibatuan->gambar_dua) {
+            Storage::disk('public')->delete($koleksibatuan->gambar_dua);
         }
-
-        if ($kelolaKoleksiBatuan->gambar_tiga) {
-            Storage::delete($kelolaKoleksiBatuan->gambar_tiga);
+    
+        if ($koleksibatuan->gambar_tiga) {
+            Storage::disk('public')->delete($koleksibatuan->gambar_tiga);
         }
-
-        if ($kelolaKoleksiBatuan->audio) {
-            Storage::delete($kelolaKoleksiBatuan->audio);
+    
+        if ($koleksibatuan->vidio) {
+            Storage::disk('public')->delete($koleksibatuan->vidio);
         }
-
-        if ($kelolaKoleksiBatuan->video) {
-            Storage::delete($kelolaKoleksiBatuan->video);
+    
+        if ($koleksibatuan->audio) {
+            Storage::disk('public')->delete($koleksibatuan->audio);
         }
-
+    
         // Hapus data dari database
-        $kelolaKoleksiBatuan->delete();
-
-        // Redirect ke halaman indeks dengan pesan sukses
-        return redirect()->route('kelolakoleksibatuan')
-            ->with('success', 'Data koleksi batuan berhasil dihapus.');
+        $koleksibatuan->delete();
+    
+        // Redirect dengan pesan sukses
+        return redirect()->route('kelolakoleksibatuan')->with('success', 'Data koleksi batuan berhasil dihapus.');
     }
 }

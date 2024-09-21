@@ -12,16 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('fosil', function (Blueprint $table) {
-            // halaman 1 
+            // halaman 1 47 field
             $table->bigIncrements('id');
             $table->string('kategori_bmn')->default('6.06.01.06.001')->nullable(false);
+            $table->string('nup_bmn');
+            // tambah field
             $table->string('no_regis');
-            $table->string('tipe_bmn')->default('Fosil')->nullable(false);
             $table->string('no_inventaris');
+
+            $table->string('tipe_bmn')->default('Fosil')->nullable(false); 
+            $table->string('no_awal');
             $table->string('satuan');
             $table->string('kelompok_koleksi')->default('Fosil')->nullable(false);
             $table->string('jenis_koleksi');
+            // tambah field
             $table->string('kode_koleksi');
+
             $table->string('ruang_penyimpanan');
             $table->string('lokasi_penyimpanan');
             $table->string('lantai');
@@ -41,6 +47,7 @@ return new class extends Migration
             $table->string('pulau');
             $table->string('provinsi');
             $table->string('kota');
+            $table->string('alamat');
             $table->string('latitude');
             $table->string('longitude');
             $table->string('elevasi');

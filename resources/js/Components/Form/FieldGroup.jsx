@@ -1,18 +1,19 @@
+// FieldGroup.jsx
 import React from "react";
 
-export default function FieldGroup({ label, name, error, children }) {
+const FieldGroup = ({ label, name, children, error }) => {
     return (
-        <div className="space-y-2">
-            {label && (
-                <label
-                    className="block text-gray-800 select-none"
-                    htmlFor={name}
-                >
-                    {label}:
-                </label>
-            )}
+        <div className="field-group">
+            <label
+                htmlFor={name}
+                className="block text-sm font-medium text-gray-700"
+            >
+                {label}
+            </label>
             {children}
-            {error && <div className="text-red-500 mt-2 text-sm">{error}</div>}
+            {error && <p className="text-red-500">{error}</p>}
         </div>
     );
-}
+};
+
+export default FieldGroup;

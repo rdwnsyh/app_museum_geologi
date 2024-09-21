@@ -77,34 +77,36 @@ const Edit = () => {
 
     const [step, setStep] = useState(1);
 
+    // Fungsi untuk menangani submit
     function handleSubmit(e) {
         e.preventDefault();
         const formData = new FormData();
-        // Menambahkan data form yang akan diperbarui
+
+        // Masukkan semua data ke dalam formData, bukan hanya yang berupa file
         for (const [key, value] of Object.entries(data)) {
             if (value instanceof File) {
                 formData.append(key, value);
-            } else {
+            } else if (value !== null) {
                 formData.append(key, value);
             }
         }
-        // Jika pada langkah terakhir (step 4), lakukan update data
+
         if (step === 4) {
-            put(route("kelolakoleksibatuan.update", koleksibatuan.id), {
-                data: formData,
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-                onSuccess: () => {
-                    // Tindakan setelah sukses update
-                },
-                onError: (errors) => {
-                    // Tindakan setelah terjadi error
-                },
-            });
+            put(
+                route("kelolakoleksibatuan.update", koleksibatuan.id),
+                formData,
+                {
+                    onSuccess: () => {
+                        // Berhasil
+                    },
+                    onError: (errors) => {
+                        // Tindakan jika gagal
+                        console.error(errors);
+                    },
+                }
+            );
         } else {
-            // Jika bukan langkah terakhir, lanjut ke langkah berikutnya
-            setStep(step + 1);
+            setStep(step + 1); // Lanjutkan ke step berikutnya
         }
     }
 
@@ -139,7 +141,7 @@ const Edit = () => {
             </h1>
 
             <div className="max-w-3xl overflow-hidden bg-white rounded shadow">
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} encType="multipart/form-data">
                     <div className="grid gap-10 p-10 lg:grid-cols-2">
                         {step === 1 && (
                             <>
@@ -526,17 +528,15 @@ const Edit = () => {
                                     error={errors.nama_koleksi}
                                 >
                                     <TextInput
-                                        //id="nama_koleksi"
-                                        type="text"
                                         name="nama_koleksi"
-                                        error={errors.nama_koleksi}
-                                        value={data.nama_koleksi}
+                                        value={data.nama_koleksi} // Data diambil dari state
                                         onChange={(e) =>
                                             setData(
                                                 "nama_koleksi",
                                                 e.target.value
                                             )
-                                        }
+                                        } // onChange memperbarui state
+                                        error={errors.nama_koleksi} // Tampilkan pesan error jika ada
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -1073,93 +1073,89 @@ const Edit = () => {
 
                         {step === 4 && (
                             <>
+                                {/* Field Gambar 1 */}
                                 <FieldGroup
                                     label="Gambar 1"
                                     name="gambar_satu"
                                     error={errors.gambar_satu}
                                 >
                                     <FileInput
-                                        type="file"
                                         name="gambar_satu"
                                         error={errors.gambar_satu}
+                                        existingFile={koleksibatuan.gambar_satu} // Menampilkan file yang sudah ada
                                         onFileChange={(file) =>
                                             handleFileChange(
                                                 "gambar_satu",
                                                 file
                                             )
-                                        }
-                                        existingFile={
-                                            koleksibatuan?.gambar_satu
-                                        } // Assuming this is the file name
+                                        } // Mengatur file yang dipilih
                                     />
                                 </FieldGroup>
 
+                                {/* Field Gambar 2 */}
                                 <FieldGroup
                                     label="Gambar 2"
                                     name="gambar_dua"
                                     error={errors.gambar_dua}
                                 >
                                     <FileInput
-                                        type="file"
                                         name="gambar_dua"
                                         error={errors.gambar_dua}
+                                        existingFile={koleksibatuan.gambar_dua}
                                         onFileChange={(file) =>
                                             handleFileChange("gambar_dua", file)
                                         }
-                                        existingFile={koleksibatuan?.gambar_dua}
                                     />
                                 </FieldGroup>
 
+                                {/* Field Gambar 3 */}
                                 <FieldGroup
                                     label="Gambar 3"
                                     name="gambar_tiga"
                                     error={errors.gambar_tiga}
                                 >
                                     <FileInput
-                                        type="file"
                                         name="gambar_tiga"
                                         error={errors.gambar_tiga}
+                                        existingFile={koleksibatuan.gambar_tiga}
                                         onFileChange={(file) =>
                                             handleFileChange(
                                                 "gambar_tiga",
                                                 file
                                             )
                                         }
-                                        existingFile={
-                                            koleksibatuan?.gambar_tiga
-                                        }
                                     />
                                 </FieldGroup>
 
+                                {/* Field Vidio */}
                                 <FieldGroup
                                     label="Vidio"
                                     name="vidio"
                                     error={errors.vidio}
                                 >
                                     <FileInput
-                                        type="file"
                                         name="vidio"
                                         error={errors.vidio}
+                                        existingFile={koleksibatuan.vidio}
                                         onFileChange={(file) =>
                                             handleFileChange("vidio", file)
                                         }
-                                        existingFile={koleksibatuan?.vidio}
                                     />
                                 </FieldGroup>
 
+                                {/* Field Audio */}
                                 <FieldGroup
                                     label="Audio"
                                     name="audio"
                                     error={errors.audio}
                                 >
                                     <FileInput
-                                        type="file"
                                         name="audio"
                                         error={errors.audio}
+                                        existingFile={koleksibatuan.audio}
                                         onFileChange={(file) =>
                                             handleFileChange("audio", file)
                                         }
-                                        existingFile={koleksibatuan?.audio}
                                     />
                                 </FieldGroup>
                             </>
@@ -1176,13 +1172,6 @@ const Edit = () => {
                                 Back
                             </button>
                         )}
-
-                        {/* Delete Button */}
-                        {/* {!batuan?.deleted_at && (
-                            <DeleteButton onDelete={destroy}>
-                                Delete Batuan
-                            </DeleteButton>
-                        )} */}
 
                         {/* Submit Button */}
                         <LoadingButton

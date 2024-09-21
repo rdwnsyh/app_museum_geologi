@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, usePage } from "@inertiajs/react";
+import { Link, usePage, router } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
 import Table from "@/Components/Table/Table";
 import SearchBar from "@/Components/SearchBar/SearchBar";
@@ -7,15 +7,21 @@ import Pagination from "@/Components/Pagination/Pagination";
 import { ArrowDownToLine, Plus } from "lucide-react";
 
 function Index() {
-    const { batuan } = usePage().props;
+    const { koleksibatuan } = usePage().props;
 
-    const data = batuan?.data || [];
-    const links = batuan?.meta?.links || [];
+    const data = koleksibatuan?.data || [];
+    const links = koleksibatuan?.meta?.links || [];
 
     const handleDelete = (id) => {
         if (window.confirm("Are you sure you want to delete this item?")) {
-            // Implement deletion logic here
-            console.log(`Delete item with id: ${id}`);
+            router.delete(route("kelolakoleksibatuan.destroy", id), {
+                onSuccess: () => {
+                    // console.log(`Item with id: ${id} deleted`);
+                },
+                onError: (error) => {
+                    // console.error("Failed to delete the item:", error);
+                },
+            });
         }
     };
 

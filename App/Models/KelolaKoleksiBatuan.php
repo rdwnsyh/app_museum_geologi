@@ -14,11 +14,11 @@ class KelolaKoleksiBatuan extends Model
 
      // Tentukan atribut mana yang dapat ditetapkan secara massal
         protected $fillable = [
-        'kategori_bmn',
+        // 'kategori_bmn',
         'nup_bmn', 'no_regis', 'no_inventaris',
-        'tipe_bmn', 
+        // 'tipe_bmn', 
         'no_awal', 'satuan',
-        'kelompok_koleksi',
+        // 'kelompok_koleksi',
         'jenis_koleksi', 'kode_koleksi', 'ruang_penyimpanan', 
         'lokasi_penyimpanan', 'lantai', 'no_lajur', 'no_lemari', 'no_laci', 'no_slot',
         'kondisi', 'nama_koleksi', 'deskripsi_koleksi', 'keterangan_koleksi', 
@@ -29,5 +29,28 @@ class KelolaKoleksiBatuan extends Model
         'gambar_satu', 'gambar_dua', 'gambar_tiga', 'vidio', 'audio'
     ];
 
-      // Metode boot untuk menangani kejadian model seperti validasi sebelum disimpan
+    public function getGambarSatuUrlAttribute()
+    {
+        return $this->gambar_satu ? asset('storage/' . $this->gambar_satu) : null;
+    }
+
+    public function getGambarDuaUrlAttribute()
+    {
+        return $this->gambar_dua ? asset('storage/' . $this->gambar_dua) : null;
+    }
+
+    public function getGambarTigaUrlAttribute()
+    {
+        return $this->gambar_tiga ? asset('storage/' . $this->gambar_tiga) : null;
+    }
+
+    public function getVidioUrlAttribute()
+    {
+        return $this->vidio ? asset('storage/' . $this->vidio) : null;
+    }
+
+    public function getAudioUrlAttribute()
+    {
+        return $this->audio ? asset('storage/' . $this->audio) : null;
+    }
 }
