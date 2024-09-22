@@ -1123,7 +1123,7 @@ const Create = () => {
 };
 
 Create.layout = (page) => (
-    <MainLayout title="Tambah Organization" children={page} />
+    <MainLayout title="Tambah Kelola Koleksi Batuan" children={page} />
 );
 
 export default Create;

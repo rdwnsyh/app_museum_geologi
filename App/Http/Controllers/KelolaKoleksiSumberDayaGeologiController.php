@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\KelolaKoleksiSumberDayaGeologi;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Redirect;
 
 class KelolaKoleksiSumberDayaGeologiController extends Controller
 {

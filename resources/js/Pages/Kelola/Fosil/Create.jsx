@@ -14,11 +14,18 @@ const Create = () => {
         // halaman 1 admin
         kategori_bmn: "",
         nup_bmn: "",
+        // tambah field
+        no_regis: "",
+        no_inventaris: "",
+
         tipe_bmn: "",
         no_awal: "",
         satuan: "",
         kelompok_koleksi: "",
         jenis_koleksi: "",
+        // tambah field
+        kode_koleksi: "",
+
         ruang_penyimpanan: "",
         lokasi_penyimpanan: "",
         lantai: "",
@@ -79,7 +86,7 @@ const Create = () => {
             }
         }
         if (step === 4) {
-            post(route("kelolakoleksibatuan.store"), {
+            post(route("kelolakoleksifosil.store"), {
                 data: formData,
                 headers: {
                     "Content-Type": "multipart/form-data",
@@ -100,6 +107,7 @@ const Create = () => {
         setStep(step - 1);
     }
 
+    // Fungsi untuk menangani perubahan file
     const handleFileChange = (name, file) => {
         setData(name, file);
     };
@@ -114,7 +122,7 @@ const Create = () => {
         <div>
             <h1 className="mb-8 text-3xl font-bold">
                 <Link
-                    href={route("kelolakoleksibatuan")}
+                    href={route("kelolakoleksifosil")}
                     className="text-indigo-600 hover:text-indigo-700"
                 >
                     Kelola Koleksi
@@ -122,7 +130,7 @@ const Create = () => {
                 <span className="font-medium text-indigo-600"> /</span> Create
             </h1>
             <div className="max-w-3xl overflow-hidden bg-white rounded shadow">
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} encType="multipart/form-data">
                     <div className="grid gap-10 p-10 lg:grid-cols-2">
                         {step === 1 && (
                             <>
@@ -159,6 +167,41 @@ const Create = () => {
                                         }
                                     />
                                 </FieldGroup>
+
+                                <FieldGroup
+                                    label="Nomor Registrasi"
+                                    name="no_regis"
+                                    error={errors.no_regis}
+                                >
+                                    <TextInput
+                                        type="text"
+                                        name="no_regis"
+                                        error={errors.no_regis}
+                                        value={data.no_regis}
+                                        onChange={(e) =>
+                                            setData("no_regis", e.target.value)
+                                        }
+                                    />
+                                </FieldGroup>
+
+                                <FieldGroup
+                                    label="Nomor Inventaris"
+                                    error={errors.no_inventaris}
+                                >
+                                    <TextInput
+                                        type="text"
+                                        name="no_inventaris"
+                                        error={errors.no_inventaris}
+                                        value={data.no_inventaris}
+                                        onChange={(e) =>
+                                            setData(
+                                                "no_inventaris",
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                </FieldGroup>
+
                                 <FieldGroup
                                     label="Tipe BMN"
                                     name="tipe_bmn"
@@ -261,6 +304,26 @@ const Create = () => {
                                         ]}
                                     />
                                 </FieldGroup>
+
+                                <FieldGroup
+                                    label="Kode Koleksi"
+                                    name="kode_koleksi"
+                                    error={errors.kode_koleksi}
+                                >
+                                    <TextInput
+                                        type="text"
+                                        name="kode_koleksi"
+                                        error={errors.kode_koleksi}
+                                        value={data.kode_koleksi}
+                                        onChange={(e) =>
+                                            setData(
+                                                "kode_koleksi",
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                </FieldGroup>
+
                                 <FieldGroup
                                     label="Ruang Penyimpanan"
                                     name="ruang_penyimpanan"
@@ -280,6 +343,7 @@ const Create = () => {
                                         ]}
                                     />
                                 </FieldGroup>
+
                                 <FieldGroup
                                     label="Lokasi Penyimpanan"
                                     name="lokasi_penyimpanan"
@@ -962,7 +1026,6 @@ const Create = () => {
                                     error={errors.gambar_satu}
                                 >
                                     <FileInput
-                                        type="file"
                                         name="gambar_satu"
                                         error={errors.gambar_satu}
                                         onFileChange={(file) =>
@@ -980,7 +1043,6 @@ const Create = () => {
                                     error={errors.gambar_dua}
                                 >
                                     <FileInput
-                                        type="file"
                                         name="gambar_dua"
                                         error={errors.gambar_dua}
                                         onFileChange={(file) =>
@@ -995,7 +1057,6 @@ const Create = () => {
                                     error={errors.gambar_tiga}
                                 >
                                     <FileInput
-                                        type="file"
                                         name="gambar_tiga"
                                         error={errors.gambar_tiga}
                                         onFileChange={(file) =>
@@ -1006,26 +1067,32 @@ const Create = () => {
                                         }
                                     />
                                 </FieldGroup>
+
                                 <FieldGroup
                                     label="Vidio"
                                     name="vidio"
                                     error={errors.vidio}
                                 >
                                     <FileInput
-                                        type="file"
                                         name="vidio"
-                                        onChange={handleFileChange}
+                                        error={errors.vidio}
+                                        onFileChange={(file) =>
+                                            handleFileChange("vidio", file)
+                                        }
                                     />
                                 </FieldGroup>
+
                                 <FieldGroup
                                     label="Audio"
                                     name="audio"
                                     error={errors.audio}
                                 >
                                     <FileInput
-                                        type="file"
                                         name="audio"
-                                        onChange={handleFileChange}
+                                        error={errors.audio}
+                                        onFileChange={(file) =>
+                                            handleFileChange("audio", file)
+                                        }
                                     />
                                 </FieldGroup>
                             </>
@@ -1044,7 +1111,7 @@ const Create = () => {
                         <LoadingButton
                             loading={processing}
                             type="submit"
-                            className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-900 transition"
+                            className="ml-auto bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-900 transition"
                         >
                             {step === 4 ? "Tambah Data" : "Next"}
                         </LoadingButton>
@@ -1056,7 +1123,7 @@ const Create = () => {
 };
 
 Create.layout = (page) => (
-    <MainLayout title="Tambah Organization" children={page} />
+    <MainLayout title="Tambah Kelola koleksi Fosil" children={page} />
 );
 
 export default Create;
