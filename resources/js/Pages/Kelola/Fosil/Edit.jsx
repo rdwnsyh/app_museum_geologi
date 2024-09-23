@@ -134,7 +134,7 @@ const Edit = () => {
                     href={route("kelolakoleksifosil")}
                     className="text-indigo-600 hover:text-indigo-700"
                 >
-                    Edit Koleksi Bantuan
+                    Edit Koleksi Fosil
                 </Link>
                 <span className="mx-2 font-medium text-indigo-600">/</span>
                 {koleksifosil?.nama_koleksi}

@@ -27,7 +27,7 @@ function Index() {
 
     return (
         <div>
-            <h1 className="mb-8 text-3xl font-bold">Kelola Koleksi</h1>
+            <h1 className="mb-8 text-3xl font-bold">Kelola Koleksi Batuan</h1>
 
             <div className="flex items-center justify-between mb-2">
                 <SearchBar />

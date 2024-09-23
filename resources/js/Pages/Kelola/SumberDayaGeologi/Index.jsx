@@ -27,7 +27,7 @@ function Index() {
 
     return (
         <div>
-            <h1 className="mb-8 text-3xl font-bold">Kelola Koleksi</h1>
+            <h1 className="mb-8 text-3xl font-bold">Kelola Koleksi Sumber Daya Geologi</h1>
 
             <div className="flex items-center justify-between mb-2">
                 <SearchBar />
@@ -58,7 +58,7 @@ function Index() {
 
             <Table
                 columns={[
-                    { label: "Koleksi Batuan", name: "id" },
+                    { label: "Koleksi Sumber Daya", name: "id" },
                     { label: "Nama Koleksi", name: "nama_koleksi" },
                     { label: "Tipe Koleksi", name: "tipe_bmn" },
                     { label: "Alamat Storage", name: "alamat" },
