@@ -6,6 +6,7 @@ use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\KelolakoleksiController;
 use App\Http\Controllers\KelolaKoleksiFosilController;
+use App\Http\Controllers\KelolaKoleksiSumberDayaGeologiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StorageController;
 use App\Http\Controllers\ManajemenAdminController;
@@ -182,7 +183,7 @@ Route::put('inbound/{inbound}/restore', [InboundController::class, 'restore'])
     ->middleware('auth');
 
 
-// Route Kelola Koleksi batuan
+// // Route Kelola Koleksi batuan
 Route::get('kelolakoleksibatuan', [KelolaKoleksiBatuanController::class, 'index'])
     ->name('kelolakoleksibatuan')
     ->middleware('auth');
@@ -235,29 +236,43 @@ Route::delete('kelolakoleksifosil/{koleksifosil}', [KelolaKoleksiFosilController
 
 
         // Route Kelola Koleksi SDG
-Route::get('kelolakoleksisumberdayageologi', [KelolaKoleksiSumberDayaGeologi::class, 'index'])
+Route::get('kelolakoleksisumberdayageologi', [KelolaKoleksiSumberDayaGeologiController::class, 'index'])
 ->name('kelolakoleksisumberdayageologi')
 ->middleware('auth');
 // Route ke halaman create kelolakoleksisumberdayageologi
-Route::get('kelolakoleksisumberdayageologi/create', [KelolaKoleksiSumberDayaGeologi::class, 'create'])
+Route::get('kelolakoleksisumberdayageologi/create', [KelolaKoleksiSumberDayaGeologiController::class, 'create'])
 ->name('kelolakoleksisumberdayageologi.create')
 ->middleware('auth');
 // proses create kelolakoleksisumberdayageologi
-Route::post('kelolakoleksisumberdayageologi', [KelolaKoleksiSumberDayaGeologi::class, 'store'])
+Route::post('kelolakoleksisumberdayageologi', [KelolaKoleksiSumberDayaGeologiController::class, 'store'])
 ->name('kelolakoleksisumberdayageologi.store')
 ->middleware('auth');
 // route ke halaman edit kelolakoleksisumberdayageologi
-Route::get('kelolakoleksisumberdayageologi/{koleksi_sdg}/edit', [KelolaKoleksiSumberDayaGeologi::class, 'edit'])
+Route::get('kelolakoleksisumberdayageologi/{koleksi_sdg}/edit', [KelolaKoleksiSumberDayaGeologiController::class, 'edit'])
 ->name('kelolakoleksisumberdayageologi.edit')
 ->middleware('auth');
 // proses edit kelolakoleksisumberdayageologi
-Route::put('kelolakoleksisumberdayageologi/{koleksi_sdg}', [KelolaKoleksiSumberDayaGeologi::class, 'update'])
+Route::put('kelolakoleksisumberdayageologi/{koleksi_sdg}', [KelolaKoleksiSumberDayaGeologiController::class, 'update'])
 ->name('kelolakoleksisumberdayageologi.update')
 ->middleware('auth');
 // route ke halaman hapus kelolakoleksisumberdayageologi
-Route::delete('kelolakoleksisumberdayageologi/{koleksi_sdg}', [KelolaKoleksiSumberDayaGeologi::class, 'destroy'])
+Route::delete('kelolakoleksisumberdayageologi/{koleksi_sdg}', [KelolaKoleksiSumberDayaGeologiController::class, 'destroy'])
 ->name('kelolakoleksisumberdayageologi.destroy')
 ->middleware('auth');
+
+// // Route Kelola Koleksi Batuan
+// Route::resource('kelolakoleksibatuan', KelolaKoleksiBatuanController::class)
+//     ->middleware('auth');
+
+// // Route Kelola Koleksi Fosil
+// Route::resource('kelolakoleksifosil', KelolaKoleksiFosilController::class)
+//     ->middleware('auth');
+
+// // Route Kelola Koleksi Sumber Daya Geologi
+// Route::resource('kelolakoleksisumberdayageologi', KelolaKoleksiSumberDayaGeologiController::class)
+//     ->middleware('auth');
+
+
 
 
     // Manajemen Admin

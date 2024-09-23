@@ -128,7 +128,7 @@ const Edit = () => {
 
     return (
         <div>
-            <Head title={`edit ${koleksibatuan?.nama_koleksi}`} />
+            <Head title={`edit ${koleksi_sdg?.nama_koleksi}`} />
             <h1 className="mb-8 text-3xl font-bold">
                 <Link
                     href={route("kelolakoleksisumberdayageologi")}
@@ -137,7 +137,7 @@ const Edit = () => {
                     Edit Koleksi Bantuan
                 </Link>
                 <span className="mx-2 font-medium text-indigo-600">/</span>
-                {koleksibatuan?.nama_koleksi}
+                {koleksi_sdg?.nama_koleksi}
             </h1>
 
             <div className="max-w-3xl overflow-hidden bg-white rounded shadow">

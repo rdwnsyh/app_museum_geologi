@@ -1,15 +1,15 @@
 import React from "react";
 import MainMenuItem from "@/Components/Menu/MainMenuItem";
-import { 
-    CircleGauge, 
-    Warehouse, 
-    HandHelping, 
-    ArchiveRestore, 
-    ArrowBigLeftDash, 
-    ArrowBigRightDash, 
-    Package, 
-    UserCog, 
-    CircleCheck 
+import {
+    CircleGauge,
+    Warehouse,
+    HandHelping,
+    ArchiveRestore,
+    ArrowBigLeftDash,
+    ArrowBigRightDash,
+    Package,
+    UserCog,
+    CircleCheck,
 } from "lucide-react";
 
 export default function MainMenu({ className }) {
@@ -52,7 +52,10 @@ export default function MainMenu({ className }) {
                 submenu={[
                     { text: "Batu dan Mineral", link: "kelolakoleksibatuan" },
                     { text: "Fosil", link: "kelolakoleksifosil" },
-                    { text: "Sumber Daya Geologi", link: "kelolakoleksisumberdayageologi" },
+                    {
+                        text: "Sumber Daya Geologi",
+                        link: "kelolakoleksisumberdayageologi",
+                    },
                 ]}
             />
             <MainMenuItem

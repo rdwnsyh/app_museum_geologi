@@ -153,11 +153,11 @@ class KelolaKoleksiSumberDayaGeologiController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(KelolaKoleksiSumberDayaGeologi $koleksi_sgd)
+    public function edit(KelolaKoleksiSumberDayaGeologi $koleksi_sdg): Response
     {
         // Menampilkan halaman edit dengan data yang diambil
-        return Inertia::render('Kelola/Fosil/Edit', [
-            'koleksi_sgd' => $koleksi_sgd
+        return Inertia::render('Kelola/SumberDayaGeologi/Edit', [
+            'koleksi_sdg' => $koleksi_sdg
         ]);
     }
 
@@ -286,7 +286,7 @@ class KelolaKoleksiSumberDayaGeologiController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(KelolaKoleksiSumberDayaGeologi $koleksi_sdg)
+    public function destroy(KelolaKoleksiSumberDayaGeologi $koleksi_sdg): RedirectResponse
     {
         // Hapus file gambar, video, dan audio yang terkait jika ada
     if ($koleksi_sdg->gambar_satu) {
