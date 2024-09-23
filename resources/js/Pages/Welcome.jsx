@@ -1,7 +1,7 @@
 import { Link } from "@inertiajs/react";
 import SearchBar from "../Components/SearchBar"; // Pastikan path ini sesuai dengan lokasi file SearchBar.js
 
-export default function Welcome({ auth }) {
+export default function Welcome({ auth, results, searchQuery }) {
     const handleImageError = () => {
         document
             .getElementById("screenshot-container")
@@ -23,7 +23,29 @@ export default function Welcome({ auth }) {
                             alt="Logo"
                             className="lg:w-60 lg:h-45 mb-6" // Mengatur jarak bawah antara logo dan search bar
                         />
-                        <SearchBar placeholder="Search..." />
+                        <SearchBar placeholder="Cari Koleksi..." />
+                        {/* <div className="mt-6">
+                            {searchQuery && (
+                                <p>Menampilkan hasil untuk "{searchQuery}":</p>
+                            )}
+                            {results.length > 0 ? (
+                                <ul>
+                                    {results.map((item) => (
+                                        <li
+                                            key={item.id}
+                                            className="border p-4 mb-2"
+                                        >
+                                            {item.name ||
+                                                item.nama_koleksi ||
+                                                item.nama_fosil ||
+                                                item.nama_sdg}
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>Tidak ada hasil yang ditemukan.</p>
+                            )}
+                        </div> */}
                     </div>
 
                     <div className="absolute top-0 right-0 p-6">

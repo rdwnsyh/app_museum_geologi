@@ -97,4 +97,13 @@ class KelolaKoleksiSumberDayaGeologi extends Model
     {
         return $this->audio ? asset('storage/' . $this->audio) : null;
     }
+
+    public function scopeFilter($query, array $filters)
+    {
+        // Filter berdasarkan keyword pencarian
+        $query->when($filters['search'] ?? false, function ($query, $search) {
+            $query->where('nama_koleksi', 'like', '%' . $search . '%');
+                // ->orWhere('description', 'like', '%' . $search . '%');
+        });
+    }
 }

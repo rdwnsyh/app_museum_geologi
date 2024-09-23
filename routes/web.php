@@ -18,8 +18,18 @@ use App\Models\KelolaKoleksiSumberDayaGeologi;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\SearchController;
 
 Route::get('/', [HomeController::class, 'index']);
+
+
+// Route untuk pencarian dari halaman utama
+Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+// Route untuk halaman detail koleksi berdasarkan ID dan tipe
+Route::get('/detail/{id}/{type}', [SearchController::class, 'detail'])->name('detail');
+
+
 
 // Route Dashboard
 Route::get('/dashboard', function () {
