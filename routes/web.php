@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InboundController;
 use App\Http\Controllers\KelolaKoleksiBatuanController;
 use App\Http\Controllers\PeminjamanController;
@@ -18,14 +19,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+Route::get('/', [HomeController::class, 'index']);
 
 // Route Dashboard
 Route::get('/dashboard', function () {
