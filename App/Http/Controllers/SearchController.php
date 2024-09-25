@@ -23,6 +23,27 @@ class SearchController extends Controller
         // Gabungkan hasil pencarian dari ketiga tabel
         $results = $batuan;
 
+    //     $search = $request->input('search');
+
+    // // Query untuk mencari nama koleksi dari tiga tabel
+    // $batuan = KelolaKoleksiBatuan::where('nama_koleksi', 'like', '%' . $search . '%')->get()->map(function ($item) {
+    //     $item->type = 'batuan';
+    //     return $item;
+    // });
+
+    // $fosil = KelolaKoleksiFosil::where('nama_koleksi', 'like', '%' . $search . '%')->get()->map(function ($item) {
+    //     $item->type = 'fosil';
+    //     return $item;
+    // });
+
+    // $sdg = KelolaKoleksiSumberDayaGeologi::where('nama_koleksi', 'like', '%' . $search . '%')->get()->map(function ($item) {
+    //     $item->type = 'sdg';
+    //     return $item;
+    // });
+
+    // // Gabungkan hasil pencarian dari ketiga tabel
+    // $results = $batuan->merge($fosil)->merge($sdg);
+
         // Render halaman baru untuk menampilkan hasil pencarian
         return Inertia::render('KoleksiMuseum', [
             'results' => $results,
