@@ -17,7 +17,6 @@ return new class extends Migration
             $table->date('tanggal_pengembalian');
             $table->string('kondisi_koleksi'); // Kondisi setelah dikembalikan
             $table->timestamps();
-
         });
     }
 

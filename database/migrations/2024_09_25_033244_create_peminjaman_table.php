@@ -13,14 +13,17 @@ return new class extends Migration
     {
         Schema::create('peminjaman', function (Blueprint $table) {
             $table->id();
-            $table->date('tanggal_peminjaman');
             
             // Relasi ke batuan, fosil, atau sumber_daya_geologi
             $table->unsignedBigInteger('koleksi_id');
-            $table->string('jenis_koleksi'); // Bisa 'batuan', 'fosil', atau 'sumber_daya_geologi'
             
             $table->string('peminjam');
-            $table->enum('status_peminjaman', ['dipinjam', 'dikembalikan'])->default('dipinjam');
+            $table->string('keperluan');
+            $table->date('tanggal_pinjam');
+            $table->string('surat_permohonan');
+            $table->string('identitas_diri');
+            $table->string('jenis_koleksi'); // Bisa 'batuan', 'fosil', atau 'sumber_daya_geologi'
+            $table->enum('status_peminjaman', ['pengajuan', 'dipinjam', 'ditolak', 'terlambat', 'selesai'])->default('pengajuan');
             $table->timestamps();
         });
     }

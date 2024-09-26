@@ -19,11 +19,11 @@ const Index = () => {
         <div>
             <h1 className="mb-8 text-3xl font-bold">Peminjaman</h1>
             <div className="flex items-center justify-between mb-6">
-            <SearchBar /> {/* Tambahkan SearchBar di sini */}
+                <SearchBar /> {/* Tambahkan SearchBar di sini */}
                 {/* <FilterBar /> */}
                 <Link
                     className="btn-indigo focus:outline-none"
-                    // href={route("contacts.create")}
+                    href={route("peminjaman.create")}
                 >
                     <span>Create</span>
                     <span className="hidden md:inline"> Peminjaman</span>
