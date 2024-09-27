@@ -32,7 +32,7 @@ class PeminjamanController extends Controller
     // Validasi data input
     $validatedData = $request->validate([
         'koleksi_id' => 'required|integer|exists:batuan,id', // Validasi ID koleksi dari tabel batuan atau sesuaikan jika koleksi dari fosil/sumber_daya_geologi
-        'jenis_koleksi' => 'required|string|in:batuan,fosil,sumber_daya_geologi', // Validasi jenis koleksi
+        'jenis_koleksi' => 'required|string', // Validasi jenis koleksi
         'peminjam' => 'required|string|max:255', // Validasi nama peminjam
         'keperluan' => 'required|string|max:255', // Validasi keperluan peminjaman
         'tanggal_pinjam' => 'required|date', // Validasi tanggal pinjam

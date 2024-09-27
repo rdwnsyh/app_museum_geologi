@@ -1,210 +1,168 @@
-import { Link, usePage, useForm } from "@inertiajs/react";
+import React from "react";
+import { Link, useForm } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
 import LoadingButton from "@/Components/Button/LoadingButton";
 import TextInput from "@/Components/Form/TextInput";
 import SelectInput from "@/Components/Form/SelectInput";
 import FieldGroup from "@/Components/Form/FieldGroup";
+import FileInput from "@/Components/Form/FileInput";
 
 const Create = () => {
-    const { organizations } = usePage().props;
     const { data, setData, errors, post, processing } = useForm({
-        first_name: "",
-        last_name: "",
-        organization_id: "",
-        email: "",
-        phone: "",
-        address: "",
-        city: "",
-        region: "",
-        country: "",
-        postal_code: "",
+        koleksi_id: "",
+        peminjam: "",
+        keperluan: "",
+        tanggal_pinjam: "",
+        surat_permohonan: "",
+        identitas_diri: "",
+        jenis_koleksi: "",
+        status_peminjaman: "",
     });
 
-    function handleSubmit(e) {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        post(route("contacts.store"));
-    }
+        const formData = new FormData();
+        Object.entries(data).forEach(([key, value]) => {
+            formData.append(key, value);
+        });
 
+        post(route("peminjaman.store"), {
+            data: formData,
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+            onSuccess: () => {
+                // Handle success (e.g., redirect)
+            },
+            onError: (errors) => {
+                // Handle errors
+            },
+        });
+    };
+
+    const handleFileChange = (name, file) => {
+        setData(name, file);
+    };
+
+    
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">
                 <Link
-                    href={route("contacts")}
+                    href={route("kelolakoleksibatuan")}
                     className="text-indigo-600 hover:text-indigo-700"
                 >
-                    Contacts
+                    Peminjaman
                 </Link>
                 <span className="font-medium text-indigo-600"> /</span> Create
             </h1>
             <div className="max-w-3xl overflow-hidden bg-white rounded shadow">
-                <form onSubmit={handleSubmit}>
-                    <div className="grid gap-8 p-8 lg:grid-cols-2">
-                        <FieldGroup
-                            label="First Name"
-                            name="first_name"
-                            error={errors.first_name}
-                        >
+                <form onSubmit={handleSubmit} encType="multipart/form-data">
+                    <div className="grid gap-10 p-10 lg:grid-cols-2">
+                        {/** Input fields */}
+                        <FieldGroup label="Nama Peminjam" error={errors.peminjam}>
                             <TextInput
-                                name="first_name"
-                                error={errors.first_name}
-                                value={data.first_name}
-                                onChange={(e) =>
-                                    setData("first_name", e.target.value)
-                                }
+                                name="peminjam"
+                                error={errors.peminjam}
+                                value={data.peminjam}
+                                onChange={(e) => setData("peminjam", e.target.value)}
+                                required
+                            />
+                        </FieldGroup>
+
+                        <FieldGroup label="Keperluan" error={errors.keperluan}>
+                            <TextInput
+                                name="keperluan"
+                                error={errors.keperluan}
+                                value={data.keperluan}
+                                onChange={(e) => setData("keperluan", e.target.value)}
+                                required
+                            />
+                        </FieldGroup>
+
+                        <FieldGroup label="Tanggal Pinjam" error={errors.tanggal_pinjam}>
+                            <TextInput
+                                type="date"
+                                name="tanggal_pinjam"
+                                error={errors.tanggal_pinjam}
+                                value={data.tanggal_pinjam}
+                                onChange={(e) => setData("tanggal_pinjam", e.target.value)}
+                                required
                             />
                         </FieldGroup>
 
                         <FieldGroup
-                            label="Last Name"
-                            name="last_name"
-                            error={errors.last_name}
-                        >
-                            <TextInput
-                                name="last_name"
-                                error={errors.last_name}
-                                value={data.last_name}
-                                onChange={(e) =>
-                                    setData("last_name", e.target.value)
-                                }
-                            />
+                                    label="Identitas Diri"
+                                    name="identitas_diri"
+                                    error={errors.identitas_diri}
+                                >
+                                    <FileInput
+                                        name="identitas_diri"
+                                        error={errors.identitas_diri}
+                                        onFileChange={(file) =>
+                                            handleFileChange("identitas_diri", file)
+                                        }
+                                    />
                         </FieldGroup>
 
                         <FieldGroup
-                            label="Organization"
-                            name="organization_id"
-                            error={errors?.organization_id}
-                        >
+                                    label="Surat Permohonan"
+                                    name="surat_permohonan"
+                                    error={errors.surat_permohonan}
+                                >
+                                    <FileInput
+                                        name="surat_permohonan"
+                                        error={errors.surat_permohonan}
+                                        onFileChange={(file) =>
+                                            handleFileChange("surat_permohonan", file)
+                                        }
+                                    />
+                        </FieldGroup>
+
+                        <FieldGroup 
+                        label="Jenis Koleksi" 
+                        error={errors.jenis_koleksi}>
+
                             <SelectInput
-                                name="organization_id"
-                                error={errors.organization_id}
-                                value={data.organization_id}
-                                onChange={(e) =>
-                                    setData("organization_id", e.target.value)
-                                }
-                                options={organizations?.map(({ id, name }) => ({
-                                    value: String(id),
-                                    label: name,
-                                }))}
-                            />
-                        </FieldGroup>
-
-                        <FieldGroup
-                            label="Email"
-                            name="email"
-                            error={errors.email}
-                        >
-                            <TextInput
-                                name="email"
-                                type="email"
-                                error={errors.email}
-                                value={data.email}
-                                onChange={(e) =>
-                                    setData("email", e.target.value)
-                                }
-                            />
-                        </FieldGroup>
-
-                        <FieldGroup
-                            label="Phone"
-                            name="phone"
-                            error={errors.phone}
-                        >
-                            <TextInput
-                                name="phone"
-                                error={errors.phone}
-                                value={data.phone}
-                                onChange={(e) =>
-                                    setData("phone", e.target.value)
-                                }
-                            />
-                        </FieldGroup>
-
-                        <FieldGroup
-                            label="Address"
-                            name="address"
-                            error={errors.address}
-                        >
-                            <TextInput
-                                name="address"
-                                error={errors.address}
-                                value={data.address}
-                                onChange={(e) =>
-                                    setData("address", e.target.value)
-                                }
-                            />
-                        </FieldGroup>
-
-                        <FieldGroup
-                            label="City"
-                            name="city"
-                            error={errors.city}
-                        >
-                            <TextInput
-                                name="city"
-                                error={errors.city}
-                                value={data.city}
-                                onChange={(e) =>
-                                    setData("city", e.target.value)
-                                }
-                            />
-                        </FieldGroup>
-
-                        <FieldGroup
-                            label="Region"
-                            name="region"
-                            error={errors.region}
-                        >
-                            <TextInput
-                                name="region"
-                                error={errors.region}
-                                value={data.region}
-                                onChange={(e) =>
-                                    setData("region", e.target.value)
-                                }
-                            />
-                        </FieldGroup>
-
-                        <FieldGroup
-                            label="Country"
-                            name="country"
-                            error={errors.country}
-                        >
-                            <SelectInput
-                                name="country"
-                                error={errors.country}
-                                value={data.country}
-                                onChange={(e) =>
-                                    setData("country", e.target.value)
-                                }
+                                name="jenis_koleksi"
+                                error={errors.jenis_koleksi}
+                                value={data.jenis_koleksi}
+                                onChange={(e) => setData("jenis_koleksi", e.target.value)}
                                 options={[
-                                    { value: "CA", label: "Canada" },
-                                    { value: "US", label: "United States" },
+                                    { value: "", label: "" },
+                                    { value: "BA", label: "Batuan" },
+                                    { value: "FO", label: "Fosil" },
+                                    { value: "SD", label: "Sumber Daya Geologi" },
+                                    
                                 ]}
                             />
                         </FieldGroup>
-
-                        <FieldGroup
-                            label="Postal Code"
-                            name="postal_code"
-                            error={errors.postal_code}
-                        >
-                            <TextInput
-                                name="postal_code"
-                                error={errors.postal_code}
-                                value={data.postal_code}
-                                onChange={(e) =>
-                                    setData("postal_code", e.target.value)
-                                }
+                        
+                        <FieldGroup label="Status Peminjaman" error={errors.status_peminjaman}>
+                            <SelectInput
+                                name="status_peminjaman"
+                                error={errors.status_peminjaman}
+                                value={data.status_peminjaman}
+                                onChange={(e) => setData("status_peminjaman", e.target.value)}
+                                options={[
+                                    { value: "", label: "" },
+                                    { value: "PE", label: "Pengajuan" },
+                                    { value: "DP", label: "Dipinjam" },
+                                    { value: "DT", label: "Ditolak" },
+                                    { value: "TE", label: "Terlambat" },
+                                    { value: "SE", label: "Selesai" },
+                                ]}
                             />
                         </FieldGroup>
                     </div>
-                    <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">
+                    <div className="flex items-center justify-between px-8 py-4 bg-gray-100 border-t border-gray-200">
                         <LoadingButton
                             loading={processing}
                             type="submit"
-                            className="btn-indigo"
+                            className="ml-auto bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-900 transition"
+                            disabled={processing}
                         >
-                            Create Contact
+                            Submit
                         </LoadingButton>
                     </div>
                 </form>
@@ -213,13 +171,8 @@ const Create = () => {
     );
 };
 
-/**
- * Persistent Layout (Inertia.js)
- *
- * [Learn more](https://inertiajs.com/pages#persistent-layouts)
- */
 Create.layout = (page) => (
-    <MainLayout title="Create Contact">{page}</MainLayout>
+    <MainLayout title="Tambah Kelola Koleksi Batuan" children={page} />
 );
 
 export default Create;
