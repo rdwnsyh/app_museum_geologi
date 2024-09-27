@@ -10,28 +10,29 @@ class Peminjaman extends Model
     use HasFactory;
 
      // Nama tabel di database
-     protected $table = 'peminjaman';
+    protected $table = 'peminjaman';
 
      // Kolom-kolom yang dapat diisi secara massal
      protected $fillable = [
-         'koleksi_id',
+        //  'koleksi_id',
          'peminjam',
          'keperluan',
          'tanggal_pinjam',
          'surat_permohonan',
          'identitas_diri',
          'jenis_koleksi',
+         'nama_koleksi',
          'status_peminjaman',
      ];
  
      // Relasi ke tabel Batuan, Fosil, atau Sumber Daya Geologi
      public function koleksi()
      {
-         if ($this->jenis_koleksi === 'batuan') {
+         if ($this->jenis_koleksi === 'Batuan') {
              return $this->belongsTo(KelolaKoleksiBatuan::class, 'koleksi_id');
-         } elseif ($this->jenis_koleksi === 'fosil') {
+         } elseif ($this->jenis_koleksi === 'Fosil') {
              return $this->belongsTo(KelolaKOleksiFosil::class, 'koleksi_id');
-         } elseif ($this->jenis_koleksi === 'sumber_daya_geologi') {
+         } elseif ($this->jenis_koleksi === 'Sumber Daya Geologi') {
              return $this->belongsTo(KelolaKoleksiSumberDayaGeologi::class, 'koleksi_id');
          }
  

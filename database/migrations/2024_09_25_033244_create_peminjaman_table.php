@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('surat_permohonan');
             $table->string('identitas_diri');
             $table->string('jenis_koleksi'); // Bisa 'batuan', 'fosil', atau 'sumber_daya_geologi'
+            $table->string('nama_koleksi'); // Bisa 'batuan', 'fosil', atau 'sumber_daya_geologi'
             $table->enum('status_peminjaman', ['pengajuan', 'dipinjam', 'ditolak', 'terlambat', 'selesai'])->default('pengajuan');
             $table->timestamps();
         });
