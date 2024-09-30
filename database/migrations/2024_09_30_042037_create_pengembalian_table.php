@@ -12,10 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pengembalian', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('peminjaman_id')->constrained('peminjaman')->onDelete('cascade');
-            $table->date('tanggal_pengembalian');
-            $table->string('kondisi_koleksi'); // Kondisi setelah dikembalikan
+            $table->bigIncrements('id');
+
+            // $table->unsignedBigInteger('peminjaman_id');
+            // // relasi ke tabel kelola koleksi
+            // $table->foreign('peminjaman_id')->references('id')->on('peminjaman')->onDelete('cascade');
+            $table->date('tanggal_kembali');
+            $table->string('status_pengembalian');
+            $table->decimal('keterangan', total: 10, places: 2);
+
             $table->timestamps();
         });
     }

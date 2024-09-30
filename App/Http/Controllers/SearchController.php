@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use App\Models\KelolaKoleksi;
 use App\Models\KelolaKoleksiFosil;
 use App\Models\KelolaKoleksiBatuan;
 use App\Models\KelolaKoleksiSumberDayaGeologi;
@@ -16,7 +17,7 @@ class SearchController extends Controller
         $search = $request->input('search');
 
         // Query untuk mencari nama koleksi dari tiga tabel
-        $batuan = KelolaKoleksiBatuan::where('nama_koleksi', 'like', '%' . $search . '%')->get();
+        $batuan = KelolaKoleksi::where('nama_koleksi', 'like', '%' . $search . '%')->get();
         // $fosil = KelolaKoleksiFosil::where('nama_koleksi', 'like', '%' . $search . '%')->get();
         // $sdg = KelolaKoleksiSumberDayaGeologi::where('nama_koleksi', 'like', '%' . $search . '%')->get();
 
@@ -56,13 +57,13 @@ class SearchController extends Controller
     {
         // Temukan data berdasarkan tipe (table) dan ID
         switch ($type) {
-            case 'batuan':
+            case 'Batuan':
                 $item = KelolaKoleksiBatuan::findOrFail($id);
                 break;
-            case 'fosil':
+            case 'Fosil':
                 $item = KelolaKoleksiFosil::findOrFail($id);
                 break;
-            case 'sdg':
+            case 'Sumber Daya Geologi':
                 $item = KelolaKoleksiSumberDayaGeologi::findOrFail($id);
                 break;
             default:

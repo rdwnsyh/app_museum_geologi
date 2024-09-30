@@ -5,12 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class KelolaKoleksiBatuan extends Model
+class KelolaKoleksi extends Model
 {
     use HasFactory;
 
-     // Tentukan tabel jika tidak mengikuti konvensi penamaan Laravel
-    protected $table = 'batuan';
+    protected $table = 'kelola_koleksi';
 
      // Tentukan atribut mana yang dapat ditetapkan secara massal
         protected $fillable = [
