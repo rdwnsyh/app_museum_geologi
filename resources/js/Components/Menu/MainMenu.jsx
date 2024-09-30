@@ -47,37 +47,13 @@ export default function MainMenu({ className }) {
                 link="outbound"
                 icon={<ArrowBigLeftDash size={12} />}
             />
-            <div>
-                <MainMenuItem
-                    text={<span className="text-sm">Kelola Koleksi</span>}
-                    link="kelolakoleksibatuan"
-                    icon={<Package size={12} />}
-                    submenu={[
-                        { text: <span className="text-sm">Batu dan Mineral</span>, link: "kelolakoleksibatuan" },
-                        { text: <span className="text-sm">Fosil</span>, link: "kelolakoleksifosil" },
-                        { text: <span className="text-sm">Sumber Daya Geologi</span>, link: "kelolakoleksisumberdayageologi" },
-                    ]}
-                    onClick={() => setKelolaKoleksiOpen(!isKelolaKoleksiOpen)}
-                />
-                {isKelolaKoleksiOpen && (
-                    <ul className="sub-menu pl-6">
-                        {[
-                            { text: <span className="text-xs">Batu dan Mineral</span>, link: "kelolakoleksibatuan" },
-                            { text: <span className="text-xs">Fosil</span>, link: "kelolakoleksifosil" },
-                            { text: <span className="text-xs">Sumber Daya Geologi</span>, link: "kelolakoleksisumberdayageologi" },
-                        ].map((item, index) => (
-                            <li key={index}>
-                                <Link
-                                    href={item.link}
-                                    className="text-gray-600 hover:bg-indigo-50"
-                                >
-                                    {item.text}
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </div>
+           
+           <MainMenuItem
+                text={<span className="text-sm">Kelola Koleksi</span>}
+                link="kelolakoleksi"
+                icon={<Package size={12} />}
+            />
+                
             <MainMenuItem
                 text={<span className="text-sm">Manajemen Admin</span>}
                 link="manajemenadmin"

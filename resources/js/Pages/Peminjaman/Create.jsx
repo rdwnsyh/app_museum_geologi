@@ -1,178 +1,222 @@
-import React from "react";
-import { Link, useForm } from "@inertiajs/react";
-import MainLayout from "@/Layouts/MainLayout";
-import LoadingButton from "@/Components/Button/LoadingButton";
-import TextInput from "@/Components/Form/TextInput";
-import SelectInput from "@/Components/Form/SelectInput";
-import FieldGroup from "@/Components/Form/FieldGroup";
-import FileInput from "@/Components/Form/FileInput";
+// PeminjamanForm.js
+import React, { useState } from 'react';
+import { Inertia } from '@inertiajs/inertia';
 
-const Create = () => {
-    const { data, setData, errors, post, processing } = useForm({
-        koleksi_id: "",
-        peminjam: "",
-        keperluan: "",
-        tanggal_pinjam: "",
-        surat_permohonan: "",
-        identitas_diri: "",
-        jenis_koleksi: "",
-        status_peminjaman: "",
+const PeminjamanForm = ({ onClose }) => {
+  const [formData, setFormData] = useState({
+    peminjam: '',
+    keperluan: '',
+    tanggalPinjam: '',
+    suratPermohonan: null,
+    ktp: null,
+    koleksi: [],
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    setFormData({ ...formData, [name]: files[0] });
+  };
+
+  const handleKoleksiChange = (index, field, value) => {
+    const updatedKoleksi = [...formData.koleksi];
+    updatedKoleksi[index][field] = value;
+    setFormData({ ...formData, koleksi: updatedKoleksi });
+  };
+
+  const addKoleksi = () => {
+    setFormData({
+      ...formData,
+      koleksi: [...formData.koleksi, { namaKoleksi: '', lamaPinjam: '' }],
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const data = new FormData();
+    data.append('peminjam', formData.peminjam);
+    data.append('keperluan', formData.keperluan);
+    data.append('tanggalPinjam', formData.tanggalPinjam);
+    data.append('suratPermohonan', formData.suratPermohonan);
+    data.append('ktp', formData.ktp);
+    formData.koleksi.forEach((item, index) => {
+      data.append(`koleksi[${index}][namaKoleksi]`, item.namaKoleksi);
+      data.append(`koleksi[${index}][lamaPinjam]`, item.lamaPinjam);
     });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const formData = new FormData();
-        Object.entries(data).forEach(([key, value]) => {
-            formData.append(key, value);
-        });
+    Inertia.post('/peminjaman', data);
+  };
 
-        post(route("peminjaman.store"), {
-            data: formData,
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-            onSuccess: () => {
-                // Handle success (e.g., redirect)
-            },
-            onError: (errors) => {
-                // Handle errors
-            },
-        });
-    };
-
-    const handleFileChange = (name, file) => {
-        setData(name, file);
-    };
-
-    
-    return (
-        <div>
-            <h1 className="mb-8 text-3xl font-bold">
-                <Link
-                    href={route("kelolakoleksibatuan")}
-                    className="text-indigo-600 hover:text-indigo-700"
-                >
-                    Peminjaman
-                </Link>
-                <span className="font-medium text-indigo-600"> /</span> Create
-            </h1>
-            <div className="max-w-3xl overflow-hidden bg-white rounded shadow">
-                <form onSubmit={handleSubmit} encType="multipart/form-data">
-                    <div className="grid gap-10 p-10 lg:grid-cols-2">
-                        {/** Input fields */}
-                        <FieldGroup label="Nama Peminjam" error={errors.peminjam}>
-                            <TextInput
-                                name="peminjam"
-                                error={errors.peminjam}
-                                value={data.peminjam}
-                                onChange={(e) => setData("peminjam", e.target.value)}
-                                required
-                            />
-                        </FieldGroup>
-
-                        <FieldGroup label="Keperluan" error={errors.keperluan}>
-                            <TextInput
-                                name="keperluan"
-                                error={errors.keperluan}
-                                value={data.keperluan}
-                                onChange={(e) => setData("keperluan", e.target.value)}
-                                required
-                            />
-                        </FieldGroup>
-
-                        <FieldGroup label="Tanggal Pinjam" error={errors.tanggal_pinjam}>
-                            <TextInput
-                                type="date"
-                                name="tanggal_pinjam"
-                                error={errors.tanggal_pinjam}
-                                value={data.tanggal_pinjam}
-                                onChange={(e) => setData("tanggal_pinjam", e.target.value)}
-                                required
-                            />
-                        </FieldGroup>
-
-                        <FieldGroup
-                                    label="Identitas Diri"
-                                    name="identitas_diri"
-                                    error={errors.identitas_diri}
-                                >
-                                    <FileInput
-                                        name="identitas_diri"
-                                        error={errors.identitas_diri}
-                                        onFileChange={(file) =>
-                                            handleFileChange("identitas_diri", file)
-                                        }
-                                    />
-                        </FieldGroup>
-
-                        <FieldGroup
-                                    label="Surat Permohonan"
-                                    name="surat_permohonan"
-                                    error={errors.surat_permohonan}
-                                >
-                                    <FileInput
-                                        name="surat_permohonan"
-                                        error={errors.surat_permohonan}
-                                        onFileChange={(file) =>
-                                            handleFileChange("surat_permohonan", file)
-                                        }
-                                    />
-                        </FieldGroup>
-
-                        <FieldGroup 
-                        label="Jenis Koleksi" 
-                        error={errors.jenis_koleksi}>
-
-                            <SelectInput
-                                name="jenis_koleksi"
-                                error={errors.jenis_koleksi}
-                                value={data.jenis_koleksi}
-                                onChange={(e) => setData("jenis_koleksi", e.target.value)}
-                                options={[
-                                    { value: "", label: "" },
-                                    { value: "BA", label: "Batuan" },
-                                    { value: "FO", label: "Fosil" },
-                                    { value: "SD", label: "Sumber Daya Geologi" },
-                                    
-                                ]}
-                            />
-                        </FieldGroup>
-                        
-                        <FieldGroup label="Status Peminjaman" error={errors.status_peminjaman}>
-                            <SelectInput
-                                name="status_peminjaman"
-                                error={errors.status_peminjaman}
-                                value={data.status_peminjaman}
-                                onChange={(e) => setData("status_peminjaman", e.target.value)}
-                                options={[
-                                    { value: "", label: "" },
-                                    { value: "PE", label: "Pengajuan" },
-                                    { value: "DP", label: "Dipinjam" },
-                                    { value: "DT", label: "Ditolak" },
-                                    { value: "TE", label: "Terlambat" },
-                                    { value: "SE", label: "Selesai" },
-                                ]}
-                            />
-                        </FieldGroup>
-                    </div>
-                    <div className="flex items-center justify-between px-8 py-4 bg-gray-100 border-t border-gray-200">
-                        <LoadingButton
-                            loading={processing}
-                            type="submit"
-                            className="ml-auto bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-900 transition"
-                            disabled={processing}
-                        >
-                            Submit
-                        </LoadingButton>
-                    </div>
-                </form>
-            </div>
+  return (
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-lg p-6 w-3/4 max-w-lg">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-gray-800">Peminjaman</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
         </div>
-    );
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label
+              htmlFor="peminjam"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Peminjam
+            </label>
+            <select
+              id="peminjam"
+              name="peminjam"
+              value={formData.peminjam}
+              onChange={handleInputChange}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            >
+              <option value="">Pilih Peminjam</option>
+              {/* Add options for peminjam */}
+            </select>
+          </div>
+
+          <div>
+            <label
+              htmlFor="keperluan"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Keperluan
+            </label>
+            <select
+              id="keperluan"
+              name="keperluan"
+              value={formData.keperluan}
+              onChange={handleInputChange}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            >
+              <option value="">Pilih Keperluan</option>
+              {/* Add options for keperluan */}
+            </select>
+          </div>
+
+          <div>
+            <label
+              htmlFor="tanggalPinjam"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Tanggal Pinjam
+            </label>
+            <input
+              type="date"
+              id="tanggalPinjam"
+              name="tanggalPinjam"
+              value={formData.tanggalPinjam}
+              onChange={handleInputChange}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="suratPermohonan"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Surat Permohonan
+            </label>
+            <input
+              type="file"
+              id="suratPermohonan"
+              name="suratPermohonan"
+              onChange={handleFileChange}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="ktp"
+              className="block text-sm font-medium text-gray-700"
+            >
+              KTP
+            </label>
+            <input
+              type="file"
+              id="ktp"
+              name="ktp"
+              onChange={handleFileChange}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="koleksi"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Koleksi
+            </label>
+            {formData.koleksi.map((item, index) => (
+              <div key={index} className="flex flex-col mb-4">
+                <input
+                  type="text"
+                  id={`namaKoleksi-${index}`}
+                  name="namaKoleksi"
+                  value={item.namaKoleksi}
+                  onChange={(e) =>
+                    handleKoleksiChange(index, 'namaKoleksi', e.target.value)
+                  }
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Nama Koleksi"
+                />
+                <input
+                  type="number"
+                  id={`lamaPinjam-${index}`}
+                  name="lamaPinjam"
+                  value={item.lamaPinjam}
+                  onChange={(e) =>
+                    handleKoleksiChange(index, 'lamaPinjam', e.target.value)
+                  }
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Lama Pinjam"
+                />
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addKoleksi}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              Tambah Koleksi
+            </button>
+          </div>
+
+          <button
+            type="submit"
+            className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Simpan
+          </button>
+        </form>
+      </div>
+    </div>
+  );
 };
 
-Create.layout = (page) => (
-    <MainLayout title="Tambah Kelola Koleksi Batuan" children={page} />
-);
-
-export default Create;
+export default PeminjamanForm;

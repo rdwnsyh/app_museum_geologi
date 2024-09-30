@@ -20,7 +20,7 @@ class KelolaKoleksiController extends Controller
          $kelolakoleksi = KelolaKoleksi::paginate(10); // Menampilkan 10 item per halaman
 
          // Kirim data ke view menggunakan Inertia
-         return Inertia::render('Kelola/Batuan/Index', [
+         return Inertia::render('Kelola/Index', [
              'kelolakoleksi' => $kelolakoleksi
          ]);
     }
@@ -30,7 +30,7 @@ class KelolaKoleksiController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Kelola/Batuan/Create');
+        return Inertia::render('Kelola/Create');
     }
 
     /**
@@ -163,7 +163,7 @@ class KelolaKoleksiController extends Controller
     public function edit(KelolaKoleksi $kelolakoleksi): Response
     {
         // Menampilkan halaman edit dengan data yang diambil
-        return Inertia::render('Kelola/Batuan/Edit', [
+        return Inertia::render('Kelola/Edit', [
             'kelolakoleksi' => $kelolakoleksi
             // dd($kelolaKoleksiBatuan)
         ]);

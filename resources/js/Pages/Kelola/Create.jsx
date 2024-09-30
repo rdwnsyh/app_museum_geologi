@@ -5,18 +5,27 @@ import LoadingButton from "@/Components/Button/LoadingButton";
 import TextInput from "@/Components/Form/TextInput";
 import SelectInput from "@/Components/Form/SelectInput";
 import FieldGroup from "@/Components/Form/FieldGroup";
+import FileInput from "@/Components/Form/FileInput";
+import RadioButton from "@/Components/Form/Radiobutton";
+import TextArea from "@/Components/Form/Textarea";
 
 const Create = () => {
-    
-    const { data, setData, errors, post, processing } = useForm({
+    const { data, setData, errors, post, processing, setError } = useForm({
         // halaman 1 admin
         kategori_bmn: "",
         nup_bmn: "",
+        // tambah field
+        no_regis: "",
+        no_inventaris: "",
+
         tipe_bmn: "",
         no_awal: "",
         satuan: "",
         kelompok_koleksi: "",
         jenis_koleksi: "",
+        // tambah field
+        kode_koleksi: "",
+
         ruang_penyimpanan: "",
         lokasi_penyimpanan: "",
         lantai: "",
@@ -24,7 +33,7 @@ const Create = () => {
         no_lemari: "",
         no_laci: "",
         no_slot: "",
-        
+
         // halaman 2
         kondisi: "",
         nama_koleksi: "",
@@ -56,20 +65,39 @@ const Create = () => {
         nilai_buku: "",
 
         // halaman 4
-        gambar_satu: "",
-        gambar_dua: "",
-        gambar_tiga: "",
-        vidio: "",
-        audio: "",
-
+        gambar_satu: null, // Ubah dari null menjadi null
+        gambar_dua: null,
+        gambar_tiga: null,
+        vidio: null,
+        audio: null,
     });
 
     const [step, setStep] = useState(1);
 
     function handleSubmit(e) {
         e.preventDefault();
+        const formData = new FormData();
+        // Menambahkan data form lainnya
+        for (const [key, value] of Object.entries(data)) {
+            if (value instanceof File) {
+                formData.append(key, value);
+            } else {
+                formData.append(key, value);
+            }
+        }
         if (step === 4) {
-            post(route("organizations.store"));
+            post(route("kelolakoleksi.store"), {
+                data: formData,
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+                onSuccess: () => {
+                    // Handle success
+                },
+                onError: (errors) => {
+                    // Handle errors
+                },
+            });
         } else {
             setStep(step + 1);
         }
@@ -79,12 +107,16 @@ const Create = () => {
         setStep(step - 1);
     }
 
-    const handlePhotoChange = (event) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            setData(prevData => ({ ...prevData, photo: file }));
-        }
+    // Fungsi untuk menangani perubahan file
+    const handleFileChange = (name, file) => {
+        setData(name, file);
     };
+
+    // Fungsi untuk menangani perubahan pada radio button
+    const handleRuangPenyimpananChange = (e) =>
+        setData("ruang_penyimpanan", e.target.value);
+    const handleDitemukanChange = (e) => setData("ditemukan", e.target.value);
+    const handlePetaChange = (e) => setData("peta", e.target.value);
 
     return (
         <div>
@@ -98,8 +130,8 @@ const Create = () => {
                 <span className="font-medium text-indigo-600"> /</span> Create
             </h1>
             <div className="max-w-3xl overflow-hidden bg-white rounded shadow">
-                <form onSubmit={handleSubmit}>
-                    <div className="grid gap-8 p-8 lg:grid-cols">
+                <form onSubmit={handleSubmit} encType="multipart/form-data">
+                    <div className="grid gap-10 p-10 lg:grid-cols-2">
                         {step === 1 && (
                             <>
                                 <FieldGroup
@@ -108,19 +140,25 @@ const Create = () => {
                                     error={errors.kategori_bmn}
                                 >
                                     <TextInput
+                                        type="text"
                                         name="kategori_bmn"
                                         error={errors.kategori_bmn}
                                         value={data.kategori_bmn}
                                         onChange={(e) =>
-                                            setData("kategori_bmn", e.target.value)
+                                            setData(
+                                                "kategori_bmn",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
+
                                 <FieldGroup
                                     label="Nup BMN"
                                     error={errors.nup_bmn}
                                 >
                                     <TextInput
+                                        type="text"
                                         name="nup_bmn"
                                         error={errors.nup_bmn}
                                         value={data.nup_bmn}
@@ -129,12 +167,48 @@ const Create = () => {
                                         }
                                     />
                                 </FieldGroup>
+
+                                <FieldGroup
+                                    label="Nomor Registrasi"
+                                    name="no_regis"
+                                    error={errors.no_regis}
+                                >
+                                    <TextInput
+                                        type="text"
+                                        name="no_regis"
+                                        error={errors.no_regis}
+                                        value={data.no_regis}
+                                        onChange={(e) =>
+                                            setData("no_regis", e.target.value)
+                                        }
+                                    />
+                                </FieldGroup>
+
+                                <FieldGroup
+                                    label="Nomor Inventaris"
+                                    error={errors.no_inventaris}
+                                >
+                                    <TextInput
+                                        type="text"
+                                        name="no_inventaris"
+                                        error={errors.no_inventaris}
+                                        value={data.no_inventaris}
+                                        onChange={(e) =>
+                                            setData(
+                                                "no_inventaris",
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                </FieldGroup>
+
                                 <FieldGroup
                                     label="Tipe BMN"
                                     name="tipe_bmn"
                                     error={errors.tipe_bmn}
                                 >
                                     <TextInput
+                                        type="text"
                                         name="tipe_bmn"
                                         error={errors.tipe_bmn}
                                         value={data.tipe_bmn}
@@ -149,6 +223,7 @@ const Create = () => {
                                     error={errors.no_awal}
                                 >
                                     <TextInput
+                                        type="text"
                                         name="no_awal"
                                         error={errors.no_awal}
                                         value={data.no_awal}
@@ -162,13 +237,20 @@ const Create = () => {
                                     name="satuan"
                                     error={errors.satuan}
                                 >
-                                    <TextInput
+                                    <SelectInput
+                                        type="text"
                                         name="satuan"
                                         error={errors.satuan}
                                         value={data.satuan}
                                         onChange={(e) =>
                                             setData("satuan", e.target.value)
                                         }
+                                        options={[
+                                            { value: "", label: "" },
+                                            { value: "BU", label: "Buah" },
+                                            { value: "UN", label: "Unit" },
+                                            { value: "SE", label: "Set" },
+                                        ]}
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -176,19 +258,17 @@ const Create = () => {
                                     name="kelompok_koleksi"
                                     error={errors.kelompok_koleksi}
                                 >
-                                    <SelectInput
+                                    <TextInput
+                                        type="text"
                                         name="kelompok_koleksi"
                                         error={errors.kelompok_koleksi}
                                         value={data.kelompok_koleksi}
                                         onChange={(e) =>
-                                            setData("kelompok_koleksi", e.target.value)
+                                            setData(
+                                                "kelompok_koleksi",
+                                                e.target.value
+                                            )
                                         }
-                                        options={[
-                                            { value: "", label: "" },
-                                            { value: "BA", label: "Batuan" },
-                                            { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
-                                        ]}
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -201,42 +281,104 @@ const Create = () => {
                                         error={errors.jenis_koleksi}
                                         value={data.jenis_koleksi}
                                         onChange={(e) =>
-                                            setData("jenis_koleksi", e.target.value)
+                                            setData(
+                                                "jenis_koleksi",
+                                                e.target.value
+                                            )
                                         }
                                         options={[
                                             { value: "", label: "" },
-                                            { value: "BA", label: "Batuan" },
-                                            { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
+                                            { value: "BE", label: "Beku" },
+                                            { value: "IM", label: "Impaktit" },
+                                            { value: "MI", label: "Mineral" },
+                                            { value: "MF", label: "Metamorf" },
+                                            { value: "MT", label: "Meteorit" },
+                                            {
+                                                value: "PK",
+                                                label: "Piroklasktik",
+                                            },
+                                            {
+                                                value: "TT",
+                                                label: "Tidak Teridentifikasi",
+                                            },
                                         ]}
                                     />
                                 </FieldGroup>
+
+                                <FieldGroup
+                                    label="Kode Koleksi"
+                                    name="kode_koleksi"
+                                    error={errors.kode_koleksi}
+                                >
+                                    <TextInput
+                                        type="text"
+                                        name="kode_koleksi"
+                                        error={errors.kode_koleksi}
+                                        value={data.kode_koleksi}
+                                        onChange={(e) =>
+                                            setData(
+                                                "kode_koleksi",
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                </FieldGroup>
+
                                 <FieldGroup
                                     label="Ruang Penyimpanan"
                                     name="ruang_penyimpanan"
                                     error={errors.ruang_penyimpanan}
                                 >
-                                    <TextInput
+                                    <RadioButton
                                         name="ruang_penyimpanan"
+                                        selectedValue={data.ruang_penyimpanan}
+                                        onChange={handleRuangPenyimpananChange}
                                         error={errors.ruang_penyimpanan}
-                                        value={data.ruang_penyimpanan}
-                                        onChange={(e) =>
-                                            setData("ruang_penyimpanan", e.target.value)
-                                        }
+                                        options={[
+                                            { value: "ST", label: "Storage" },
+                                            {
+                                                value: "NS",
+                                                label: "Non Storage",
+                                            },
+                                        ]}
                                     />
                                 </FieldGroup>
+
                                 <FieldGroup
                                     label="Lokasi Penyimpanan"
                                     name="lokasi_penyimpanan"
                                     error={errors.lokasi_penyimpanan}
                                 >
-                                    <TextInput
+                                    <SelectInput
                                         name="lokasi_penyimpanan"
                                         error={errors.lokasi_penyimpanan}
                                         value={data.lokasi_penyimpanan}
                                         onChange={(e) =>
-                                            setData("lokasi_penyimpanan", e.target.value)
+                                            setData(
+                                                "lokasi_penyimpanan",
+                                                e.target.value
+                                            )
                                         }
+                                        options={[
+                                            { value: "", label: "" },
+                                            { value: "S1", label: "Storage 1" },
+                                            { value: "S2", label: "Storage 2" },
+                                            { value: "S3", label: "Storage 3" },
+                                            { value: "S4", label: "Storage 4" },
+                                            { value: "S5", label: "Storage 5" },
+                                            { value: "S6", label: "Storage 6" },
+                                            { value: "S7", label: "Storage 7" },
+                                            { value: "S8", label: "Storage 8" },
+                                            { value: "S9", label: "Storage 9" },
+                                            {
+                                                value: "S10",
+                                                label: "Storage 10",
+                                            },
+                                            {
+                                                value: "S11",
+                                                label: "Storage 11",
+                                            },
+                                        ]}
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -244,13 +386,19 @@ const Create = () => {
                                     name="lantai"
                                     error={errors.lantai}
                                 >
-                                    <TextInput
+                                    <SelectInput
                                         name="lantai"
                                         error={errors.lantai}
                                         value={data.lantai}
                                         onChange={(e) =>
                                             setData("lantai", e.target.value)
                                         }
+                                        options={[
+                                            { value: "", label: "" },
+                                            { value: "L1", label: "Lantai 1" },
+                                            { value: "L2", label: "Lantai 2" },
+                                            { value: "L3", label: "Lantai 3" },
+                                        ]}
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -259,6 +407,7 @@ const Create = () => {
                                     error={errors.no_lajur}
                                 >
                                     <TextInput
+                                        type="number"
                                         name="no_lajur"
                                         error={errors.no_lajur}
                                         value={data.no_lajur}
@@ -273,6 +422,7 @@ const Create = () => {
                                     error={errors.no_lemari}
                                 >
                                     <TextInput
+                                        type="number"
                                         name="no_lemari"
                                         error={errors.no_lemari}
                                         value={data.no_lemari}
@@ -287,6 +437,7 @@ const Create = () => {
                                     error={errors.no_laci}
                                 >
                                     <TextInput
+                                        type="number"
                                         name="no_laci"
                                         error={errors.no_laci}
                                         value={data.no_laci}
@@ -301,6 +452,7 @@ const Create = () => {
                                     error={errors.no_slot}
                                 >
                                     <TextInput
+                                        type="number"
                                         name="no_slot"
                                         error={errors.no_slot}
                                         value={data.no_slot}
@@ -319,13 +471,25 @@ const Create = () => {
                                     name="kondisi"
                                     error={errors.kondisi}
                                 >
-                                    <TextInput
+                                    <SelectInput
                                         name="kondisi"
                                         error={errors.kondisi}
                                         value={data.kondisi}
                                         onChange={(e) =>
                                             setData("kondisi", e.target.value)
                                         }
+                                        options={[
+                                            { value: "", label: "" },
+                                            { value: "B", label: "Baik" },
+                                            {
+                                                value: "RR",
+                                                label: "Rusak Ringan",
+                                            },
+                                            {
+                                                value: "RB",
+                                                label: "Rusak berat",
+                                            },
+                                        ]}
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -333,19 +497,17 @@ const Create = () => {
                                     name="nama_koleksi"
                                     error={errors.nama_koleksi}
                                 >
-                                    <SelectInput
+                                    <TextInput
+                                        type="text"
                                         name="nama_koleksi"
                                         error={errors.nama_koleksi}
                                         value={data.nama_koleksi}
                                         onChange={(e) =>
-                                            setData("kelompok_koleksi", e.target.value)
+                                            setData(
+                                                "nama_koleksi",
+                                                e.target.value
+                                            )
                                         }
-                                        options={[
-                                            { value: "", label: "" },
-                                            { value: "BA", label: "Batuan" },
-                                            { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
-                                        ]}
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -353,19 +515,19 @@ const Create = () => {
                                     name="deskripsi_koleksi"
                                     error={errors.deskripsi_koleksi}
                                 >
-                                    <SelectInput
+                                    <TextArea
+                                        type="text"
                                         name="deskripsi_koleksi"
-                                        error={errors.deskripsi_koleksi}
                                         value={data.deskripsi_koleksi}
                                         onChange={(e) =>
-                                            setData("deskripsi_koleksi", e.target.value)
+                                            setData(
+                                                "deskripsi_koleksi",
+                                                e.target.value
+                                            )
                                         }
-                                        options={[
-                                            { value: "", label: "" },
-                                            { value: "BA", label: "Batuan" },
-                                            { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
-                                        ]}
+                                        error={errors.deskripsi_koleksi}
+                                        placeholder="Masukkan Deskripsi di sini..."
+                                        rows={6} // Adjust as needed
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -373,13 +535,19 @@ const Create = () => {
                                     name="keterangan_koleksi"
                                     error={errors.keterangan_koleksi}
                                 >
-                                    <TextInput
+                                    <TextArea
+                                        type="text"
                                         name="keterangan_koleksi"
-                                        error={errors.keterangan_koleksi}
                                         value={data.keterangan_koleksi}
                                         onChange={(e) =>
-                                            setData("keterangan_koleksi", e.target.value)
+                                            setData(
+                                                "keterangan_koleksi",
+                                                e.target.value
+                                            )
                                         }
+                                        error={errors.keterangan_koleksi}
+                                        placeholder="Masukkan Keterangan Koleksi di sini..."
+                                        rows={6} // Adjust as needed
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -387,13 +555,87 @@ const Create = () => {
                                     name="umur_geologi"
                                     error={errors.umur_geologi}
                                 >
-                                    <TextInput
+                                    <SelectInput
                                         name="umur_geologi"
                                         error={errors.umur_geologi}
                                         value={data.umur_geologi}
                                         onChange={(e) =>
-                                            setData("umur_geologi", e.target.value)
+                                            setData(
+                                                "umur_geologi",
+                                                e.target.value
+                                            )
                                         }
+                                        options={[
+                                            { value: "", label: "" },
+                                            {
+                                                value: "PR",
+                                                label: "Prakambrium",
+                                            },
+                                            {
+                                                value: "PK",
+                                                label: "Paleozoikum - Kambrium",
+                                            },
+                                            {
+                                                value: "PO",
+                                                label: "Paleozoikum - Ordovium",
+                                            },
+                                            {
+                                                value: "PS",
+                                                label: "Paleozoikum - Silur",
+                                            },
+                                            {
+                                                value: "PD",
+                                                label: "Paleozoikum - Devon",
+                                            },
+                                            {
+                                                value: "PKR",
+                                                label: "Paleozoikum - Karbo",
+                                            },
+                                            {
+                                                value: "PP",
+                                                label: "Paleozoikum - Perem",
+                                            },
+                                            {
+                                                value: "MT",
+                                                label: "Mesozoikum - Trias",
+                                            },
+                                            {
+                                                value: "MJ",
+                                                label: "Mesozoikum - Jura",
+                                            },
+                                            {
+                                                value: "MK",
+                                                label: "Mesozoikum - Kapur",
+                                            },
+                                            {
+                                                value: "KP",
+                                                label: "Kenozoikum - Paleogen",
+                                            },
+                                            {
+                                                value: "KE",
+                                                label: "Kenozoikum - Eosen",
+                                            },
+                                            {
+                                                value: "KO",
+                                                label: "Kenozoikum - Oligosen",
+                                            },
+                                            {
+                                                value: "KM",
+                                                label: "Kenozoikum - Miosen",
+                                            },
+                                            {
+                                                value: "KP",
+                                                label: "Kenozoikum - Pliosen",
+                                            },
+                                            {
+                                                value: "KPT",
+                                                label: "Kenozoikum - Plistosen",
+                                            },
+                                            {
+                                                value: "KH",
+                                                label: "Kenozoikum - Holosen",
+                                            },
+                                        ]}
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -401,19 +643,17 @@ const Create = () => {
                                     name="nama_formasi"
                                     error={errors.nama_formasi}
                                 >
-                                    <SelectInput
+                                    <TextInput
+                                        type="text"
                                         name="nama_formasi"
                                         error={errors.nama_formasi}
                                         value={data.nama_formasi}
                                         onChange={(e) =>
-                                            setData("nama_formasi", e.target.value)
+                                            setData(
+                                                "nama_formasi",
+                                                e.target.value
+                                            )
                                         }
-                                        options={[
-                                            { value: "", label: "" },
-                                            { value: "BA", label: "Batuan" },
-                                            { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
-                                        ]}
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -421,27 +661,31 @@ const Create = () => {
                                     name="ditemukan"
                                     error={errors.ditemukan}
                                 >
-                                    <SelectInput
+                                    <RadioButton
                                         name="ditemukan"
+                                        selectedValue={data.ditemukan}
+                                        onChange={handleDitemukanChange}
                                         error={errors.ditemukan}
-                                        value={data.ditemukan}
-                                        onChange={(e) =>
-                                            setData("ditemukan", e.target.value)
-                                        }
                                         options={[
-                                            { value: "", label: "" },
-                                            { value: "BA", label: "Batuan" },
-                                            { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
+                                            {
+                                                value: "DL",
+                                                label: "Dalam Negeri",
+                                            },
+                                            {
+                                                value: "LN",
+                                                label: "Luar Negeri",
+                                            },
                                         ]}
                                     />
                                 </FieldGroup>
+
                                 <FieldGroup
                                     label="Pulau"
                                     name="pulau"
                                     error={errors.pulau}
                                 >
                                     <TextInput
+                                        type="text"
                                         name="pulau"
                                         error={errors.pulau}
                                         value={data.pulau}
@@ -456,6 +700,7 @@ const Create = () => {
                                     error={errors.provinsi}
                                 >
                                     <TextInput
+                                        type="text"
                                         name="provinsi"
                                         error={errors.provinsi}
                                         value={data.provinsi}
@@ -469,47 +714,42 @@ const Create = () => {
                                     name="kota"
                                     error={errors.kota}
                                 >
-                                    <SelectInput
+                                    <TextInput
+                                        type="text"
                                         name="kota"
                                         error={errors.kota}
                                         value={data.kota}
                                         onChange={(e) =>
                                             setData("kota", e.target.value)
                                         }
-                                        options={[
-                                            { value: "", label: "" },
-                                            { value: "BA", label: "Batuan" },
-                                            { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
-                                        ]}
                                     />
                                 </FieldGroup>
+
                                 <FieldGroup
                                     label="Alamat"
                                     name="alamat"
                                     error={errors.alamat}
                                 >
-                                    <SelectInput
+                                    <TextArea
+                                        type="text"
                                         name="alamat"
-                                        error={errors.alamat}
                                         value={data.alamat}
                                         onChange={(e) =>
                                             setData("alamat", e.target.value)
                                         }
-                                        options={[
-                                            { value: "", label: "" },
-                                            { value: "BA", label: "Batuan" },
-                                            { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
-                                        ]}
+                                        error={errors.alamat}
+                                        placeholder="Masukkan alamat di sini..."
+                                        rows={6} // Adjust as needed
                                     />
                                 </FieldGroup>
+
                                 <FieldGroup
                                     label="Latitude"
                                     name="latitude"
                                     error={errors.latitude}
                                 >
                                     <TextInput
+                                        type="text"
                                         name="latitude"
                                         error={errors.latitude}
                                         value={data.latitude}
@@ -524,6 +764,7 @@ const Create = () => {
                                     error={errors.longitude}
                                 >
                                     <TextInput
+                                        type="text"
                                         name="longitude"
                                         error={errors.longitude}
                                         value={data.longitude}
@@ -537,38 +778,33 @@ const Create = () => {
                                     name="elevasi"
                                     error={errors.elevasi}
                                 >
-                                    <SelectInput
+                                    <TextInput
                                         name="elevasi"
                                         error={errors.elevasi}
                                         value={data.elevasi}
                                         onChange={(e) =>
                                             setData("elevasi", e.target.value)
                                         }
-                                        options={[
-                                            { value: "", label: "" },
-                                            { value: "BA", label: "Batuan" },
-                                            { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
-                                        ]}
                                     />
                                 </FieldGroup>
                                 <FieldGroup
-                                    label="peta"
+                                    label="Peta"
                                     name="peta"
                                     error={errors.peta}
                                 >
-                                    <SelectInput
+                                    <RadioButton
                                         name="peta"
+                                        selectedValue={data.peta}
+                                        onChange={handlePetaChange}
                                         error={errors.peta}
-                                        value={data.peta}
-                                        onChange={(e) =>
-                                            setData("peta", e.target.value)
-                                        }
                                         options={[
-                                            { value: "", label: "" },
-                                            { value: "BA", label: "Batuan" },
-                                            { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
+                                            { value: "RP", label: "Rupa Bumi" },
+                                            { value: "BL", label: "Blad" },
+                                            { value: "GO", label: "Geologi" },
+                                            {
+                                                value: "LU",
+                                                label: "Luar Negeri",
+                                            },
                                         ]}
                                     />
                                 </FieldGroup>
@@ -577,13 +813,19 @@ const Create = () => {
                                     name="skala"
                                     error={errors.skala}
                                 >
-                                    <TextInput
+                                    <SelectInput
                                         name="skala"
                                         error={errors.skala}
                                         value={data.skala}
                                         onChange={(e) =>
                                             setData("skala", e.target.value)
                                         }
+                                        options={[
+                                            { value: "", label: "" },
+                                            { value: "LI", label: "1:50.000" },
+                                            { value: "RA", label: "1:100.000" },
+                                            { value: "DU", label: "1:250.000" },
+                                        ]}
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -592,15 +834,18 @@ const Create = () => {
                                     error={errors.lembar_peta}
                                 >
                                     <TextInput
+                                        type="text"
                                         name="lembar_peta"
                                         error={errors.lembar_peta}
                                         value={data.lembar_peta}
                                         onChange={(e) =>
-                                            setData("lembar_peta", e.target.value)
+                                            setData(
+                                                "lembar_peta",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
-                                
                             </>
                         )}
 
@@ -611,12 +856,43 @@ const Create = () => {
                                     name="cara_peroleh"
                                     error={errors.cara_peroleh}
                                 >
-                                    <TextInput
+                                    <SelectInput
                                         name="cara_peroleh"
                                         error={errors.cara_peroleh}
                                         value={data.cara_peroleh}
                                         onChange={(e) =>
-                                            setData("cara_peroleh", e.target.value)
+                                            setData(
+                                                "cara_peroleh",
+                                                e.target.value
+                                            )
+                                        }
+                                        options={[
+                                            { value: "", label: "" },
+                                            { value: "PE", label: "Pembuatan" },
+                                            { value: "PM", label: "Pembelian" },
+                                            { value: "HI", label: "HIbah" },
+                                            {
+                                                value: "PG",
+                                                label: "Penyelidikan Geologi",
+                                            },
+                                        ]}
+                                    />
+                                </FieldGroup>
+                                <FieldGroup
+                                    label="Tahun Peroleh"
+                                    name="thn_peroleh"
+                                    error={errors.thn_peroleh}
+                                >
+                                    <TextInput
+                                        type="year"
+                                        name="thn_peroleh"
+                                        error={errors.thn_peroleh}
+                                        value={data.thn_peroleh}
+                                        onChange={(e) =>
+                                            setData(
+                                                "thn_peroleh",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -626,11 +902,15 @@ const Create = () => {
                                     error={errors.determinator}
                                 >
                                     <TextInput
+                                        type="text"
                                         name="determinator"
                                         error={errors.determinator}
                                         value={data.determinator}
                                         onChange={(e) =>
-                                            setData("determinator", e.target.value)
+                                            setData(
+                                                "determinator",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -640,6 +920,7 @@ const Create = () => {
                                     error={errors.kolektor}
                                 >
                                     <TextInput
+                                        type="text"
                                         name="kolektor"
                                         error={errors.kolektor}
                                         value={data.kolektor}
@@ -654,11 +935,15 @@ const Create = () => {
                                     error={errors.kepemilikan_awal}
                                 >
                                     <TextInput
+                                        type="text"
                                         name="kepemilikan_awal"
                                         error={errors.kepemilikan_awal}
                                         value={data.kepemilikan_awal}
                                         onChange={(e) =>
-                                            setData("kepemilikan_awal", e.target.value)
+                                            setData(
+                                                "kepemilikan_awal",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -667,13 +952,16 @@ const Create = () => {
                                     name="publikasi"
                                     error={errors.publikasi}
                                 >
-                                    <TextInput
+                                    <TextArea
+                                        type="text"
                                         name="publikasi"
-                                        error={errors.publikasi}
                                         value={data.publikasi}
                                         onChange={(e) =>
                                             setData("publikasi", e.target.value)
                                         }
+                                        error={errors.publikasi}
+                                        placeholder="Masukkan Publikasi di sini..."
+                                        rows={6} // Adjust as needed
                                     />
                                 </FieldGroup>
                                 <FieldGroup
@@ -682,6 +970,7 @@ const Create = () => {
                                     error={errors.url}
                                 >
                                     <TextInput
+                                        type="text"
                                         name="url"
                                         error={errors.url}
                                         value={data.url}
@@ -696,11 +985,15 @@ const Create = () => {
                                     error={errors.nilai_peroleh}
                                 >
                                     <TextInput
+                                        type="text"
                                         name="nilai_peroleh"
                                         error={errors.nilai_peroleh}
                                         value={data.nilai_peroleh}
                                         onChange={(e) =>
-                                            setData("nilai_peroleh", e.target.value)
+                                            setData(
+                                                "nilai_peroleh",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -710,11 +1003,15 @@ const Create = () => {
                                     error={errors.nilai_buku}
                                 >
                                     <TextInput
+                                        type="text"
                                         name="nilai_buku"
                                         error={errors.nilai_buku}
                                         value={data.nilai_buku}
                                         onChange={(e) =>
-                                            setData("nilai_buku", e.target.value)
+                                            setData(
+                                                "nilai_buku",
+                                                e.target.value
+                                            )
                                         }
                                     />
                                 </FieldGroup>
@@ -724,100 +1021,89 @@ const Create = () => {
                         {step === 4 && (
                             <>
                                 <FieldGroup
-                                    label="Gambar Satu"
+                                    label="Gambar 1"
                                     name="gambar_satu"
                                     error={errors.gambar_satu}
                                 >
-                                    <TextInput
+                                    <FileInput
                                         name="gambar_satu"
                                         error={errors.gambar_satu}
-                                        value={data.gambar_satu}
-                                        onChange={(e) =>
-                                            setData("gambar_satu", e.target.value)
+                                        onFileChange={(file) =>
+                                            handleFileChange(
+                                                "gambar_satu",
+                                                file
+                                            )
                                         }
                                     />
                                 </FieldGroup>
+
                                 <FieldGroup
-                                    label="Gambar Dua"
+                                    label="Gambar 2"
                                     name="gambar_dua"
                                     error={errors.gambar_dua}
                                 >
-                                    <TextInput
+                                    <FileInput
                                         name="gambar_dua"
                                         error={errors.gambar_dua}
-                                        value={data.gambar_dua}
-                                        onChange={(e) =>
-                                            setData("gambar_dua", e.target.value)
+                                        onFileChange={(file) =>
+                                            handleFileChange("gambar_dua", file)
                                         }
                                     />
                                 </FieldGroup>
+
                                 <FieldGroup
-                                    label="Gambar Tiga"
+                                    label="Gambar 3"
                                     name="gambar_tiga"
                                     error={errors.gambar_tiga}
                                 >
-                                    <TextInput
+                                    <FileInput
                                         name="gambar_tiga"
                                         error={errors.gambar_tiga}
-                                        value={data.gambar_tiga}
-                                        onChange={(e) =>
-                                            setData("gambar_tiga", e.target.value)
+                                        onFileChange={(file) =>
+                                            handleFileChange(
+                                                "gambar_tiga",
+                                                file
+                                            )
                                         }
                                     />
                                 </FieldGroup>
+
                                 <FieldGroup
                                     label="Vidio"
                                     name="vidio"
                                     error={errors.vidio}
                                 >
-                                    <TextInput
+                                    <FileInput
                                         name="vidio"
                                         error={errors.vidio}
-                                        value={data.vidio}
-                                        onChange={(e) =>
-                                            setData("vidio", e.target.value)
+                                        onFileChange={(file) =>
+                                            handleFileChange("vidio", file)
                                         }
                                     />
                                 </FieldGroup>
+
                                 <FieldGroup
                                     label="Audio"
                                     name="audio"
                                     error={errors.audio}
                                 >
-                                    <TextInput
+                                    <FileInput
                                         name="audio"
                                         error={errors.audio}
-                                        value={data.audio}
-                                        onChange={(e) =>
-                                            setData("audio", e.target.value)
+                                        onFileChange={(file) =>
+                                            handleFileChange("audio", file)
                                         }
                                     />
                                 </FieldGroup>
-
-                                <FieldGroup
-                                    label="Photo"
-                                    name="photo"
-                                    error={errors.photo}
-                                >
-                                    <FileInput
-                                        name="photo"
-                                        accept="image/*"
-                                        error={errors.photo}
-                                        onChange={handlePhotoChange}
-                                    />
-                                </FieldGroup>
-                               
                             </>
                         )}
-
-                        
                     </div>
                     <div className="flex items-center justify-between px-8 py-4 bg-gray-100 border-t border-gray-200">
                         {step > 1 && (
                             <button
                                 type="button"
                                 onClick={handleBack}
-                                className="btn-indigo"
+                                className="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-900 transition"
                             >
                                 Back
                             </button>
@@ -825,9 +1111,9 @@ const Create = () => {
                         <LoadingButton
                             loading={processing}
                             type="submit"
-                            className="btn-indigo"
+                            className="ml-auto bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-900 transition"
                         >
-                            {step === 4 ? "Create Organization" : "Next"}
+                            {step === 4 ? "Tambah Data" : "Next"}
                         </LoadingButton>
                     </div>
                 </form>
@@ -837,7 +1123,7 @@ const Create = () => {
 };
 
 Create.layout = (page) => (
-    <MainLayout title="Create Organization" children={page} />
+    <MainLayout title="Tambah Kelola Koleksi" children={page} />
 );
 
 export default Create;
