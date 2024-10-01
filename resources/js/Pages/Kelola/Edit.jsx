@@ -13,66 +13,66 @@ import RadioButton from "@/Components/Form/Radiobutton";
 import TextArea from "@/Components/Form/Textarea";
 
 const Edit = () => {
-    const { koleksi_batuan } = usePage().props || {}; // Mengambil data yang dikirim dari controller
-    console.log(koleksi_batuan);
+    const { kelolakoleksi } = usePage().props || {}; // Mengambil data yang dikirim dari controller
+    console.log(kelolakoleksi);
 
     const { data, setData, errors, post, put, processing, setError } = useForm({
         //halaman 1
         // id: koleksibatuan?.id || "",
-        kategori_bmn: koleksi_batuan?.kategori_bmn || "",
-        nup_bmn: koleksi_batuan?.nup_bmn || "",
-        no_regis: koleksi_batuan?.no_regis || "",
-        no_inventaris: koleksi_batuan?.no_inventaris || "",
-        tipe_bmn: koleksi_batuan?.tipe_bmn || "",
-        no_awal: koleksi_batuan?.no_awal || "",
-        satuan: koleksi_batuan?.satuan || "",
-        kelompok_koleksi: koleksi_batuan?.kelompok_koleksi || "",
-        jenis_koleksi: koleksi_batuan?.jenis_koleksi || "",
-        kode_koleksi: koleksi_batuan?.kode_koleksi || "",
-        ruang_penyimpanan: koleksi_batuan?.ruang_penyimpanan || "",
-        lokasi_penyimpanan: koleksi_batuan?.lokasi_penyimpanan || "",
-        lantai: koleksi_batuan?.lantai || "",
-        no_lajur: koleksi_batuan?.no_lajur || "",
-        no_lemari: koleksi_batuan?.no_lemari || "",
-        no_laci: koleksi_batuan?.no_laci || "",
-        no_slot: koleksi_batuan?.no_slot || "",
+        kategori_bmn: kelolakoleksi?.kategori_bmn || "",
+        nup_bmn: kelolakoleksi?.nup_bmn || "",
+        no_regis: kelolakoleksi?.no_regis || "",
+        no_inventaris: kelolakoleksi?.no_inventaris || "",
+        tipe_bmn: kelolakoleksi?.tipe_bmn || "",
+        no_awal: kelolakoleksi?.no_awal || "",
+        satuan: kelolakoleksi?.satuan || "",
+        kelompok_koleksi: kelolakoleksi?.kelompok_koleksi || "",
+        jenis_koleksi: kelolakoleksi?.jenis_koleksi || "",
+        kode_koleksi: kelolakoleksi?.kode_koleksi || "",
+        ruang_penyimpanan: kelolakoleksi?.ruang_penyimpanan || "",
+        lokasi_penyimpanan: kelolakoleksi?.lokasi_penyimpanan || "",
+        lantai: kelolakoleksi?.lantai || "",
+        no_lajur: kelolakoleksi?.no_lajur || "",
+        no_lemari: kelolakoleksi?.no_lemari || "",
+        no_laci: kelolakoleksi?.no_laci || "",
+        no_slot: kelolakoleksi?.no_slot || "",
 
         //halaman 2
-        kondisi: koleksi_batuan?.kondisi || "",
-        nama_koleksi: koleksi_batuan?.nama_koleksi || "",
-        deskripsi_koleksi: koleksi_batuan?.deskripsi_koleksi || "",
-        keterangan_koleksi: koleksi_batuan?.keterangan_koleksi || "",
-        umur_geologi: koleksi_batuan?.umur_geologi || "",
-        nama_formasi: koleksi_batuan?.nama_formasi || "",
-        ditemukan: koleksi_batuan?.ditemukan || "",
-        pulau: koleksi_batuan?.pulau || "",
-        provinsi: koleksi_batuan?.provinsi || "",
-        kota: koleksi_batuan?.kota || "",
-        alamat: koleksi_batuan?.alamat || "",
-        latitude: koleksi_batuan?.latitude || "",
-        longitude: koleksi_batuan?.longitude || "",
-        elevasi: koleksi_batuan?.elevasi || "",
-        peta: koleksi_batuan?.peta || "",
-        skala: koleksi_batuan?.skala || "",
-        lembar_peta: koleksi_batuan?.lembar_peta || "",
+        kondisi: kelolakoleksi?.kondisi || "",
+        nama_koleksi: kelolakoleksi?.nama_koleksi || "",
+        deskripsi_koleksi: kelolakoleksi?.deskripsi_koleksi || "",
+        keterangan_koleksi: kelolakoleksi?.keterangan_koleksi || "",
+        umur_geologi: kelolakoleksi?.umur_geologi || "",
+        nama_formasi: kelolakoleksi?.nama_formasi || "",
+        ditemukan: kelolakoleksi?.ditemukan || "",
+        pulau: kelolakoleksi?.pulau || "",
+        provinsi: kelolakoleksi?.provinsi || "",
+        kota: kelolakoleksi?.kota || "",
+        alamat: kelolakoleksi?.alamat || "",
+        latitude: kelolakoleksi?.latitude || "",
+        longitude: kelolakoleksi?.longitude || "",
+        elevasi: kelolakoleksi?.elevasi || "",
+        peta: kelolakoleksi?.peta || "",
+        skala: kelolakoleksi?.skala || "",
+        lembar_peta: kelolakoleksi?.lembar_peta || "",
 
         //halaman 3
-        cara_peroleh: koleksi_batuan?.cara_peroleh || "",
-        thn_peroleh: koleksi_batuan?.thn_peroleh || "",
-        determinator: koleksi_batuan?.determinator || "",
-        kolektor: koleksi_batuan?.kolektor || "",
-        kepemilikan_awal: koleksi_batuan?.kepemilikan_awal || "",
-        publikasi: koleksi_batuan?.publikasi || "",
-        url: koleksi_batuan?.url || "",
-        nilai_peroleh: koleksi_batuan?.nilai_peroleh || "",
-        nilai_buku: koleksi_batuan?.nilai_buku || "",
+        cara_peroleh: kelolakoleksi?.cara_peroleh || "",
+        thn_peroleh: kelolakoleksi?.thn_peroleh || "",
+        determinator: kelolakoleksi?.determinator || "",
+        kolektor: kelolakoleksi?.kolektor || "",
+        kepemilikan_awal: kelolakoleksi?.kepemilikan_awal || "",
+        publikasi: kelolakoleksi?.publikasi || "",
+        url: kelolakoleksi?.url || "",
+        nilai_peroleh: kelolakoleksi?.nilai_peroleh || "",
+        nilai_buku: kelolakoleksi?.nilai_buku || "",
 
         //halaman 4
-        gambar_satu: koleksi_batuan?.gambar_satu || null,
-        gambar_dua: koleksi_batuan?.gambar_dua || null,
-        gambar_tiga: koleksi_batuan?.gambar_tiga || null,
-        vidio: koleksi_batuan?.vidio || null,
-        audio: koleksi_batuan?.audio || null,
+        gambar_satu: kelolakoleksi?.gambar_satu || null,
+        gambar_dua: kelolakoleksi?.gambar_dua || null,
+        gambar_tiga: kelolakoleksi?.gambar_tiga || null,
+        vidio: kelolakoleksi?.vidio || null,
+        audio: kelolakoleksi?.audio || null,
     });
 
     const [step, setStep] = useState(1);
@@ -92,19 +92,15 @@ const Edit = () => {
         }
 
         if (step === 4) {
-            put(
-                route("kelolakoleksi.update", koleksi_batuan.id),
-                formData,
-                {
-                    onSuccess: () => {
-                        // Berhasil
-                    },
-                    onError: (errors) => {
-                        // Tindakan jika gagal
-                        console.error(errors);
-                    },
-                }
-            );
+            put(route("kelolakoleksi.update", kelolakoleksi.id), formData, {
+                onSuccess: () => {
+                    // Berhasil
+                },
+                onError: (errors) => {
+                    // Tindakan jika gagal
+                    console.error(errors);
+                },
+            });
         } else {
             setStep(step + 1); // Lanjutkan ke step berikutnya
         }
@@ -128,16 +124,16 @@ const Edit = () => {
 
     return (
         <div>
-            <Head title={`edit ${koleksi_batuan?.nama_koleksi}`} />
+            <Head title={`edit ${kelolakoleksi?.nama_koleksi}`} />
             <h1 className="mb-8 text-3xl font-bold">
                 <Link
                     href={route("kelolakoleksi")}
                     className="text-indigo-600 hover:text-indigo-700"
                 >
-                    Edit Koleksi Bantuan
+                    Edit Koleksi
                 </Link>
                 <span className="mx-2 font-medium text-indigo-600">/</span>
-                {koleksi_batuan?.nama_koleksi}
+                {kelolakoleksi?.nama_koleksi}
             </h1>
 
             <div className="max-w-3xl overflow-hidden bg-white rounded shadow">
@@ -1082,7 +1078,9 @@ const Edit = () => {
                                     <FileInput
                                         name="gambar_satu"
                                         error={errors.gambar_satu}
-                                        existingFile={koleksi_batuan.gambar_satu} // Menampilkan file yang sudah ada
+                                        existingFile={
+                                            koleksi_batuan.gambar_satu
+                                        } // Menampilkan file yang sudah ada
                                         onFileChange={(file) =>
                                             handleFileChange(
                                                 "gambar_satu",
@@ -1117,7 +1115,9 @@ const Edit = () => {
                                     <FileInput
                                         name="gambar_tiga"
                                         error={errors.gambar_tiga}
-                                        existingFile={koleksi_batuan.gambar_tiga}
+                                        existingFile={
+                                            koleksi_batuan.gambar_tiga
+                                        }
                                         onFileChange={(file) =>
                                             handleFileChange(
                                                 "gambar_tiga",

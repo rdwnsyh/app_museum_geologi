@@ -10,45 +10,33 @@ class Peminjaman extends Model
     use HasFactory;
 
      // Nama tabel di database
-    protected $table = 'peminjaman';
-
-     // Kolom-kolom yang dapat diisi secara massal
+     protected $table = 'peminjaman';
+     protected $primaryKey = 'peminjaman_id';
+     
      protected $fillable = [
-        //  'koleksi_id',
-         'peminjam',
-         'keperluan',
-         'tanggal_pinjam',
-         'surat_permohonan',
-         'identitas_diri',
-         'jenis_koleksi',
-         'nama_koleksi',
-         'status_peminjaman',
+         'users_id',
+        'tanggal_pinjam',
+        'tanggal_jatuh_tempo',
+        'status',
+        'identitas',
+        'surat_permohonan',
      ];
  
-     // Relasi ke tabel Batuan, Fosil, atau Sumber Daya Geologi
-     public function koleksi()
+     // Relasi ke User
+     public function users()
      {
-         if ($this->jenis_koleksi === 'Batuan') {
-             return $this->belongsTo(KelolaKoleksiBatuan::class, 'koleksi_id');
-         } elseif ($this->jenis_koleksi === 'Fosil') {
-             return $this->belongsTo(KelolaKOleksiFosil::class, 'koleksi_id');
-         } elseif ($this->jenis_koleksi === 'Sumber Daya Geologi') {
-             return $this->belongsTo(KelolaKoleksiSumberDayaGeologi::class, 'koleksi_id');
-         }
- 
-         return null; // Jika jenis koleksi tidak sesuai
+         return $this->belongsTo(User::class, 'users_id');
      }
  
-     // Accessor untuk status peminjaman
-     public function getStatusPeminjamanAttribute($value)
+     // Relasi ke Detail Peminjaman
+     public function detailPeminjaman()
      {
-         // Bisa tambahkan logika konversi jika dibutuhkan, misal:
-         return ucfirst($value); // Mengubah status menjadi huruf kapital pada awal kata (misal: pengajuan -> Pengajuan)
+         return $this->hasMany(DetailPeminjaman::class, 'peminjaman_id');
      }
  
-     // Mutator untuk status peminjaman (jika ingin modifikasi data sebelum disimpan ke database)
-     public function setStatusPeminjamanAttribute($value)
+     // Relasi ke Pengembalian
+     public function pengembalian()
      {
-         $this->attributes['status_peminjaman'] = strtolower($value);
+         return $this->hasOne(Pengembalian::class, 'peminjaman_id');
      }
 }

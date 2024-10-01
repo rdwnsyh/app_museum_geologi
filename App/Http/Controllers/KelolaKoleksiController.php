@@ -117,25 +117,25 @@ class KelolaKoleksiController extends Controller
 
       // Proses upload gambar
     if ($request->hasFile('gambar_satu')) {
-        $validatedData['gambar_satu'] = $request->file('gambar_satu')->store('koleksi_batuan', 'public');
+        $validatedData['gambar_satu'] = $request->file('gambar_satu')->store('koleksi', 'public');
     }
 
     if ($request->hasFile('gambar_dua')) {
-        $validatedData['gambar_dua'] = $request->file('gambar_dua')->store('koleksi_batuan', 'public');
+        $validatedData['gambar_dua'] = $request->file('gambar_dua')->store('koleksi', 'public');
     }
 
     if ($request->hasFile('gambar_tiga')) {
-        $validatedData['gambar_tiga'] = $request->file('gambar_tiga')->store('koleksi_batuan', 'public');
+        $validatedData['gambar_tiga'] = $request->file('gambar_tiga')->store('koleksi', 'public');
     }
 
     // Proses upload audio
     if ($request->hasFile('audio')) {
-        $validatedData['audio'] = $request->file('audio')->store('koleksi_batuan/audio', 'public');
+        $validatedData['audio'] = $request->file('audio')->store('koleksi/audio', 'public');
     }
 
 // Proses upload video
     if ($request->hasFile('vidio')) {
-        $validatedData['vidio'] = $request->file('vidio')->store('koleksi_batuan/vidio', 'public');
+        $validatedData['vidio'] = $request->file('vidio')->store('koleksi/vidio', 'public');
     }
 
 
@@ -243,7 +243,7 @@ class KelolaKoleksiController extends Controller
             Storage::disk('public')->delete($kelolakoleksi->gambar_satu);
         }
         // Store the new file and save its path
-        $validatedData['gambar_satu'] = $request->file('gambar_satu')->store('koleksi_batuan', 'public');
+        $validatedData['gambar_satu'] = $request->file('gambar_satu')->store('koleksi', 'public');
     }
     
     if ($request->hasFile('gambar_dua')) {
@@ -252,7 +252,7 @@ class KelolaKoleksiController extends Controller
             Storage::disk('public')->delete($kelolakoleksi->gambar_dua);
         }
         // Store the new file and save its path
-        $validatedData['gambar_dua'] = $request->file('gambar_dua')->store('koleksi_batuan', 'public');
+        $validatedData['gambar_dua'] = $request->file('gambar_dua')->store('koleksi', 'public');
     }
     
     if ($request->hasFile('gambar_tiga')) {
@@ -261,7 +261,7 @@ class KelolaKoleksiController extends Controller
             Storage::disk('public')->delete($kelolakoleksi->gambar_tiga);
         }
         // Store the new file and save its path
-        $validatedData['gambar_tiga'] = $request->file('gambar_tiga')->store('koleksi_batuan', 'public');
+        $validatedData['gambar_tiga'] = $request->file('gambar_tiga')->store('koleksi', 'public');
     }
     
     if ($request->hasFile('audio')) {
@@ -270,7 +270,7 @@ class KelolaKoleksiController extends Controller
             Storage::disk('public')->delete($kelolakoleksi->audio);
         }
         // Store the new audio file in a dedicated directory
-        $validatedData['audio'] = $request->file('audio')->store('koleksi_batuan/audio', 'public');
+        $validatedData['audio'] = $request->file('audio')->store('koleksi/audio', 'public');
     }
     
     if ($request->hasFile('vidio')) { // Make sure to use the correct name 'vidio' or 'video'
@@ -279,7 +279,7 @@ class KelolaKoleksiController extends Controller
             Storage::disk('public')->delete($kelolakoleksi->vidio);
         }
         // Store the new video file in a dedicated directory
-        $validatedData['vidio'] = $request->file('vidio')->store('koleksi_batuan/video', 'public');
+        $validatedData['vidio'] = $request->file('vidio')->store('koleksi/video', 'public');
     }
 
     // Update data ke database

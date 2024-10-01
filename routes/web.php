@@ -1,24 +1,24 @@
 <?php
 
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\InboundController;
-use App\Http\Controllers\KelolaKoleksiBatuanController;
-use App\Http\Controllers\PeminjamanController;
-use App\Http\Controllers\PengembalianController;
-use App\Http\Controllers\KelolakoleksiController;
-use App\Http\Controllers\KelolaKoleksiFosilController;
-use App\Http\Controllers\KelolaKoleksiSumberDayaGeologiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StorageController;
-use App\Http\Controllers\ManajemenAdminController;
 use App\Http\Controllers\OutboundController;
-// use App\Http\Controllers\ManajemenUserController;
-use App\Http\Controllers\PersetujuanController;
+use App\Http\Controllers\PeminjamanController;
 use App\Models\KelolaKoleksiSumberDayaGeologi;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-use App\Http\Controllers\SearchController;
+use App\Http\Controllers\PersetujuanController;
+// use App\Http\Controllers\ManajemenUserController;
+use App\Http\Controllers\PengembalianController;
+use App\Http\Controllers\KelolakoleksiController;
+use App\Http\Controllers\ManajemenAdminController;
+use App\Http\Controllers\KelolaKoleksiFosilController;
+use App\Http\Controllers\KelolaKoleksiBatuanController;
+use App\Http\Controllers\KelolaKoleksiSumberDayaGeologiController;
 
 Route::get('/', [HomeController::class, 'index']);
 
