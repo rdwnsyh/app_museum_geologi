@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Models\Peminjaman;
 use Illuminate\Http\Request;
+use App\Models\DetailPeminjaman;
 use Illuminate\Support\Facades\Storage;
 
 class PeminjamanController extends Controller
@@ -13,9 +14,17 @@ class PeminjamanController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        return Inertia::render('Peminjaman/Index');
-    }
+{
+    
+    // Mengambil semua data peminjaman beserta relasi detail_peminjaman dan koleksi
+    $peminjaman = Peminjaman::with('detailPeminjaman.koleksi', 'user')->get()->paginate();
+
+    // Mengirim data ke frontend menggunakan Inertia
+    return Inertia::render('Peminjaman/Index', [
+        'peminjaman' => $peminjaman
+    ]);
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -30,14 +39,20 @@ class PeminjamanController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi data input
-        $validatedData = $request->validate([
-        'users_id' => 'required|exists:users,id', // Validasi ID pengguna harus ada di tabel users
-        'tanggal_pinjam' => 'required|date|after_or_equal:today', // Validasi tanggal pinjam harus berupa tanggal dan tidak boleh sebelum hari ini
-        'tanggal_jatuh_tempo' => 'required|date|after_or_equal:tanggal_pinjam', // Tanggal jatuh tempo tidak boleh sebelum tanggal pinjam
-        'status' => 'required|in:Pengajuan,Sedang di Pinjam,Terlambat,Ditolak,Dikembalikan', // Validasi status harus berisi salah satu dari nilai yang valid
+    // Validasi data input
+    $validatedData = $request->validate([
+        // Tabel Peminjaman
+        'users_id' => 'required|exists:users,id', // Pastikan pengguna terdaftar di tabel users
+        'tanggal_pinjam' => 'required|date|after_or_equal:today', // Tanggal pinjam tidak boleh sebelum hari ini
+        'tanggal_jatuh_tempo' => 'required|date|after_or_equal:tanggal_pinjam', // Jatuh tempo harus setelah atau sama dengan tanggal pinjam
+        'status' => 'required|in:Pengajuan,Sedang di Pinjam,Terlambat,Ditolak,Dikembalikan', // Validasi status peminjaman
         'identitas' => 'required|string|max:255', // Validasi identitas peminjam
         'surat_permohonan' => 'required|file|mimes:pdf,doc,docx|max:2048', // Validasi file surat permohonan (PDF, DOC, DOCX maksimal 2MB)
+
+        // Tabel Detail Peminjaman
+        'koleksi_id' => 'required|exists:kelola_koleksi,id', // Pastikan koleksi yang dipinjam ada di tabel kelola_koleksi
+        'jumlah_dipinjam' => 'required|integer|min:1', // Jumlah barang yang dipinjam
+        'kondisi' => 'required|string|max:255', // Kondisi barang saat dipinjam
     ], [
         'users_id.required' => 'Pengguna harus diisi.',
         'users_id.exists' => 'Pengguna tidak ditemukan.',
@@ -48,28 +63,45 @@ class PeminjamanController extends Controller
         'tanggal_jatuh_tempo.date' => 'Format tanggal jatuh tempo tidak valid.',
         'tanggal_jatuh_tempo.after_or_equal' => 'Tanggal jatuh tempo harus sama atau setelah tanggal pinjam.',
         'status.required' => 'Status harus diisi.',
-        'status.in' => 'Status harus berupa salah satu dari: Pengajuan, Sedang di Pinjam, Terlambat, Ditolak, atau Dikembalikan.',
+        'status.in' => 'Status harus berupa salah satu dari: Pengajuan, Sedang di Pinjam, Terlambat, Ditolak, Selesai.',
         'identitas.required' => 'Identitas harus diisi.',
         'surat_permohonan.required' => 'File surat permohonan harus diunggah.',
         'surat_permohonan.mimes' => 'Format file surat permohonan harus berupa: pdf, doc, atau docx.',
         'surat_permohonan.max' => 'Ukuran file surat permohonan maksimal 2MB.',
+        'koleksi_id.exists' => 'Koleksi yang dipilih tidak ditemukan.',
     ]);
 
     // Proses upload file identitas
     if ($request->hasFile('identitas')) {
         $validatedData['identitas'] = $request->file('identitas')->store('identitas', 'public');
     }
+
     // Proses upload file surat permohonan
     if ($request->hasFile('surat_permohonan')) {
         $validatedData['surat_permohonan'] = $request->file('surat_permohonan')->store('surat_permohonan', 'public');
     }
 
-    // Simpan data ke dalam database
-    Peminjaman::create($validatedData);
+    // Simpan data peminjaman ke tabel `peminjaman`
+    $peminjaman = Peminjaman::create([
+        'users_id' => $validatedData['users_id'],
+        'tanggal_pinjam' => $validatedData['tanggal_pinjam'],
+        'tanggal_jatuh_tempo' => $validatedData['tanggal_jatuh_tempo'],
+        'status' => $validatedData['status'],
+        'identitas' => $validatedData['identitas'],
+        'surat_permohonan' => $validatedData['surat_permohonan'],
+    ]);
+
+    // Simpan data ke tabel `detail_peminjaman`
+    DetailPeminjaman::create([
+        'peminjaman_id' => $peminjaman->id, // Ambil ID dari peminjaman yang baru disimpan
+        'koleksi_id' => $validatedData['koleksi_id'],
+        'jumlah_dipinjam' => $validatedData['jumlah_dipinjam'],
+        'kondisi' => $validatedData['kondisi'],
+    ]);
 
     // Redirect atau kirim pesan sukses
-    return redirect()->route('peminjaman')->with('success', 'Peminjaman berhasil diajukan.');
-    }
+    return redirect()->route('peminjaman')->with('success', 'Pengajuan peminjaman berhasil ditambahkan.');
+}
 
 
     /**
@@ -85,10 +117,12 @@ class PeminjamanController extends Controller
      */
     public function edit(Peminjaman $peminjaman)
     {
-        // Menampilkan halaman edit dengan data yang diambil
+         // Memuat data peminjaman beserta detail peminjaman dan koleksi yang terkait
+        $peminjaman->load('detailPeminjaman.koleksi', 'user');
+
+        // Mengirim data ke frontend untuk ditampilkan di form edit
         return Inertia::render('Peminjaman/Edit', [
             'peminjaman' => $peminjaman
-            // dd($kelolaKoleksiBatuan)
         ]);
     }
 
@@ -99,12 +133,18 @@ class PeminjamanController extends Controller
 {
     // Validasi data input
     $validatedData = $request->validate([
-        'users_id' => 'required|exists:users,id', // Validasi ID pengguna harus ada di tabel users
-        'tanggal_pinjam' => 'required|date|after_or_equal:today', // Validasi tanggal pinjam tidak boleh sebelum hari ini
+        // Tabel Peminjaman
+        'users_id' => 'required|exists:users,id', // Pastikan pengguna terdaftar di tabel users
+        'tanggal_pinjam' => 'required|date|after_or_equal:today', // Tanggal pinjam tidak boleh sebelum hari ini
         'tanggal_jatuh_tempo' => 'required|date|after_or_equal:tanggal_pinjam', // Tanggal jatuh tempo harus setelah atau sama dengan tanggal pinjam
-        'status' => 'required|in:Pengajuan,Sedang di Pinjam,Terlambat,Ditolak,Dikembalikan', // Validasi status yang valid
+        'status' => 'required|in:Pengajuan,Sedang di Pinjam,Terlambat,Ditolak,Selesai', // Validasi status peminjaman
         'identitas' => 'required|string|max:255', // Validasi identitas peminjam
-        'surat_permohonan' => 'nullable|file|mimes:pdf,doc,docx|max:2048', // Validasi file surat permohonan (nullable saat update)
+        'surat_permohonan' => 'nullable|file|mimes:pdf,doc,docx|max:2048', // Validasi file surat permohonan (PDF, DOC, DOCX maksimal 2MB)
+
+        // Tabel Detail Peminjaman
+        'koleksi_id' => 'required|exists:kelola_koleksi,id', // Pastikan koleksi yang dipinjam ada di tabel kelola_koleksi
+        'jumlah_dipinjam' => 'required|integer|min:1', // Jumlah barang yang dipinjam
+        'kondisi' => 'required|string|max:255', // Kondisi barang saat dipinjam
     ], [
         'users_id.required' => 'Pengguna harus diisi.',
         'users_id.exists' => 'Pengguna tidak ditemukan.',
@@ -115,37 +155,50 @@ class PeminjamanController extends Controller
         'tanggal_jatuh_tempo.date' => 'Format tanggal jatuh tempo tidak valid.',
         'tanggal_jatuh_tempo.after_or_equal' => 'Tanggal jatuh tempo harus sama atau setelah tanggal pinjam.',
         'status.required' => 'Status harus diisi.',
-        'status.in' => 'Status harus berupa Pengajuan, Sedang di Pinjam, Terlambat, Ditolak, atau Dikembalikan.',
+        'status.in' => 'Status harus berupa salah satu dari: Pengajuan, Sedang di Pinjam, Terlambat, Ditolak, atau Dikembalikan.',
         'identitas.required' => 'Identitas harus diisi.',
+        'identitas.max' => 'Identitas maksimal 255 karakter.',
         'surat_permohonan.mimes' => 'Format file surat permohonan harus berupa: pdf, doc, atau docx.',
         'surat_permohonan.max' => 'Ukuran file surat permohonan maksimal 2MB.',
+        'koleksi_id.exists' => 'Koleksi yang dipilih tidak ditemukan.',
     ]);
 
-    // Proses upload file surat permohonan jika ada
+    // Proses upload file identitas (opsional)
+    if ($request->hasFile('identitas')) {
+        $validatedData['identitas'] = $request->file('identitas')->store('identitas', 'public');
+    }
+
+    // Proses upload file surat permohonan (opsional)
     if ($request->hasFile('surat_permohonan')) {
         // Hapus file lama jika ada
         if ($peminjaman->surat_permohonan) {
             Storage::disk('public')->delete($peminjaman->surat_permohonan);
         }
-        // Simpan file surat permohonan yang baru
+        // Upload file baru
         $validatedData['surat_permohonan'] = $request->file('surat_permohonan')->store('surat_permohonan', 'public');
     }
-    // Proses upload file surat permohonan jika ada
-    if ($request->hasFile('identitas')) {
-        // Hapus file lama jika ada
-        if ($peminjaman->identitas) {
-            Storage::disk('public')->delete($peminjaman->identitas);
-        }
-        // Simpan file surat permohonan yang baru
-        $validatedData['identitas'] = $request->file('identitas')->store('identitas', 'public');
-    }
 
-    // Update data peminjaman dengan data yang telah divalidasi
-    $peminjaman->update($validatedData);
+    // Update data di tabel `peminjaman`
+    $peminjaman->update([
+        'users_id' => $validatedData['users_id'],
+        'tanggal_pinjam' => $validatedData['tanggal_pinjam'],
+        'tanggal_jatuh_tempo' => $validatedData['tanggal_jatuh_tempo'],
+        'status' => $validatedData['status'],
+        'identitas' => $validatedData['identitas'],
+        'surat_permohonan' => $validatedData['surat_permohonan'] ?? $peminjaman->surat_permohonan, // Update jika ada file baru
+    ]);
 
-    // Redirect ke halaman sebelumnya dengan pesan sukses
-    return redirect()->route('peminjaman')->with('success', 'peminjaman berhasil diperbarui.');
+    // Update data di tabel `detail_peminjaman`
+    $peminjaman->detailPeminjaman()->update([
+        'koleksi_id' => $validatedData['koleksi_id'],
+        'jumlah_dipinjam' => $validatedData['jumlah_dipinjam'],
+        'kondisi' => $validatedData['kondisi'],
+    ]);
+
+    // Redirect atau kirim pesan sukses
+    return redirect()->route('peminjaman')->with('success', 'Data peminjaman berhasil diperbarui.');
 }
+
 
 
 

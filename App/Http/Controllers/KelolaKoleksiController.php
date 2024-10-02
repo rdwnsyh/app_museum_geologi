@@ -17,7 +17,7 @@ class KelolaKoleksiController extends Controller
     public function index(): Response
     {
          // Ambil data dari tabel batuan dengan pagination
-         $kelolakoleksi = KelolaKoleksi::paginate(10); // Menampilkan 10 item per halaman
+         $kelolakoleksi = KelolaKoleksi::paginate(); // Menampilkan 10 item per halaman
 
          // Kirim data ke view menggunakan Inertia
          return Inertia::render('Kelola/Index', [
@@ -41,14 +41,14 @@ class KelolaKoleksiController extends Controller
         // Validasi data input
         $validatedData = $request->validate([
             // Halaman 1
-            'kategori_bmn' => 'nullable|string|max:255' ?? '6.06.01.05.005',
+            'kategori_bmn' => 'string|max:255' ?? '6.06.01.05.005',
             'nup_bmn' => 'required|string|max:255',
             'no_regis' => 'required|string|max:255',
             'no_inventaris' => 'required|string|max:255',
-            'tipe_bmn' => 'nullable|string|max:255' ?? 'Batuan',
+            'tipe_bmn' => 'string|max:255' ?? 'Batuan',
             'no_awal' => 'required|string|max:255',
             'satuan' => 'required|string|max:255',
-            'kelompok_koleksi' => 'nullable|string|max:255' ?? 'Batuan',
+            'kelompok_koleksi' => 'string|max:255' ?? 'Batuan',
             'jenis_koleksi' => 'required|string|max:255',
             'kode_koleksi' => 'required|string|max:255',
             'ruang_penyimpanan' => 'required|string|max:255',
