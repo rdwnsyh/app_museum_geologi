@@ -1,10 +1,17 @@
 import React from 'react';
-import { X } from 'lucide-react'; // Import X icon from lucide-react
-import { Link } from '@inertiajs/react'; // Ensure you import Link if using Inertia
+import { X } from 'lucide-react';
+import { Link } from '@inertiajs/react';
 import Logo from "@/Components/Logo/Logo";
 
 const Modal = ({ isOpen, onClose, title, logoSrc, children }) => {
   if (!isOpen) return null;
+
+  const handleOverlayClick = (e) => {
+    // Cek apakah klik terjadi di luar modal
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
 
   return (
     <div
@@ -12,6 +19,7 @@ const Modal = ({ isOpen, onClose, title, logoSrc, children }) => {
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"
+      onClick={handleOverlayClick} // Tambahkan event handler untuk overlay
     >
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div
@@ -35,14 +43,14 @@ const Modal = ({ isOpen, onClose, title, logoSrc, children }) => {
               ) : (
                 <Logo className="text-white fill-current" width="120" height="28" />
               )}
-              <h2 className="ml-2 text-lg font-bold" id="modal-title">{title}</h2> {/* Adjusted title position */}
+              <h2 className="ml-2 text-lg font-bold" id="modal-title">{title}</h2>
             </Link>
             <button
               type="button"
               className="rounded-md text-gray-500 hover:text-gray-700 focus:outline-none"
               onClick={onClose}
             >
-              <X className="w-6 h-6" /> {/* X icon */}
+              <X className="w-6 h-6" />
             </button>
           </div>
 

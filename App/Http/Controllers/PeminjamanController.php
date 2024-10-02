@@ -17,7 +17,7 @@ class PeminjamanController extends Controller
 {
     
     // Mengambil semua data peminjaman beserta relasi detail_peminjaman dan koleksi
-    $peminjaman = Peminjaman::with('detailPeminjaman.koleksi', 'user')->get()->paginate();
+    $peminjaman = Peminjaman::with('detailPeminjaman.koleksi', 'user')->paginate();
 
     // Mengirim data ke frontend menggunakan Inertia
     return Inertia::render('Peminjaman/Index', [

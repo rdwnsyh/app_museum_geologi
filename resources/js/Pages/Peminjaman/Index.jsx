@@ -83,10 +83,9 @@ function Index() {
 
             <Table
                 columns={[
-                    { label: "Lama", name: "lama_pinjam" },
+                    { label: "Nama Peminjam", name: "users_id" },
                     { label: "Tanggal Pinjam", name: "tanggal_pinjam" },
                     { label: "Tanggal Jatuh Tempo", name: "tanggal_jatuh_tempo" },
-                    { label: "Status", name: "status" },
                     {
                         label: "Status",
                         name: "status",
