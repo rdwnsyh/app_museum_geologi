@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    
     public function up(): void
     {
         Schema::create('peminjaman', function (Blueprint $table) {
@@ -16,7 +14,7 @@ return new class extends Migration
             $table->unsignedBigInteger('users_id'); // Foreign key ke tabel Pengguna
             $table->date('tanggal_pinjam'); // Tanggal saat barang dipinjam
             $table->date('tanggal_jatuh_tempo'); // Tanggal jatuh tempo pengembalian
-            $table->enum('status', ['Pengajuan', 'Sedang di Pinjam', 'Terlambat', 'Ditolak', 'Dikembalikan'])->default('Pengajuan'); // Status peminjaman
+            $table->enum('status', ['Pengajuan', 'Sedang di Pinjam', 'Terlambat', 'Ditolak', 'Selesai'])->default('Pengajuan'); // Status peminjaman
             $table->string('identitas'); // Status peminjaman
             $table->string('surat_permohonan'); // Status peminjaman
             $table->timestamps();
