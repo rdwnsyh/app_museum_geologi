@@ -10,7 +10,7 @@ class Pengembalian extends Model
     use HasFactory;
 
     protected $table = 'pengembalian';
-    protected $primaryKey = 'pengembalian_id';
+    protected $primaryKey = 'id';
 
     protected $fillable = [
         'peminjaman_id',

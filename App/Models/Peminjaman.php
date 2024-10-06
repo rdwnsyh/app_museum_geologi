@@ -11,7 +11,7 @@ class Peminjaman extends Model
 
      // Nama tabel di database
      protected $table = 'peminjaman';
-     protected $primaryKey = 'peminjaman_id';
+     protected $primaryKey = 'id';
      
      protected $fillable = [
          'users_id',

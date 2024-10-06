@@ -104,4 +104,9 @@ class KelolaKoleksi extends Model
                 // ->orWhere('description', 'like', '%' . $search . '%');
         });
     }
+
+    public function detailPeminjaman()
+    {
+        return $this->hasMany(DetailPeminjaman::class, 'koleksi_id');
+    }
 }
