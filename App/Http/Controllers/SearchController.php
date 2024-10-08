@@ -12,59 +12,32 @@ use App\Models\KelolaKoleksiSumberDayaGeologi;
 class SearchController extends Controller
 {
     // Method untuk pencarian berdasarkan nama koleksi
-    public function search(Request $request)
-    {
-        $search = $request->input('search');
+    // SearchController.php
 
-        // Query untuk mencari nama koleksi dari tiga tabel
-        $batuan = KelolaKoleksi::where('nama_koleksi', 'like', '%' . $search . '%')->get();
-        // $fosil = KelolaKoleksiFosil::where('nama_koleksi', 'like', '%' . $search . '%')->get();
-        // $sdg = KelolaKoleksiSumberDayaGeologi::where('nama_koleksi', 'like', '%' . $search . '%')->get();
+public function search(Request $request)
+{
+    $search = $request->input('search');
 
-        // Gabungkan hasil pencarian dari ketiga tabel
-        $results = $batuan;
+    // Query to search collections based on name in multiple tables
+    $results = KelolaKoleksi::filter(['search' => $search])->get(); // Searching across the relevant table
 
-    //     $search = $request->input('search');
+    // dd($results);
 
-    // // Query untuk mencari nama koleksi dari tiga tabel
-    // $batuan = KelolaKoleksiBatuan::where('nama_koleksi', 'like', '%' . $search . '%')->get()->map(function ($item) {
-    //     $item->type = 'batuan';
-    //     return $item;
-    // });
+    // Render new page to display search results
+    return Inertia::render('KoleksiMuseum', [
+        'results' => $results,
+        'searchQuery' => $search,
+    ]);
+}
 
-    // $fosil = KelolaKoleksiFosil::where('nama_koleksi', 'like', '%' . $search . '%')->get()->map(function ($item) {
-    //     $item->type = 'fosil';
-    //     return $item;
-    // });
-
-    // $sdg = KelolaKoleksiSumberDayaGeologi::where('nama_koleksi', 'like', '%' . $search . '%')->get()->map(function ($item) {
-    //     $item->type = 'sdg';
-    //     return $item;
-    // });
-
-    // // Gabungkan hasil pencarian dari ketiga tabel
-    // $results = $batuan->merge($fosil)->merge($sdg);
-
-        // Render halaman baru untuk menampilkan hasil pencarian
-        return Inertia::render('KoleksiMuseum', [
-            'results' => $results,
-            'searchQuery' => $search,
-        ]);
-    }
 
     // Method untuk menampilkan detail koleksi berdasarkan ID dan tipe (table)
     public function detail($id, $type)
     {
         // Temukan data berdasarkan tipe (table) dan ID
         switch ($type) {
-            case 'Batuan':
-                $item = KelolaKoleksiBatuan::findOrFail($id);
-                break;
-            case 'Fosil':
-                $item = KelolaKoleksiFosil::findOrFail($id);
-                break;
-            case 'Sumber Daya Geologi':
-                $item = KelolaKoleksiSumberDayaGeologi::findOrFail($id);
+            case 'koleksi':
+                $item = KelolaKoleksi::findOrFail($id);
                 break;
             default:
                 abort(404); // Jika tipe tidak ditemukan

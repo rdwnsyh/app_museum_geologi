@@ -98,10 +98,9 @@ class KelolaKoleksi extends Model
 
     public function scopeFilter($query, array $filters)
     {
-        // Filter berdasarkan keyword pencarian
+        // Filter based on search keyword
         $query->when($filters['search'] ?? false, function ($query, $search) {
             $query->where('nama_koleksi', 'like', '%' . $search . '%');
-                // ->orWhere('description', 'like', '%' . $search . '%');
         });
     }
 
