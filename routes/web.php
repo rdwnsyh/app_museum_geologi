@@ -3,6 +3,7 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\InboundController;
@@ -11,8 +12,8 @@ use App\Http\Controllers\StorageController;
 use App\Http\Controllers\OutboundController;
 use App\Http\Controllers\PeminjamanController;
 use App\Models\KelolaKoleksiSumberDayaGeologi;
-use App\Http\Controllers\PersetujuanController;
 // use App\Http\Controllers\ManajemenUserController;
+use App\Http\Controllers\PersetujuanController;
 use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\KelolakoleksiController;
 use App\Http\Controllers\ManajemenAdminController;
@@ -28,6 +29,10 @@ Route::get('/search', [SearchController::class, 'search'])->name('search');
 
 // Route untuk halaman detail koleksi berdasarkan ID dan tipe
 Route::get('/detail/{id}/{type}', [SearchController::class, 'detail'])->name('detail');
+
+Route::middleware(['auth'])->group(function() {
+    Route::get('/keranjang', [CartController::class, 'index'])->name('keranjang');
+});
 
 
 

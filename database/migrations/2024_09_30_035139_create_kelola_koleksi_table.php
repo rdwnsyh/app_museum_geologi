@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('kelola_koleksi', function (Blueprint $table) {
             // halaman 1 47 field
+            
             $table->bigIncrements('id');
             $table->string('kategori_bmn');
             $table->string('nup_bmn');
