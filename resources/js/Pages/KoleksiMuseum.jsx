@@ -50,7 +50,7 @@ const KoleksiMuseum = () => {
                                             "Deskripsi tidak tersedia."}
                                     </p>
                                     <a
-                                        href={`/detail/${item.id}/batuan`}
+                                        href={`/detail/${item.id}/koleksi`}
                                         className="text-blue-500 hover:underline mt-2 block"
                                     >
                                         Lihat Detail

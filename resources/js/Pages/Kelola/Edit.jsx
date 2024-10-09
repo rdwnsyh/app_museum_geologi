@@ -1079,7 +1079,7 @@ const Edit = () => {
                                         name="gambar_satu"
                                         error={errors.gambar_satu}
                                         existingFile={
-                                            koleksi_batuan.gambar_satu
+                                            kelolakoleksi.gambar_satu
                                         } // Menampilkan file yang sudah ada
                                         onFileChange={(file) =>
                                             handleFileChange(
@@ -1099,7 +1099,7 @@ const Edit = () => {
                                     <FileInput
                                         name="gambar_dua"
                                         error={errors.gambar_dua}
-                                        existingFile={koleksi_batuan.gambar_dua}
+                                        existingFile={kelolakoleksi.gambar_dua}
                                         onFileChange={(file) =>
                                             handleFileChange("gambar_dua", file)
                                         }
@@ -1116,7 +1116,7 @@ const Edit = () => {
                                         name="gambar_tiga"
                                         error={errors.gambar_tiga}
                                         existingFile={
-                                            koleksi_batuan.gambar_tiga
+                                            kelolakoleksi.gambar_tiga
                                         }
                                         onFileChange={(file) =>
                                             handleFileChange(
@@ -1136,7 +1136,7 @@ const Edit = () => {
                                     <FileInput
                                         name="vidio"
                                         error={errors.vidio}
-                                        existingFile={koleksi_batuan.vidio}
+                                        existingFile={kelolakoleksi.vidio}
                                         onFileChange={(file) =>
                                             handleFileChange("vidio", file)
                                         }
@@ -1152,7 +1152,7 @@ const Edit = () => {
                                     <FileInput
                                         name="audio"
                                         error={errors.audio}
-                                        existingFile={koleksi_batuan.audio}
+                                        existingFile={kelolakoleksi.audio}
                                         onFileChange={(file) =>
                                             handleFileChange("audio", file)
                                         }

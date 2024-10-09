@@ -2,15 +2,16 @@
 import React from 'react';
 import { Link } from "@inertiajs/react";
 import Logo from "@/Components/Logo/Logo"; // Assuming you have a Logo component
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ShoppingCart } from "lucide-react"; // Import the ShoppingCart icon
+import Keranjang from '@/Pages/Keranjang';
 
 const Navbar = ({ searchQuery, setSearchQuery }) => {
     return (
         <nav className="bg-yellow-500 shadow-lg p-4">
             <div className="container mx-auto flex justify-between items-center">
-            <Link className="mt-1" href="/">
-                <Logo className="text-white fill-current" width="120" height="28" />
-            </Link>
+                <Link className="mt-1" href="/">
+                    <Logo className="text-white fill-current" width="120" height="28" />
+                </Link>
                 <div className="flex-1 relative rounded-md shadow-sm">
                     <input
                         type="text"
@@ -22,45 +23,25 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
                         placeholder="Cari koleksi..."
                     />
                 </div>
-                <div className="space-x-4">
-                
-                    {/* <Link href="/" className="text-white hover:underline">
-                        Home
-                    </Link>
-                    <Link href="/koleksi" className="text-white hover:underline">
-                        Koleksi
-                    </Link>
-                    <Link href="/about" className="text-white hover:underline">
-                        About
-                    </Link>
-                    <Link href="/contact" className="text-white hover:underline">
-                        Contact
-                    </Link> */}
-                    <div className="ml-4 relative">
+                <div className="flex items-center space-x-4">
                     <Link
-                        href="/"
-                        // className="flex items-center bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        href="/keranjang" // Ensure this points to the correct route for the Keranjang page
+                        className="flex items-center text-white py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
+                        <ShoppingCart size={20} className="mr-1" /> {/* Cart icon */}
                         
-                        <ChevronDown
-                            size={20}
-                            className="ml-2 text-gray-800 group-hover:text-indigo-600"
-                        />
                     </Link>
-
-                        {/* <button
-                            type="button"
-                            className="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition duration-150 ease-in-out"
-                            id="user-menu"
-                            aria-label="User menu"
-                            aria-haspopup="true"
+                    <div className="relative">
+                        <Link
+                            href="/"
+                            className="flex items-center text-white"
                         >
-                            <img
-                                className="h-8 w-8 rounded-full"
-                                src="/images/user.png" // Replace with your user image
-                                alt="User"
+                            <span className="mr-1"></span>
+                            <ChevronDown
+                                size={20}
+                                className="text-gray-800 group-hover:text-indigo-600"
                             />
-                        </button> */}
+                        </Link>
                     </div>
                 </div>
             </div>
