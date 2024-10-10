@@ -1,30 +1,28 @@
 import React from "react";
-import { Link, usePage } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
-// import FilterBar from "@/Components/FilterBar/FilterBar";
-// import Pagination from "@/Components/Pagination/Pagination";
 import Table from "@/Components/Table/Table";
 import SearchBar from "@/Components/SearchBar/SearchBar";
-// import { Trash2 } from "lucide-react";
 import { ArrowDownToLine, Plus } from "lucide-react";
 
 function Index() {
-    // const { organizations } = usePage().props;
-
-    // const {
-    //     data,
-    //     meta: { links },
-    // } = organizations;
+    // Static data for the table
+    const staticData = [
+        { id: 1, users_id: "John Doe", tanggal_pinjam: "2024-10-01", tanggal_jatuh_tempo: "2024-10-15", status: "Sedang dipinjam" },
+        { id: 2, users_id: "Jane Smith", tanggal_pinjam: "2024-09-20", tanggal_jatuh_tempo: "2024-10-05", status: "Sedang dipinjam" },
+        { id: 3, users_id: "Alice Johnson", tanggal_pinjam: "2024-09-25", tanggal_jatuh_tempo: "2024-10-10", status: "Sedang dipinjam" },
+        { id: 4, users_id: "Bob Brown", tanggal_pinjam: "2024-09-30", tanggal_jatuh_tempo: "2024-10-14", status: "Sedang dipinjam" },
+        { id: 5, users_id: "Charlie Davis", tanggal_pinjam: "2024-09-15", tanggal_jatuh_tempo: "2024-09-30", status: "Sedang dipinjam" },
+    ];
 
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">Inbound</h1>
 
             <div className="flex items-center justify-between mb-6">
-                <SearchBar /> {/* Tambahkan SearchBar di sini */}
-                {/* <FilterBar /> */}
+                <SearchBar />
                 <div className="flex items-center justify-end mb-2">
-                <Link
+                    <Link
                         className="bg-green-600 text-white py-2 px-2 mx-2 rounded hover:bg-green-900 transition flex items-center"
                         href={route("inbound.create")}
                     >
@@ -59,17 +57,16 @@ function Index() {
                         renderCell: (row) => (
                             <div className="flex space-x-2">
                                 <button
-                                    onClick={() => handleDelete(row.id)}
+                                    onClick={() => handleDelete(row.id)} // Implement handleDelete if needed
                                     className="bg-red-600 text-white py-1 px-3 rounded hover:bg-red-900 transition"
                                 >
-                                    Sedang dipinjam
+                                    {row.status}
                                 </button>
                             </div>
                         ),
                     },
                 ]}
-                // rows={data}
-                // getRowDetailsUrl={(row) => route("organizations.edit", row.id)}
+                rows={staticData} // Use static data as rows
             />
             {/* <Pagination links={links} /> */}
         </div>

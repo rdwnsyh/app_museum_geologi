@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Create = ({ onSubmit }) => {
+const Tambah = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
     tanggal_pinjam: '',
     tanggal_jatuh_tempo: '',
@@ -142,13 +142,7 @@ const Create = ({ onSubmit }) => {
         </div>
 
         <div className="flex justify-end">
-          {/* <button 
-            type="button"
-            onClick={addRowToTable}
-            className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
-          >
-            Tambah Baris
-          </button> */}
+          
           <button 
             type="submit" 
             className="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded ml-2"
@@ -161,4 +155,4 @@ const Create = ({ onSubmit }) => {
   );
 };
 
-export default Create;
+export default Tambah;

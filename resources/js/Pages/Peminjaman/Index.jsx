@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, usePage, router } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
 import Table from "@/Components/Table/Table";
 import SearchBar from "@/Components/SearchBar/SearchBar";
@@ -9,10 +9,14 @@ import Modal from "@/Components/Modal/Modal";
 import Create from "./Create"; // Import Create component
 
 function Index() {
-    const { peminjaman } = usePage().props;
-
-    const data = peminjaman?.data || [];
-    const links = peminjaman?.meta?.links || [];
+    // Static data for the table
+    const staticData = [
+        { id: 1, users_id: "John Doe", tanggal_pinjam: "2024-10-01", tanggal_jatuh_tempo: "2024-10-10", status: "Sedang dipinjam" },
+        { id: 2, users_id: "Jane Smith", tanggal_pinjam: "2024-09-15", tanggal_jatuh_tempo: "2024-09-25", status: "Kembali" },
+        { id: 3, users_id: "Alice Johnson", tanggal_pinjam: "2024-10-05", tanggal_jatuh_tempo: "2024-10-15", status: "Sedang dipinjam" },
+        { id: 4, users_id: "Bob Brown", tanggal_pinjam: "2024-09-20", tanggal_jatuh_tempo: "2024-09-30", status: "Kembali" },
+        { id: 5, users_id: "Charlie Davis", tanggal_pinjam: "2024-10-07", tanggal_jatuh_tempo: "2024-10-14", status: "Sedang dipinjam" },
+    ];
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -95,7 +99,7 @@ function Index() {
                                     onClick={() => handleDelete(row.id)}
                                     className="bg-red-600 text-white py-1 px-3 rounded hover:bg-red-900 transition"
                                 >
-                                    Sedang dipinjam
+                                    {row.status}
                                 </button>
                             </div>
                         ),
@@ -115,10 +119,11 @@ function Index() {
                         ),
                     },
                 ]}
-                rows={data}
+                rows={staticData} // Use static data as rows
             />
 
-            {links.length > 0 && <Pagination links={links} />}
+            {/* Pagination component (optional) */}
+            {/* {links.length > 0 && <Pagination links={links} />} */}
         </div>
     );
 }

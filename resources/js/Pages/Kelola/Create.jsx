@@ -12,6 +12,7 @@ import TextArea from "@/Components/Form/Textarea";
 const Create = () => {
     const { data, setData, errors, post, processing, setError } = useForm({
         // halaman 1 admin
+        kelompok_koleksi: "",
         kategori_bmn: "",
         nup_bmn: "",
         // tambah field
@@ -134,6 +135,28 @@ const Create = () => {
                     <div className="grid gap-10 p-10 lg:grid-cols-2">
                         {step === 1 && (
                             <>
+                                <FieldGroup
+                                    label="Kelompok Koleksi"
+                                    name="kelompok_koleksi"
+                                    error={errors.kelompok_koleksi}
+                                >
+                                    <SelectInput
+                                        type="text"
+                                        name="kelompok_koleksi"
+                                        error={errors.kelompok_koleksi}
+                                        value={data.kelompok_koleksi}
+                                        onChange={(e) =>
+                                            setData("kelompok_koleksi", e.target.value)
+                                        }
+                                        options={[
+                                            { value: "", label: "" },
+                                            { value: "BA", label: "Batuan dan Mineral" },
+                                            { value: "FO", label: "Fosil" },
+                                            { value: "SD", label: "Sumber Daya" },
+                                        ]}
+                                    />
+                                </FieldGroup>
+                                
                                 <FieldGroup
                                     label="Kategori BMN"
                                     name="kategori_bmn"

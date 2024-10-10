@@ -6,6 +6,9 @@ import { Inertia } from "@inertiajs/inertia"; // Import Inertia for navigation
 const DetailKoleksi = () => {
     const { item, type } = usePage().props; // Destructure props passed from the server
     const [searchQuery, setSearchQuery] = useState("");
+    const [currentAudio, setCurrentAudio] = useState('');
+    const [currentVideo, setCurrentVideo] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
     // Form handling
     const { data, setData, post } = useForm({});
@@ -22,7 +25,31 @@ const DetailKoleksi = () => {
             }
         });
     };
-    
+
+    const handleAudioClick = () => {
+        setCurrentAudio(`/audio/${item.audio}`);
+        setCurrentVideo(''); // Reset video when audio is clicked
+        setIsModalOpen(true); // Open modal
+    };
+
+    const handleVideoClick = () => {
+        setCurrentVideo(`/video/${item.video}`);
+        setCurrentAudio(''); // Reset audio when video is clicked
+        setIsModalOpen(true); // Open modal
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setCurrentAudio(''); // Clear audio
+        setCurrentVideo(''); // Clear video
+    };
+
+    const handleModalClick = (event) => {
+        // Check if the click is outside the modal content
+        if (event.target === event.currentTarget) {
+            closeModal();
+        }
+    };
 
     return (
         <div className="bg-gray-100 min-h-screen">
@@ -31,12 +58,24 @@ const DetailKoleksi = () => {
             <div className="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <div className="md:grid md:grid-cols-3 md:gap-6">
                     <div className="md:col-span-1">
-                        <div className="px-4 sm:px-0">
-                            <img
-                                src={item.gambar_satu || "/default-image.png"} // Fallback image
-                                alt={item.nama_koleksi}
-                                className="w-full h-auto mb-4 rounded-md"
-                            />
+                        <div className="flex flex-col items-center">
+                            <div className="overflow-x-auto whitespace-nowrap mb-8">
+                                <img
+                                    src={item.gambar_satu || "/batu.png"}
+                                    alt={item.nama_koleksi}
+                                    className="inline-block w-full h-auto rounded-md"
+                                />
+                                <img
+                                    src={item.gambar_dua || "/batu.png"}
+                                    alt={item.nama_koleksi}
+                                    className="inline-block w-full h-auto rounded-md"
+                                />
+                                <img
+                                    src={item.gambar_dua || "/batu.png"}
+                                    alt={item.nama_koleksi}
+                                    className="inline-block w-full h-auto rounded-md"
+                                />
+                            </div>
                             <h3 className="text-lg font-medium leading-6 text-gray-900 text-center">
                                 {item.nama_koleksi}
                             </h3>
@@ -73,23 +112,23 @@ const DetailKoleksi = () => {
                                         Kembali ke Koleksi
                                     </Link>
                                     <div className="inline-flex ml-3">
-                                    <button
-                                        type="button"
-                                        onClick={handleAddToCart}
-                                        className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                                    >
-                                        Masukkan Keranjang
-                                    </button>
                                         <button
                                             type="button"
-                                            onClick={() => Inertia.get(`/audio/${item.audio}`)}
+                                            onClick={handleAddToCart}
+                                            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                                        >
+                                            Masukkan Keranjang
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={handleAudioClick}
                                             className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                         >
                                             Audio
                                         </button>
                                         <button
                                             type="button"
-                                            onClick={() => Inertia.get(`/video/${item.video}`)}
+                                            onClick={handleVideoClick}
                                             className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                         >
                                             Video
@@ -101,6 +140,35 @@ const DetailKoleksi = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Modal for Audio/Video */}
+            {isModalOpen && (
+                <div 
+                    className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+                    onClick={handleModalClick} // Handle click on modal background
+                >
+                    <div className="bg-white rounded-lg p-4 w-11/12 md:w-1/3">
+                        <button
+                            onClick={closeModal}
+                            className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+                        >
+                            &times; {/* Close icon */}
+                        </button>
+                        {currentAudio && (
+                            <audio controls className="w-full">
+                                <source src={currentAudio} type="audio/mpeg" />
+                                Your browser does not support the audio element.
+                            </audio>
+                        )}
+                        {currentVideo && (
+                            <video controls className="w-full mt-4">
+                                <source src={currentVideo} type="video/mp4" />
+                                Your browser does not support the video element.
+                            </video>
+                        )}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

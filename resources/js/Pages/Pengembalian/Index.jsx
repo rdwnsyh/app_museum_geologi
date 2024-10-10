@@ -1,27 +1,25 @@
 import React from "react";
-import { Link, usePage } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
-import Pagination from "@/Components/Pagination/Pagination";
-import FilterBar from "@/Components/FilterBar/FilterBar";
 import Table from "@/Components/Table/Table";
 import SearchBar from "@/Components/SearchBar/SearchBar";
-import { Trash2 } from "lucide-react";
 import { ArrowDownToLine } from "lucide-react";
 
 const Index = () => {
-    // const { contacts } = usePage().props;
-
-    // const {
-    //     data,
-    //     meta: { links },
-    // } = contacts;
+    // Static data for the table
+    const staticData = [
+        { id: 1, peminjaman_id: "John Doe", tanggal_kembali: "2024-10-01", status_pengembalian: "Kembali", keterangan: "Sukses" },
+        { id: 2, peminjaman_id: "Jane Smith", tanggal_kembali: "2024-09-15", status_pengembalian: "Terlambat", keterangan: "Denda dikenakan" },
+        { id: 3, peminjaman_id: "Alice Johnson", tanggal_kembali: "2024-10-05", status_pengembalian: "Kembali", keterangan: "Sukses" },
+        { id: 4, peminjaman_id: "Bob Brown", tanggal_kembali: "2024-09-20", status_pengembalian: "Kembali", keterangan: "Sukses" },
+        { id: 5, peminjaman_id: "Charlie Davis", tanggal_kembali: "2024-10-07", status_pengembalian: "Terlambat", keterangan: "Denda dikenakan" },
+    ];
 
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">Pengembalian</h1>
             <div className="flex items-center justify-between mb-6">
-            <SearchBar /> 
-                {/* <FilterBar /> */}
+                <SearchBar />
                 <div className="flex items-center justify-end mb-2">
                     <Link
                         className="bg-blue-600 text-white py-2 px-4 mx-2 rounded hover:bg-blue-900 transition flex items-center"
@@ -41,28 +39,26 @@ const Index = () => {
             </div>
             <Table
                 columns={[
-                    {label: "Nama Peminjam",name: "peminjaman_id"},
-                        
+                    { label: "Nama Peminjam", name: "peminjaman_id" },
                     { label: "Tanggal Kembali", name: "tanggal_kembali" },
                     { label: "Status Pengembalian", name: "status_pengembalian" },
                     { label: "Keterangan", name: "keterangan" },
                     {
-                        label: "Status",
+                        label: "Aksi",
                         name: "status",
                         renderCell: (row) => (
                             <div className="flex space-x-2">
                                 <button
-                                    onClick={() => handleDelete(row.id)}
+                                    onClick={() => handleDelete(row.id)} // Implement handleDelete function as needed
                                     className="bg-red-600 text-white py-1 px-3 rounded hover:bg-red-900 transition"
                                 >
-                                    Sedang dipinjam
+                                    Hapus
                                 </button>
                             </div>
                         ),
                     },
                 ]}
-                // rows={data}
-                // getRowDetailsUrl={(row) => route("contacts.edit", row.id)}
+                rows={staticData} // Use static data as rows
             />
             {/* <Pagination links={links} /> */}
         </div>

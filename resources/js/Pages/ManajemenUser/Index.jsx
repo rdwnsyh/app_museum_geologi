@@ -1,29 +1,27 @@
 import React from "react";
-import { Link, usePage } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
-import Pagination from "@/Components/Pagination/Pagination";
-import FilterBar from "@/Components/FilterBar/FilterBar";
 import Table from "@/Components/Table/Table";
 import SearchBar from "@/Components/SearchBar/SearchBar";
-import { Trash2 } from "lucide-react";
 import { ArrowDownToLine, Plus } from "lucide-react";
 
 const Index = () => {
-    // const { contacts } = usePage().props;
-
-    // const {
-    //     data,
-    //     meta: { links },
-    // } = contacts;
+    // Static data for the table
+    const staticData = [
+        { id: 1, users_id: "Alice Johnson", tanggal_pembuatan: "2024-10-01", status: "User" },
+        { id: 2, users_id: "Bob Smith", tanggal_pembuatan: "2024-09-20", status: "User" },
+        { id: 3, users_id: "Charlie Brown", tanggal_pembuatan: "2024-09-25", status: "User" },
+        { id: 4, users_id: "Diana Prince", tanggal_pembuatan: "2024-09-30", status: "User" },
+        { id: 5, users_id: "Ethan Hunt", tanggal_pembuatan: "2024-09-15", status: "User" },
+    ];
 
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">Manajemen User</h1>
             <div className="flex items-center justify-between mb-6">
-            <SearchBar /> {/* Tambahkan SearchBar di sini */}
-                {/* <FilterBar /> */}
+                <SearchBar />
                 <div className="flex items-center justify-end mb-2">
-                <Link
+                    <Link
                         className="bg-green-600 text-white py-2 px-2 mx-2 rounded hover:bg-green-900 transition flex items-center"
                         href={route("manajemenuser.create")}
                     >
@@ -49,24 +47,23 @@ const Index = () => {
             <Table
                 columns={[
                     { label: "Nama", name: "users_id" },
-                    { label: "Tanggal pembuatan", name: "tanggal_pinjam" },
+                    { label: "Tanggal Pembuatan", name: "tanggal_pembuatan" },
                     {
                         label: "Status",
                         name: "status",
                         renderCell: (row) => (
                             <div className="flex space-x-2">
                                 <button
-                                    onClick={() => handleDelete(row.id)}
+                                    onClick={() => handleDelete(row.id)} // You can implement handleDelete if needed
                                     className="bg-red-600 text-white py-1 px-3 rounded hover:bg-red-900 transition"
                                 >
-                                    User
+                                    {row.status}
                                 </button>
                             </div>
                         ),
                     },
                 ]}
-                // rows={data}
-                // getRowDetailsUrl={(row) => route("contacts.edit", row.id)}
+                rows={staticData} // Use static data as rows
             />
             {/* <Pagination links={links} /> */}
         </div>
@@ -78,6 +75,6 @@ const Index = () => {
  *
  * [Learn more](https://inertiajs.com/pages#persistent-layouts)
  */
-Index.layout = (page) => <MainLayout title="ManajemenUser">{page}</MainLayout>;
+Index.layout = (page) => <MainLayout title="Manajemen User">{page}</MainLayout>;
 
 export default Index;

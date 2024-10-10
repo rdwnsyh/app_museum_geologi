@@ -1,29 +1,27 @@
 import React from "react";
-import { Link, usePage } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
-import Pagination from "@/Components/Pagination/Pagination";
-import FilterBar from "@/Components/FilterBar/FilterBar";
 import Table from "@/Components/Table/Table";
 import SearchBar from "@/Components/SearchBar/SearchBar";
-import { Trash2 } from "lucide-react";
 import { ArrowDownToLine, Plus } from "lucide-react";
 
 const Index = () => {
-    // const { contacts } = usePage().props;
-
-    // const {
-    //     data,
-    //     meta: { links },
-    // } = contacts;
+    // Static data for the table
+    const staticData = [
+        { id: 1, name: "Alice Johnson", status: "Approved" },
+        { id: 2, name: "Bob Smith", status: "Pending" },
+        { id: 3, name: "Charlie Brown", status: "Rejected" },
+        { id: 4, name: "Diana Prince", status: "Approved" },
+        { id: 5, name: "Ethan Hunt", status: "Pending" },
+    ];
 
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">Persetujuan</h1>
             <div className="flex items-center justify-between mb-6">
-            <SearchBar /> {/* Tambahkan SearchBar di sini */}
-                {/* <FilterBar /> */}
+                <SearchBar />
                 <div className="flex items-center justify-end mb-2">
-                <Link
+                    <Link
                         className="bg-green-600 text-white py-2 px-2 mx-2 rounded hover:bg-green-900 transition flex items-center"
                         href={route("manajemenadmin.create")}
                     >
@@ -53,22 +51,26 @@ const Index = () => {
                         name: "name",
                         renderCell: (row) => (
                             <>
-                                {/* {row.name}
-                                {row.deleted_at && (
-                                    <Trash2
-                                        size={16}
-                                        className="ml-2 text-gray-400"
-                                    />
-                                )} */}
+                                {row.name}
                             </>
                         ),
                     },
-                    { label: "Organization", name: "organization.name" },
-                    { label: "City", name: "city" },
-                    { label: "Phone", name: "phone", colSpan: 2 },
+                    {
+                        label: "Aksi",
+                        name: "status",
+                        renderCell: (row) => (
+                            <div className="flex space-x-2">
+                                <button
+                                    onClick={() => handleDelete(row.id)} // Implement handleDelete if needed
+                                    className="bg-red-600 text-white py-1 px-3 rounded hover:bg-red-900 transition"
+                                >
+                                    {row.status}
+                                </button>
+                            </div>
+                        ),
+                    },
                 ]}
-                // rows={data}
-                // getRowDetailsUrl={(row) => route("contacts.edit", row.id)}
+                rows={staticData} // Use static data as rows
             />
             {/* <Pagination links={links} /> */}
         </div>

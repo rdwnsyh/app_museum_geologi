@@ -58,7 +58,7 @@ function Index() {
 
             <Table
                 columns={[
-                    { label: "Koleksi Batuan", name: "id" },
+                    { label: "Koleksi", name: "id" },
                     { label: "Nama Koleksi", name: "nama_koleksi" },
                     { label: "Tipe Koleksi", name: "tipe_bmn" },
                     { label: "Alamat Storage", name: "alamat" },
