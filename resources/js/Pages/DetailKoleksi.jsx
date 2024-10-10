@@ -11,9 +11,18 @@ const DetailKoleksi = () => {
     const { data, setData, post } = useForm({});
 
     const handleAddToCart = () => {
-        // Assuming you want to add the item to the cart
-        Inertia.post('/keranjang', { itemId: item.id });
+        console.log("Adding to cart:", { itemId: item.id }); // Debugging line
+        Inertia.post('/keranjang', { itemId: item.id }, {
+            onSuccess: () => {
+                // Navigate to the cart page after adding the item
+                Inertia.visit('/keranjang');
+            },
+            onError: (errors) => {
+                console.error("Error adding to cart:", errors);
+            }
+        });
     };
+    
 
     return (
         <div className="bg-gray-100 min-h-screen">
@@ -64,13 +73,13 @@ const DetailKoleksi = () => {
                                         Kembali ke Koleksi
                                     </Link>
                                     <div className="inline-flex ml-3">
-                                        <button
-                                            type="button"
-                                            onClick={handleAddToCart}
-                                            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                                        >
-                                            Keranjang
-                                        </button>
+                                    <button
+                                        type="button"
+                                        onClick={handleAddToCart}
+                                        className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                                    >
+                                        Masukkan Keranjang
+                                    </button>
                                         <button
                                             type="button"
                                             onClick={() => Inertia.get(`/audio/${item.audio}`)}

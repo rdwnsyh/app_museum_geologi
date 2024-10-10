@@ -6,6 +6,7 @@ import FilterBar from "@/Components/FilterBar/FilterBar";
 import Table from "@/Components/Table/Table";
 import SearchBar from "@/Components/SearchBar/SearchBar";
 import { Trash2 } from "lucide-react";
+import { ArrowDownToLine, Plus } from "lucide-react";
 
 const Index = () => {
     // const { contacts } = usePage().props;
@@ -21,13 +22,29 @@ const Index = () => {
             <div className="flex items-center justify-between mb-6">
             <SearchBar /> {/* Tambahkan SearchBar di sini */}
                 {/* <FilterBar /> */}
+                <div className="flex items-center justify-end mb-2">
                 <Link
-                    className="btn-indigo focus:outline-none"
-                    // href={route("contacts.create")}
-                >
-                    <span>Create</span>
-                    <span className="hidden md:inline"> Persetujuan</span>
-                </Link>
+                        className="bg-green-600 text-white py-2 px-2 mx-2 rounded hover:bg-green-900 transition flex items-center"
+                        href={route("manajemenadmin.create")}
+                    >
+                        <Plus className="w-4 h-4 mr-2" />
+                        <span className="hidden md:inline">Tambah</span>
+                    </Link>
+                    <Link
+                        className="bg-blue-600 text-white py-2 px-4 mx-2 rounded hover:bg-blue-900 transition flex items-center"
+                        href="#"
+                    >
+                        <ArrowDownToLine className="w-4 h-4 mr-2" />
+                        <span className="hidden md:inline">Excel</span>
+                    </Link>
+                    <Link
+                        className="bg-blue-600 text-white py-2 px-4 mx-2 rounded hover:bg-blue-900 transition flex items-center"
+                        href="#"
+                    >
+                        <ArrowDownToLine className="w-4 h-4 mr-2" />
+                        <span className="hidden md:inline">PDF</span>
+                    </Link>
+                </div>
             </div>
             <Table
                 columns={[

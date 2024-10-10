@@ -6,6 +6,7 @@ import MainLayout from "@/Layouts/MainLayout";
 import Table from "@/Components/Table/Table";
 import SearchBar from "@/Components/SearchBar/SearchBar";
 // import { Trash2 } from "lucide-react";
+import { ArrowDownToLine, Plus } from "lucide-react";
 
 function Index() {
     // const { organizations } = usePage().props;
@@ -22,35 +23,50 @@ function Index() {
             <div className="flex items-center justify-between mb-6">
                 <SearchBar /> {/* Tambahkan SearchBar di sini */}
                 {/* <FilterBar /> */}
+                <div className="flex items-center justify-end mb-2">
                 <Link
-                    className="btn-indigo focus:outline-none"
-                    href={route("kelolakoleksi.create")}
-                >
-                    <span>Create</span>
-                    <span className="hidden md:inline"> Inbound </span>
-                </Link>
+                        className="bg-green-600 text-white py-2 px-2 mx-2 rounded hover:bg-green-900 transition flex items-center"
+                        href={route("inbound.create")}
+                    >
+                        <Plus className="w-4 h-4 mr-2" />
+                        <span className="hidden md:inline">Tambah</span>
+                    </Link>
+                    <Link
+                        className="bg-blue-600 text-white py-2 px-4 mx-2 rounded hover:bg-blue-900 transition flex items-center"
+                        href="#"
+                    >
+                        <ArrowDownToLine className="w-4 h-4 mr-2" />
+                        <span className="hidden md:inline">Excel</span>
+                    </Link>
+                    <Link
+                        className="bg-blue-600 text-white py-2 px-4 mx-2 rounded hover:bg-blue-900 transition flex items-center"
+                        href="#"
+                    >
+                        <ArrowDownToLine className="w-4 h-4 mr-2" />
+                        <span className="hidden md:inline">PDF</span>
+                    </Link>
+                </div>
             </div>
 
             <Table
                 columns={[
+                    { label: "Nama Peminjam", name: "users_id" },
+                    { label: "Tanggal Pinjam", name: "tanggal_pinjam" },
+                    { label: "Tanggal Jatuh Tempo", name: "tanggal_jatuh_tempo" },
                     {
-                        label: "Name",
-                        name: "name",
+                        label: "Status",
+                        name: "status",
                         renderCell: (row) => (
-                            <>
-                                {/* {row.name}
-                                {row.deleted_at && (
-                                    <Trash2
-                                        size={16}
-                                        className="ml-2 text-gray-400"
-                                    />
-                                )} */}
-                            </>
+                            <div className="flex space-x-2">
+                                <button
+                                    onClick={() => handleDelete(row.id)}
+                                    className="bg-red-600 text-white py-1 px-3 rounded hover:bg-red-900 transition"
+                                >
+                                    Sedang dipinjam
+                                </button>
+                            </div>
                         ),
                     },
-                    { label: "City", name: "city" },
-                    { label: "Phone", name: "phone", colSpan: 2 },
-                    { label: "Alamat", name: "alamat", colSpan: 3 },
                 ]}
                 // rows={data}
                 // getRowDetailsUrl={(row) => route("organizations.edit", row.id)}

@@ -95,7 +95,7 @@ function Index() {
                                     onClick={() => handleDelete(row.id)}
                                     className="bg-red-600 text-white py-1 px-3 rounded hover:bg-red-900 transition"
                                 >
-                                    Delete
+                                    Sedang dipinjam
                                 </button>
                             </div>
                         ),

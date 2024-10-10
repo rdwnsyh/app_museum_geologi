@@ -6,6 +6,7 @@ import FilterBar from "@/Components/FilterBar/FilterBar";
 import Table from "@/Components/Table/Table";
 import SearchBar from "@/Components/SearchBar/SearchBar";
 import { Trash2 } from "lucide-react";
+import { ArrowDownToLine } from "lucide-react";
 
 const Index = () => {
     // const { contacts } = usePage().props;
@@ -19,36 +20,46 @@ const Index = () => {
         <div>
             <h1 className="mb-8 text-3xl font-bold">Pengembalian</h1>
             <div className="flex items-center justify-between mb-6">
-            <SearchBar /> {/* Tambahkan SearchBar di sini */}
+            <SearchBar /> 
                 {/* <FilterBar /> */}
-                <Link
-                    className="btn-indigo focus:outline-none"
-                    // href={route("contacts.create")}
-                >
-                    <span>Create</span>
-                    <span className="hidden md:inline"> Pengembalian</span>
-                </Link>
+                <div className="flex items-center justify-end mb-2">
+                    <Link
+                        className="bg-blue-600 text-white py-2 px-4 mx-2 rounded hover:bg-blue-900 transition flex items-center"
+                        href="#"
+                    >
+                        <ArrowDownToLine className="w-4 h-4 mr-2" />
+                        <span className="hidden md:inline">Excel</span>
+                    </Link>
+                    <Link
+                        className="bg-blue-600 text-white py-2 px-4 mx-2 rounded hover:bg-blue-900 transition flex items-center"
+                        href="#"
+                    >
+                        <ArrowDownToLine className="w-4 h-4 mr-2" />
+                        <span className="hidden md:inline">PDF</span>
+                    </Link>
+                </div>
             </div>
             <Table
                 columns={[
+                    {label: "Nama Peminjam",name: "peminjaman_id"},
+                        
+                    { label: "Tanggal Kembali", name: "tanggal_kembali" },
+                    { label: "Status Pengembalian", name: "status_pengembalian" },
+                    { label: "Keterangan", name: "keterangan" },
                     {
-                        label: "Name",
-                        name: "name",
+                        label: "Status",
+                        name: "status",
                         renderCell: (row) => (
-                            <>
-                                {/* {row.name}
-                                {row.deleted_at && (
-                                    <Trash2
-                                        size={16}
-                                        className="ml-2 text-gray-400"
-                                    />
-                                )} */}
-                            </>
+                            <div className="flex space-x-2">
+                                <button
+                                    onClick={() => handleDelete(row.id)}
+                                    className="bg-red-600 text-white py-1 px-3 rounded hover:bg-red-900 transition"
+                                >
+                                    Sedang dipinjam
+                                </button>
+                            </div>
                         ),
                     },
-                    { label: "Organization", name: "organization.name" },
-                    { label: "City", name: "city" },
-                    { label: "Phone", name: "phone", colSpan: 2 },
                 ]}
                 // rows={data}
                 // getRowDetailsUrl={(row) => route("contacts.edit", row.id)}
