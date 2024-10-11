@@ -22,7 +22,6 @@ const Create = () => {
         tipe_bmn: "",
         no_awal: "",
         satuan: "",
-        kelompok_koleksi: "",
         jenis_koleksi: "",
         // tambah field
         kode_koleksi: "",
@@ -276,24 +275,7 @@ const Create = () => {
                                         ]}
                                     />
                                 </FieldGroup>
-                                <FieldGroup
-                                    label="Kelompok Koleksi"
-                                    name="kelompok_koleksi"
-                                    error={errors.kelompok_koleksi}
-                                >
-                                    <TextInput
-                                        type="text"
-                                        name="kelompok_koleksi"
-                                        error={errors.kelompok_koleksi}
-                                        value={data.kelompok_koleksi}
-                                        onChange={(e) =>
-                                            setData(
-                                                "kelompok_koleksi",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                </FieldGroup>
+                                
                                 <FieldGroup
                                     label="Jenis Koleksi"
                                     name="jenis_koleksi"

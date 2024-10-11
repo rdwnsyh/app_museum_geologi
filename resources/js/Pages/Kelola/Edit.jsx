@@ -19,6 +19,7 @@ const Edit = () => {
     const { data, setData, errors, post, put, processing, setError } = useForm({
         //halaman 1
         // id: koleksibatuan?.id || "",
+        kelompok_koleksi: kelolakoleksi?.kelompok_koleksi || "",
         kategori_bmn: kelolakoleksi?.kategori_bmn || "",
         nup_bmn: kelolakoleksi?.nup_bmn || "",
         no_regis: kelolakoleksi?.no_regis || "",
@@ -26,7 +27,7 @@ const Edit = () => {
         tipe_bmn: kelolakoleksi?.tipe_bmn || "",
         no_awal: kelolakoleksi?.no_awal || "",
         satuan: kelolakoleksi?.satuan || "",
-        kelompok_koleksi: kelolakoleksi?.kelompok_koleksi || "",
+       
         jenis_koleksi: kelolakoleksi?.jenis_koleksi || "",
         kode_koleksi: kelolakoleksi?.kode_koleksi || "",
         ruang_penyimpanan: kelolakoleksi?.ruang_penyimpanan || "",
@@ -141,6 +142,29 @@ const Edit = () => {
                     <div className="grid gap-10 p-10 lg:grid-cols-2">
                         {step === 1 && (
                             <>
+
+<FieldGroup
+                                    label="Kelompok Koleksi"
+                                    name="kelompok_koleksi"
+                                    error={errors.kelompok_koleksi}
+                                >
+                                    <SelectInput
+                                        type="text"
+                                        name="kelompok_koleksi"
+                                        error={errors.kelompok_koleksi}
+                                        value={data.kelompok_koleksi}
+                                        onChange={(e) =>
+                                            setData("kelompok_koleksi", e.target.value)
+                                        }
+                                        options={[
+                                            { value: "", label: "" },
+                                            { value: "BA", label: "Batuan dan Mineral" },
+                                            { value: "FO", label: "Fosil" },
+                                            { value: "SD", label: "Sumber Daya" },
+                                        ]}
+                                    />
+                                </FieldGroup>
+
                                 <FieldGroup
                                     label="Kategori BMN"
                                     name="kategori_bmn"
