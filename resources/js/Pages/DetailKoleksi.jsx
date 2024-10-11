@@ -6,45 +6,49 @@ import { Inertia } from "@inertiajs/inertia"; // Import Inertia for navigation
 const DetailKoleksi = () => {
     const { item, type } = usePage().props; // Destructure props passed from the server
     const [searchQuery, setSearchQuery] = useState("");
-    const [currentAudio, setCurrentAudio] = useState('');
-    const [currentVideo, setCurrentVideo] = useState('');
+    const [currentAudio, setCurrentAudio] = useState("");
+    const [currentVideo, setCurrentVideo] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
-    const audioSource = '/Audio.mp3'; // Single audio source
-    const videoSource = '/Video.mp4'; // Single video source
+    const audioSource = "/Audio.mp3"; // Single audio source
+    const videoSource = "/Video.mp4"; // Single video source
 
     // Form handling
     const { data, setData, post } = useForm({});
 
     const handleAddToCart = () => {
         console.log("Adding to cart:", { itemId: item.id }); // Debugging line
-        Inertia.post('/keranjang', { itemId: item.id }, {
-            onSuccess: () => {
-                // Navigate to the cart page after adding the item
-                Inertia.visit('/keranjang');
-            },
-            onError: (errors) => {
-                console.error("Error adding to cart:", errors);
+        Inertia.post(
+            "/keranjang",
+            { itemId: item.id },
+            {
+                onSuccess: () => {
+                    // Navigate to the cart page after adding the item
+                    Inertia.visit("/keranjang");
+                },
+                onError: (errors) => {
+                    console.error("Error adding to cart:", errors);
+                },
             }
-        });
+        );
     };
 
     const handleAudioClick = () => {
         setCurrentAudio(audioSource);
-        setCurrentVideo(''); // Reset video when audio is clicked
+        setCurrentVideo(""); // Reset video when audio is clicked
         setIsModalOpen(true); // Open modal
     };
 
     const handleVideoClick = () => {
         setCurrentVideo(videoSource);
-        setCurrentAudio(''); // Reset audio when video is clicked
+        setCurrentAudio(""); // Reset audio when video is clicked
         setIsModalOpen(true); // Open modal
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
-        setCurrentAudio(''); // Clear audio
-        setCurrentVideo(''); // Clear video
+        setCurrentAudio(""); // Clear audio
+        setCurrentVideo(""); // Clear video
     };
 
     const handleModalClick = (event) => {
@@ -89,12 +93,29 @@ const DetailKoleksi = () => {
                             <div className="shadow overflow-hidden sm:rounded-md">
                                 <div className="px-4 py-5 bg-white sm:p-6">
                                     <div className="grid grid-cols-1 gap-6">
-                                        {[ 
-                                            { label: "Name:", value: item.nama_koleksi },
-                                            { label: "Type:", value: type.tipe_bmn || "-" },
-                                            { label: "Dimensi:", value: item.dimensions || "-" },
-                                            { label: "Lokasi Temuan:", value: item.ditemukan || "-" },
-                                            { label: "Deskripsi:", value: item.deskripsi_koleksi || "-" },
+                                        {[
+                                            {
+                                                label: "Name:",
+                                                value: item.nama_koleksi,
+                                            },
+                                            {
+                                                label: "Type:",
+                                                value: type.tipe_bmn || "-",
+                                            },
+                                            {
+                                                label: "Dimensi:",
+                                                value: item.dimensions || "-",
+                                            },
+                                            {
+                                                label: "Lokasi Temuan:",
+                                                value: item.ditemukan || "-",
+                                            },
+                                            {
+                                                label: "Deskripsi:",
+                                                value:
+                                                    item.deskripsi_koleksi ||
+                                                    "-",
+                                            },
                                         ].map((field, index) => (
                                             <div key={index}>
                                                 <label className="block text-sm font-medium text-gray-700">
@@ -117,7 +138,7 @@ const DetailKoleksi = () => {
                                     <div className="inline-flex ml-3">
                                         <button
                                             type="button"
-                                            onClick={handleAddToCart}
+                                            // onClick={handleAddToCart}
                                             className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                                         >
                                             Masukkan Keranjang
@@ -146,7 +167,7 @@ const DetailKoleksi = () => {
 
             {/* Modal for Audio/Video */}
             {isModalOpen && (
-                <div 
+                <div
                     className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
                     onClick={handleModalClick} // Handle click on modal background
                 >
@@ -159,13 +180,19 @@ const DetailKoleksi = () => {
                         </button>
                         {currentAudio && (
                             <audio controls className="w-full">
-                                <source src={currentAudio || '/Audio.mp3'} type="audio/mpeg" />
+                                <source
+                                    src={currentAudio || "/Audio.mp3"}
+                                    type="audio/mpeg"
+                                />
                                 Your browser does not support the audio element.
                             </audio>
                         )}
                         {currentVideo && (
                             <video controls className="w-full mt-4">
-                                <source src={currentVideo || '/Vidio.mp4'} type="video/mp4" />
+                                <source
+                                    src={currentVideo || "/Vidio.mp4"}
+                                    type="video/mp4"
+                                />
                                 Your browser does not support the video element.
                             </video>
                         )}

@@ -100,7 +100,14 @@ class KelolaKoleksi extends Model
     {
         // Filter based on search keyword
         $query->when($filters['search'] ?? false, function ($query, $search) {
-            $query->where('nama_koleksi', 'like', '%' . $search . '%');
+            return $query->where('nama_koleksi', 'like', '%' . $search . '%')
+                ->orWhere('deskripsi_koleksi', 'like', '%' . $search . '%')
+                ->orWhere('ditemukan', 'like', '%' . $search . '%')
+                ->orWhere('pulau', 'like', '%' . $search . '%')
+                ->orWhere('kota', 'like', '%' . $search . '%')
+                ->orWhere('alamat', 'like', '%' . $search . '%')
+                ->orWhere('tipe_bmn', 'like', '%' . $search . '%')
+                ->orWhere('provinsi', 'like', '%' . $search . '%');
         });
     }
 
