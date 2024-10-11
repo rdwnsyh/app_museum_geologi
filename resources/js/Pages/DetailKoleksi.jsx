@@ -10,6 +10,9 @@ const DetailKoleksi = () => {
     const [currentVideo, setCurrentVideo] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
+    const audioSource = '/Audio.mp3'; // Single audio source
+    const videoSource = '/Video.mp4'; // Single video source
+
     // Form handling
     const { data, setData, post } = useForm({});
 
@@ -27,13 +30,13 @@ const DetailKoleksi = () => {
     };
 
     const handleAudioClick = () => {
-        setCurrentAudio(`/audio/${item.audio}`);
+        setCurrentAudio(audioSource);
         setCurrentVideo(''); // Reset video when audio is clicked
         setIsModalOpen(true); // Open modal
     };
 
     const handleVideoClick = () => {
-        setCurrentVideo(`/video/${item.video}`);
+        setCurrentVideo(videoSource);
         setCurrentAudio(''); // Reset audio when video is clicked
         setIsModalOpen(true); // Open modal
     };
@@ -71,7 +74,7 @@ const DetailKoleksi = () => {
                                     className="inline-block w-full h-auto rounded-md"
                                 />
                                 <img
-                                    src={item.gambar_dua || "/batu.png"}
+                                    src={item.gambar_tiga || "/batu.png"} // Corrected to gambar_tiga
                                     alt={item.nama_koleksi}
                                     className="inline-block w-full h-auto rounded-md"
                                 />
@@ -156,13 +159,13 @@ const DetailKoleksi = () => {
                         </button>
                         {currentAudio && (
                             <audio controls className="w-full">
-                                <source src={currentAudio} type="audio/mpeg" />
+                                <source src={currentAudio || '/Audio.mp3'} type="audio/mpeg" />
                                 Your browser does not support the audio element.
                             </audio>
                         )}
                         {currentVideo && (
                             <video controls className="w-full mt-4">
-                                <source src={currentVideo} type="video/mp4" />
+                                <source src={currentVideo || '/Vidio.mp4'} type="video/mp4" />
                                 Your browser does not support the video element.
                             </video>
                         )}
