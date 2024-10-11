@@ -1,47 +1,59 @@
 import React, { useState } from "react";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
-import Navbar from "@/Components/Navbar/Navbar"; 
-import { Inertia } from "@inertiajs/inertia"; 
+import Navbar from "@/Components/Navbar/Navbar";
+import { Inertia } from "@inertiajs/inertia";
 
 const DetailKoleksi = () => {
-    const { item, type } = usePage().props; 
+    const { item, type } = usePage().props;
     const [searchQuery, setSearchQuery] = useState("");
-    const [currentAudio, setCurrentAudio] = useState('');
-    const [currentVideo, setCurrentVideo] = useState('');
+    const [currentAudio, setCurrentAudio] = useState("");
+    const [currentVideo, setCurrentVideo] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { post } = useForm();
 
     const handleAddToCart = () => {
         console.log("Adding to cart:", { itemId: item.id });
-        Inertia.post('/keranjang', { itemId: item.id }, {
-            onSuccess: () => {
-                Inertia.visit('/keranjang');
-            },
-            onError: (errors) => {
-                console.error("Error adding to cart:", errors);
+        Inertia.post(
+            "/keranjang",
+            { itemId: item.id },
+            {
+                onSuccess: () => {
+                    Inertia.visit("/keranjang");
+                },
+                onError: (errors) => {
+                    console.error("Error adding to cart:", errors);
+                },
             }
-        });
+        );
     };
 
     const handleAudioClick = () => {
         console.log("Item audio:", item.audio); // Debugging line
-        setCurrentAudio(item.audio ? `/koleksi/audio/${item.audio}` : '');
-        setCurrentVideo(''); 
-        setIsModalOpen(true); 
+        if (item.audio) {
+            setCurrentAudio(`/storage/${item.audio}`);
+        } else {
+            console.error("No audio file found");
+        }
+        setCurrentVideo("");
+        setIsModalOpen(true);
     };
 
     const handleVideoClick = () => {
         console.log("Item video:", item.vidio); // Debugging line
-        setCurrentVideo(item.vidio ? `/koleksi/vidio/${item.vidio}` : '');
-        setCurrentAudio(''); 
-        setIsModalOpen(true); 
+        if (item.vidio) {
+            setCurrentVideo(`/storage/${item.vidio}`);
+        } else {
+            console.error("No video file found");
+        }
+        setCurrentAudio("");
+        setIsModalOpen(true);
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
-        setCurrentAudio('');
-        setCurrentVideo('');
+        setCurrentAudio("");
+        setCurrentVideo("");
     };
 
     const handleModalClick = (event) => {
@@ -60,17 +72,29 @@ const DetailKoleksi = () => {
                         <div className="flex flex-col items-center">
                             <div className="overflow-x-auto whitespace-nowrap mb-8">
                                 <img
-                                    src={item.gambar_satu ? `/koleksi/${item.gambar_satu}` : "/batu.png"}
+                                    src={
+                                        item.gambar_satu
+                                            ? `/storage/${item.gambar_satu}`
+                                            : "/batu.png"
+                                    }
                                     alt={item.nama_koleksi}
                                     className="inline-block w-full h-auto rounded-md"
                                 />
                                 <img
-                                    src={item.gambar_dua ? `/koleksi/${item.gambar_dua}` : "/batu.png"}
+                                    src={
+                                        item.gambar_dua
+                                            ? `/storage/${item.gambar_dua}`
+                                            : "/batu.png"
+                                    }
                                     alt={item.nama_koleksi}
                                     className="inline-block w-full h-auto rounded-md"
                                 />
                                 <img
-                                    src={item.gambar_tiga ? `/koleksi/${item.gambar_tiga}` : "/batu.png"}
+                                    src={
+                                        item.gambar_tiga
+                                            ? `/storage/${item.gambar_tiga}`
+                                            : "/batu.png"
+                                    }
                                     alt={item.nama_koleksi}
                                     className="inline-block w-full h-auto rounded-md"
                                 />
@@ -85,12 +109,29 @@ const DetailKoleksi = () => {
                             <div className="shadow overflow-hidden sm:rounded-md">
                                 <div className="px-4 py-5 bg-white sm:p-6">
                                     <div className="grid grid-cols-1 gap-6">
-                                        {[ 
-                                            { label: "Name:", value: item.nama_koleksi },
-                                            { label: "Type:", value: type.tipe_bmn || "-" },
-                                            { label: "Dimensi:", value: item.dimensions || "-" },
-                                            { label: "Lokasi Temuan:", value: item.ditemukan || "-" },
-                                            { label: "Deskripsi:", value: item.deskripsi_koleksi || "-" },
+                                        {[
+                                            {
+                                                label: "Name:",
+                                                value: item.nama_koleksi,
+                                            },
+                                            {
+                                                label: "Type:",
+                                                value: type.tipe_bmn || "-",
+                                            },
+                                            {
+                                                label: "Dimensi:",
+                                                value: item.dimensions || "-",
+                                            },
+                                            {
+                                                label: "Lokasi Temuan:",
+                                                value: item.ditemukan || "-",
+                                            },
+                                            {
+                                                label: "Deskripsi:",
+                                                value:
+                                                    item.deskripsi_koleksi ||
+                                                    "-",
+                                            },
                                         ].map((field, index) => (
                                             <div key={index}>
                                                 <label className="block text-sm font-medium text-gray-700">
@@ -100,7 +141,7 @@ const DetailKoleksi = () => {
                                                     {field.value}
                                                 </p>
                                             </div>
-                                        ))}  
+                                        ))}
                                     </div>
                                 </div>
                                 <div className="px-4 py-3 bg-gray-100 text-right sm:px-6">
@@ -141,7 +182,7 @@ const DetailKoleksi = () => {
             </div>
 
             {isModalOpen && (
-                <div 
+                <div
                     className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
                     onClick={handleModalClick}
                 >
@@ -154,13 +195,13 @@ const DetailKoleksi = () => {
                         </button>
                         {currentAudio && (
                             <audio controls className="w-full">
-                                <source src={currentAudio} type="audio/mp3" />
+                                <source src={currentAudio} type="audio/mpeg" />
                                 Your browser does not support the audio element.
                             </audio>
                         )}
                         {currentVideo && (
                             <video controls className="w-full mt-4">
-                                <source src={currentVideo} type="video/mp4" /> {/* Corrected from 'vidio/mp4' */}
+                                <source src={currentVideo} type="video/mp4" />
                                 Your browser does not support the video element.
                             </video>
                         )}
