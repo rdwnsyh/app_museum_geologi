@@ -225,16 +225,11 @@ class KelolaKoleksiController extends Controller
         'nilai_buku' => 'required|string|max:255',
 
         // Halaman 4: Validasi gambar, audio, dan video
-        // 'gambar_satu' => 'image|mimes:jpeg,png,jpg,svg|max:2048',
-        // 'gambar_dua' => 'image|mimes:jpeg,png,jpg,svg|max:2048',
-        // 'gambar_tiga' => 'image|mimes:jpeg,png,jpg,svg|max:2048',
-        // 'audio' => 'mimes:mp3,wav,ogg|max:5120',
-        // 'vidio' => 'mimes:mp4,avi,mov|max:10240',
-        // 'gambar_satu' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-        // 'gambar_dua' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-        // 'gambar_tiga' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-        // 'audio' => 'mimes:mp3,wav|max:5120', // Max 10MB
-        // 'vidio' => 'mimes:mp4,mov,avi|max:10240', // Max 50MB
+        'gambar_satu' => 'image|mimes:jpeg,png,jpg,svg|max:2048',
+        'gambar_dua' => 'image|mimes:jpeg,png,jpg,svg|max:2048',
+        'gambar_tiga' => 'image|mimes:jpeg,png,jpg,svg|max:2048',
+        'audio' => 'mimes:mp3,wav,ogg|max:5120',
+        'vidio' => 'mimes:mp4,avi,mov|max:10240',
     ]);
 
     if ($request->hasFile('gambar_satu')) {

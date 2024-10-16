@@ -20,6 +20,7 @@ use App\Http\Controllers\ManajemenAdminController;
 use App\Http\Controllers\KelolaKoleksiFosilController;
 use App\Http\Controllers\KelolaKoleksiBatuanController;
 use App\Http\Controllers\KelolaKoleksiSumberDayaGeologiController;
+use App\Http\Controllers\CheckoutController;
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -30,8 +31,22 @@ Route::get('/search', [SearchController::class, 'search'])->name('search');
 // Route untuk halaman detail koleksi berdasarkan ID dan tipe
 Route::get('/detail/{id}/{type}', [SearchController::class, 'detail'])->name('detail');
 
-Route::middleware(['auth'])->group(function() {
+// Route untuk halaman cart (keranjang)
+Route::middleware(['auth'])->group(function () {
+    // Menampilkan isi keranjang
     Route::get('/keranjang', [CartController::class, 'index'])->name('keranjang');
+    
+    // Menambahkan item ke keranjang
+    Route::post('/keranjang/add', [CartController::class, 'add'])->name('keranjang.add');
+    
+    // Menghapus item dari keranjang
+    Route::post('/keranjang/remove/{id}', [CartController::class, 'remove'])->name('keranjang.remove');
+
+    // Proses checkout dari keranjang
+    Route::post('/pinjam', [CheckoutController::class, 'checkout'])->name('pinjam');
+
+    // Menampilkan detail peminjaman
+    Route::get('/peminjaman/{id}', [PeminjamanController::class, 'show'])->name('peminjaman.show');
 });
 
 

@@ -27,7 +27,7 @@ const Edit = () => {
         tipe_bmn: kelolakoleksi?.tipe_bmn || "",
         no_awal: kelolakoleksi?.no_awal || "",
         satuan: kelolakoleksi?.satuan || "",
-       
+
         jenis_koleksi: kelolakoleksi?.jenis_koleksi || "",
         kode_koleksi: kelolakoleksi?.kode_koleksi || "",
         ruang_penyimpanan: kelolakoleksi?.ruang_penyimpanan || "",
@@ -142,8 +142,7 @@ const Edit = () => {
                     <div className="grid gap-10 p-10 lg:grid-cols-2">
                         {step === 1 && (
                             <>
-
-<FieldGroup
+                                <FieldGroup
                                     label="Kelompok Koleksi"
                                     name="kelompok_koleksi"
                                     error={errors.kelompok_koleksi}
@@ -154,13 +153,22 @@ const Edit = () => {
                                         error={errors.kelompok_koleksi}
                                         value={data.kelompok_koleksi}
                                         onChange={(e) =>
-                                            setData("kelompok_koleksi", e.target.value)
+                                            setData(
+                                                "kelompok_koleksi",
+                                                e.target.value
+                                            )
                                         }
                                         options={[
                                             { value: "", label: "" },
-                                            { value: "BA", label: "Batuan dan Mineral" },
+                                            {
+                                                value: "BA",
+                                                label: "Batuan dan Mineral",
+                                            },
                                             { value: "FO", label: "Fosil" },
-                                            { value: "SD", label: "Sumber Daya" },
+                                            {
+                                                value: "SD",
+                                                label: "Sumber Daya",
+                                            },
                                         ]}
                                     />
                                 </FieldGroup>
@@ -1102,9 +1110,7 @@ const Edit = () => {
                                     <FileInput
                                         name="gambar_satu"
                                         error={errors.gambar_satu}
-                                        existingFile={
-                                            kelolakoleksi.gambar_satu
-                                        } // Menampilkan file yang sudah ada
+                                        existingFile={kelolakoleksi.gambar_satu} // Menampilkan file yang sudah ada
                                         onFileChange={(file) =>
                                             handleFileChange(
                                                 "gambar_satu",
@@ -1139,9 +1145,7 @@ const Edit = () => {
                                     <FileInput
                                         name="gambar_tiga"
                                         error={errors.gambar_tiga}
-                                        existingFile={
-                                            kelolakoleksi.gambar_tiga
-                                        }
+                                        existingFile={kelolakoleksi.gambar_tiga}
                                         onFileChange={(file) =>
                                             handleFileChange(
                                                 "gambar_tiga",

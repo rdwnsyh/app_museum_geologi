@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Models\Cart;
 use Inertia\Inertia;
+use App\Models\CartItem;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+
 
 class CartController extends Controller
 {
@@ -13,8 +17,40 @@ class CartController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Keranjang');
+        $cart = auth()->user()->cart()->with('cartItems.koleksi')->first();
+
+    if (!$cart) {
+    // Jika keranjang belum ada, Anda bisa membuatnya atau menampilkan pesan
+    return Inertia::render('Keranjang', ['cart' => null]);
     }
+
+    return Inertia::render('Keranjang');
+    }
+
+    public function add(Request $request)
+    {
+        $request->validate([
+            'koleksi_id' => 'required|exists:koleksi,id',
+            'jumlah' => 'required|integer|min:1',
+        ]);
+
+        $cart = auth()->user()->cart()->firstOrCreate();
+        $cart->cartItems()->updateOrCreate(
+            ['koleksi_id' => $request->koleksi_id],
+            ['jumlah' => DB::raw('jumlah + ' . $request->jumlah)]
+        );
+
+        return redirect()->back();
+    }
+
+    public function remove($itemId)
+    {
+        $cartItem = CartItem::findOrFail($itemId);
+        $cartItem->delete();
+
+        return redirect()->back();
+    }
+
 
     /**
      * Show the form for creating a new resource.
