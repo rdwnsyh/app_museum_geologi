@@ -1,50 +1,50 @@
 import React, { useState } from "react";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import Navbar from "@/Components/Navbar/Navbar";
-import { Inertia } from "@inertiajs/inertia";
 
 const DetailKoleksi = () => {
-    const { item, type } = usePage().props;
+    const { item } = usePage().props;
     const [searchQuery, setSearchQuery] = useState("");
     const [currentAudio, setCurrentAudio] = useState("");
     const [currentVideo, setCurrentVideo] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [cartItems, setCartItems] = useState([]);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [checkoutData, setCheckoutData] = useState({
+        users_id: "", // Assuming this comes from your auth context
+        tanggal_pinjam: "",
+        tanggal_jatuh_tempo: "",
+        status: "Pengajuan", // Default status
+        identitas: null,
+        surat_permohonan: null,
+    });
 
     const { post } = useForm();
 
     const handleAddToCart = () => {
-        console.log("Adding to cart:", { itemId: item.id });
-        Inertia.post(
-            "/keranjang",
-            { itemId: item.id },
-            {
-                onSuccess: () => {
-                    Inertia.visit("/keranjang");
-                },
-                onError: (errors) => {
-                    console.error("Error adding to cart:", errors);
-                },
-            }
-        );
+        const itemId = item.users_id || null; // Fallback to null
+        console.log("Adding to cart:", { itemId });
+    
+        if (itemId) {
+            setCartItems((prev) => [...prev, { id: itemId, nama_koleksi: item.nama_koleksi }]);
+            localStorage.setItem('cart', JSON.stringify([...cartItems, { id: itemId, nama_koleksi: item.nama_koleksi }]));
+        } else {
+            console.error("Item ID is undefined, cannot add to cart.");
+            alert("Item ID is not available. Please check the item details.");
+        }
     };
 
     const handleAudioClick = () => {
-        console.log("Item audio:", item.audio); // Debugging line
         if (item.audio) {
             setCurrentAudio(`/storage/${item.audio}`);
-        } else {
-            console.error("No audio file found");
         }
         setCurrentVideo("");
         setIsModalOpen(true);
     };
 
     const handleVideoClick = () => {
-        console.log("Item video:", item.vidio); // Debugging line
         if (item.vidio) {
             setCurrentVideo(`/storage/${item.vidio}`);
-        } else {
-            console.error("No video file found");
         }
         setCurrentAudio("");
         setIsModalOpen(true);
@@ -62,6 +62,40 @@ const DetailKoleksi = () => {
         }
     };
 
+    const handleCheckout = async () => {
+        const formData = new FormData();
+        formData.append('users_id', checkoutData.users_id);
+        formData.append('tanggal_pinjam', checkoutData.tanggal_pinjam);
+        formData.append('tanggal_jatuh_tempo', checkoutData.tanggal_jatuh_tempo);
+        formData.append('status', checkoutData.status);
+        
+        if (checkoutData.identitas) {
+            formData.append('identitas', checkoutData.identitas);
+        }
+        if (checkoutData.surat_permohonan) {
+            formData.append('surat_permohonan', checkoutData.surat_permohonan);
+        }
+
+        try {
+            const response = await fetch('/checkout', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Failed to checkout");
+            }
+
+            setSuccessMessage("Peminjaman berhasil diajukan!");
+            setCartItems([]); // Reset cart items or navigate as needed
+
+        } catch (error) {
+            console.error("Checkout error:", error);
+            setSuccessMessage("Checkout failed. Please try again.");
+        }
+    };
+
     return (
         <div className="bg-gray-100 min-h-screen">
             <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
@@ -71,33 +105,14 @@ const DetailKoleksi = () => {
                     <div className="md:col-span-1">
                         <div className="flex flex-col items-center">
                             <div className="overflow-x-auto whitespace-nowrap mb-8">
-                                <img
-                                    src={
-                                        item.gambar_satu
-                                            ? `/storage/${item.gambar_satu}`
-                                            : "/batu.png"
-                                    }
-                                    alt={item.nama_koleksi}
-                                    className="inline-block w-full h-auto rounded-md"
-                                />
-                                <img
-                                    src={
-                                        item.gambar_dua
-                                            ? `/storage/${item.gambar_dua}`
-                                            : "/batu.png"
-                                    }
-                                    alt={item.nama_koleksi}
-                                    className="inline-block w-full h-auto rounded-md"
-                                />
-                                <img
-                                    src={
-                                        item.gambar_tiga
-                                            ? `/storage/${item.gambar_tiga}`
-                                            : "/batu.png"
-                                    }
-                                    alt={item.nama_koleksi}
-                                    className="inline-block w-full h-auto rounded-md"
-                                />
+                                {[item.gambar_satu, item.gambar_dua, item.gambar_tiga].map((gambar, index) => (
+                                    <img
+                                        key={index}
+                                        src={gambar ? `/storage/${gambar}` : "/batu.png"}
+                                        alt={item.nama_koleksi}
+                                        className="inline-block w-full h-auto rounded-md"
+                                    />
+                                ))}
                             </div>
                             <h3 className="text-lg font-medium leading-6 text-gray-900 text-center">
                                 {item.nama_koleksi}
@@ -110,28 +125,11 @@ const DetailKoleksi = () => {
                                 <div className="px-4 py-5 bg-white sm:p-6">
                                     <div className="grid grid-cols-1 gap-6">
                                         {[
-                                            {
-                                                label: "Name:",
-                                                value: item.nama_koleksi,
-                                            },
-                                            {
-                                                label: "Type:",
-                                                value: type.tipe_bmn || "-",
-                                            },
-                                            {
-                                                label: "Dimensi:",
-                                                value: item.dimensions || "-",
-                                            },
-                                            {
-                                                label: "Lokasi Temuan:",
-                                                value: item.ditemukan || "-",
-                                            },
-                                            {
-                                                label: "Deskripsi:",
-                                                value:
-                                                    item.deskripsi_koleksi ||
-                                                    "-",
-                                            },
+                                            { label: "Name:", value: item.nama_koleksi },
+                                            { label: "Type:", value: item.tipe_bmn || "-" },
+                                            { label: "Dimensi:", value: item.dimensions || "-" },
+                                            { label: "Lokasi Temuan:", value: item.ditemukan || "-" },
+                                            { label: "Deskripsi:", value: item.deskripsi_koleksi || "-" },
                                         ].map((field, index) => (
                                             <div key={index}>
                                                 <label className="block text-sm font-medium text-gray-700">
@@ -178,6 +176,34 @@ const DetailKoleksi = () => {
                             </div>
                         </form>
                     </div>
+                </div>
+
+                <div className="mt-10">
+                    <h4 className="text-lg font-semibold">Items in Cart:</h4>
+                    <ul className="mt-2">
+                        {cartItems.length === 0 ? (
+                            <li className="text-gray-500">Cart is empty</li>
+                        ) : (
+                            cartItems.map((cartItem, index) => (
+                                <li key={index} className="flex justify-between border-b py-2">
+                                    <span>{cartItem.nama_koleksi}</span>
+                                </li>
+                            ))
+                        )}
+                    </ul>
+                </div>
+
+                <div className="mt-5">
+                    <button
+                        type="button"
+                        onClick={handleCheckout}
+                        className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                        Checkout
+                    </button>
+                    {successMessage && (
+                        <div className="mt-2 text-green-600">{successMessage}</div>
+                    )}
                 </div>
             </div>
 

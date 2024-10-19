@@ -4,18 +4,11 @@ import Navbar from "@/Components/Navbar/Navbar";
 import Modal from "@/Components/Modal/Modal"; 
 import Tambah from "./Tambah";
 
-const Keranjang = () => {
-  const [cartItems, setCartItems] = useState([
-    { id: 1, name: 'Tray Table', color: 'Black', quantity: 2, checked: true, imageUrl: '/batu.png' },
-    { id: 2, name: 'Tray Table', color: 'White', quantity: 2, checked: false, imageUrl: '/batu.png' },
-    { id: 3, name: 'Tray Table', color: 'Red', quantity: 2, checked: true, imageUrl: '/batu.png' },
-    { id: 4, name: 'Tray Table', color: 'Blue', quantity: 2, checked: false, imageUrl: '/batu.png' },
-    { id: 5, name: 'Tray Table', color: 'Green', quantity: 2, checked: false, imageUrl: '/batu.png' },
-    { id: 6, name: 'Tray Table', color: 'Yellow', quantity: 2, checked: true, imageUrl: '/batu.png' },
-  ]);
+const Keranjang = ({ cartItems = [] }) => {
+  const [items, setItems] = useState(cartItems);
 
   const handleCheck = (id) => {
-    setCartItems((prevItems) =>
+    setItems((prevItems) =>
       prevItems.map((item) =>
         item.id === id ? { ...item, checked: !item.checked } : item
       )
@@ -42,7 +35,7 @@ const Keranjang = () => {
 
   const handleQuantityChange = (id, value) => {
     if (value < 1) return; 
-    setCartItems((prevItems) =>
+    setItems((prevItems) =>
       prevItems.map((item) =>
         item.id === id ? { ...item, quantity: value } : item
       )
@@ -50,10 +43,10 @@ const Keranjang = () => {
   };
 
   const handleDelete = (id) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
-  const checkedItems = cartItems.filter((item) => item.checked);
+  const checkedItems = items.filter((item) => item.checked);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -69,12 +62,12 @@ const Keranjang = () => {
                     <input
                       type="checkbox"
                       onChange={() => {
-                        const allChecked = checkedItems.length === cartItems.length;
-                        setCartItems((prevItems) =>
+                        const allChecked = checkedItems.length === items.length;
+                        setItems((prevItems) =>
                           prevItems.map((item) => ({ ...item, checked: !allChecked }))
                         );
                       }}
-                      checked={checkedItems.length === cartItems.length}
+                      checked={checkedItems.length === items.length}
                       aria-label="Select all items"
                     />
                   </th>
@@ -86,7 +79,7 @@ const Keranjang = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {cartItems.map((item) => (
+                {items.map((item) => (
                   <tr key={item.id}>
                     <td className="px-4 py-2 text-left">
                       <input
