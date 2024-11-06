@@ -31,22 +31,16 @@ Route::get('/search', [SearchController::class, 'search'])->name('search');
 // Route untuk halaman detail koleksi berdasarkan ID dan tipe
 Route::get('/detail/{id}/{type}', [SearchController::class, 'detail'])->name('detail');
 
-// Route untuk halaman cart (keranjang)
+// Route untuk halaman (keranjang)
 Route::middleware(['auth'])->group(function () {
     // Menampilkan isi keranjang
-    Route::get('/keranjang', [CartController::class, 'index'])->name('keranjang');
-    
+    Route::get('/keranjang', [PeminjamanController::class, 'showCart'])->name('keranjang');
     // Menambahkan item ke keranjang
-    Route::post('/keranjang/add', [CartController::class, 'add'])->name('keranjang.add');
-    
-    // Menghapus item dari keranjang
-    Route::post('/keranjang/remove/{id}', [CartController::class, 'remove'])->name('keranjang.remove');
-
+    Route::post('/keranjang/add', [PeminjamanController::class, 'addToCart'])->name('keranjang.add');
     // Proses checkout dari keranjang
-    Route::post('/pinjam', [CheckoutController::class, 'checkout'])->name('pinjam');
-
-    // Menampilkan detail peminjaman
-    Route::get('/peminjaman/{id}', [PeminjamanController::class, 'show'])->name('peminjaman.show');
+    Route::post('/keranjang/checkout', [PeminjamanController::class, 'checkout'])->name('keranjang.checkout');
+    // Menghapus item dari keranjang
+    Route::delete('/keranjang/remove/{id}', [PeminjamanController::class, 'removeFromCart'])->name('keranjang.remove');
 });
 
 

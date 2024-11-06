@@ -15,91 +15,213 @@ class PeminjamanController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    // Menampilkan isi keranjang
+    public function showCart()
 {
-    $peminjaman = Peminjaman::with('details.koleksi', 'user')->where('users_id', Auth::id())->get();
-    return inertia('Peminjaman/Index', compact('peminjaman'));
+    // Ambil data keranjang dari sesi
+    $cart = session()->get('cart', []);
+
+    // Ambil data koleksi dari keranjang berdasarkan koleksi_id
+    $cartItems = [];
+    foreach ($cart as $itemId => $item) {
+        $itemDetails = KelolaKoleksi::find($itemId);
+        if ($itemDetails) {
+            // Gabungkan informasi item dengan data dari database
+            $cartItems[] = [
+                'id' => $itemId,
+                'koleksi_id' => $itemDetails->koleksi_id,
+                'image_satu' => $itemDetails->gambar_satu,
+                'nama_koleksi' => $itemDetails->nama_koleksi,
+                'quantity' => $item['quantity'],
+                'checked' => $item['checked'] ?? false, // Default false for checked
+            ];
+        }
+    }
+
+    // Kirim data ke halaman frontend melalui Inertia
+    return Inertia::render('Keranjang', [
+        'cartItems' => $cartItems,
+    ]);
 }
 
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $koleksi = KelolaKoleksi::where('status', 'ada')->get(); // Only available items
-        return inertia('Peminjaman/Create', compact('koleksi'));
+    public function addToCart(Request $request)
+{
+    // Validasi input
+    $request->validate([
+        'koleksi_id' => 'required|exists:kelola_koleksi,id',  // Pastikan koleksi_id valid dan ada di database
+        'quantity' => 'required|integer|min:1',  // Pastikan quantity adalah angka dan minimal 1
+    ]);
+
+    // Ambil ID koleksi dan jumlah item yang ingin ditambahkan
+    $itemId = $request->input('koleksi_id');
+    $quantity = $request->input('jumlah_dipinjam', 1); // Jika quantity tidak diberikan, default 1
+
+    // Debugging: periksa nilai itemId dan quantity
+    // dd($itemId, $quantity);  // Menghentikan eksekusi dan menampilkan nilai itemId dan quantity
+
+    $condition = $request->input('kondisi', 'Good'); // Kondisi default
+
+    // Ambil keranjang dari sesi
+    $cart = session()->get('cart', []);
+
+    // Cek apakah item sudah ada di keranjang
+    if (isset($cart[$itemId])) {
+        // Jika item sudah ada, tambahkan jumlahnya
+        $cart[$itemId]['quantity'] += $quantity;
+    } else {
+        // Jika item belum ada, ambil data item dari database
+        $item = KelolaKoleksi::find($itemId);
+        
+        // Cek jika item tidak ditemukan, kembali dengan pesan error
+        if (!$item) {
+            return back()->with('error', 'Item tidak ditemukan.');
+        }
+
+        // Simpan item ke dalam keranjang dengan atribut yang diperlukan
+        $cart[$itemId] = [
+                'koleksi_id' => $item->koleksi_id,
+                'imageUrl' => $item->gambar_satu,
+                'nama_koleksi' => $item->nama_koleksi,
+                'quantity' => $item->jumlah_dipinjam,
+        ];
     }
+
+    // Simpan data keranjang ke sesi
+    session()->put('cart', $cart);
+
+    return back()->with('success', 'Item berhasil ditambahkan ke keranjang.');
+}
+
+
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function checkout(Request $request)
     {
-    // Validasi data input
-    $validatedData = $request->validate([
-        // Tabel Peminjaman
-        'users_id' => 'required|exists:users,id', // Pastikan pengguna terdaftar di tabel users
-        'tanggal_pinjam' => 'required|date|after_or_equal:today', // Tanggal pinjam tidak boleh sebelum hari ini
-        'tanggal_jatuh_tempo' => 'required|date|after_or_equal:tanggal_pinjam', // Jatuh tempo harus setelah atau sama dengan tanggal pinjam
-        'status' => 'required|in:Pengajuan,Sedang di Pinjam,Terlambat,Ditolak,Dikembalikan', // Validasi status peminjaman
-        'identitas' => 'required|file|mimes:pdf,doc,docx|max:2048', // Validasi identitas peminjam
-        'surat_permohonan' => 'required|file|mimes:pdf,doc,docx|max:2048', // Validasi file surat permohonan (PDF, DOC, DOCX maksimal 2MB)
+        // Ambil item di keranjang dari sesi
+        $cartItems = session()->get('cart', []);
+        if (empty($cartItems)) {
+            return back()->withErrors('Keranjang Anda kosong.');
+        }
 
-        // Tabel Detail Peminjaman
-        'koleksi_id' => 'required|exists:kelola_koleksi,id', // Pastikan koleksi yang dipinjam ada di tabel kelola_koleksi
-        'jumlah_dipinjam' => 'required|integer|min:1', // Jumlah barang yang dipinjam
-        'kondisi' => 'required|string|max:255', // Kondisi barang saat dipinjam
-    ], [
-        'users_id.required' => 'Pengguna harus diisi.',
-        'users_id.exists' => 'Pengguna tidak ditemukan.',
-        'tanggal_pinjam.required' => 'Tanggal pinjam harus diisi.',
-        'tanggal_pinjam.date' => 'Format tanggal pinjam tidak valid.',
-        'tanggal_pinjam.after_or_equal' => 'Tanggal pinjam tidak boleh sebelum hari ini.',
-        'tanggal_jatuh_tempo.required' => 'Tanggal jatuh tempo harus diisi.',
-        'tanggal_jatuh_tempo.date' => 'Format tanggal jatuh tempo tidak valid.',
-        'tanggal_jatuh_tempo.after_or_equal' => 'Tanggal jatuh tempo harus sama atau setelah tanggal pinjam.',
-        'status.required' => 'Status harus diisi.',
-        'status.in' => 'Status harus berupa salah satu dari: Pengajuan, Sedang di Pinjam, Terlambat, Ditolak, Selesai.',
-        'identitas.required' => 'Identitas harus diisi.',
-        'surat_permohonan.required' => 'File surat permohonan harus diunggah.',
-        'surat_permohonan.mimes' => 'Format file surat permohonan harus berupa: pdf, doc, atau docx.',
-        'surat_permohonan.max' => 'Ukuran file surat permohonan maksimal 2MB.',
-        'koleksi_id.exists' => 'Koleksi yang dipilih tidak ditemukan.',
-    ]);
-
-    // Proses upload file identitas
-    if ($request->hasFile('identitas')) {
-        $validatedData['identitas'] = $request->file('identitas')->store('identitas', 'public');
-    }
-
-    // Proses upload file surat permohonan
-    if ($request->hasFile('surat_permohonan')) {
-        $validatedData['surat_permohonan'] = $request->file('surat_permohonan')->store('surat_permohonan', 'public');
-    }
-
-    // Simpan data peminjaman ke tabel `peminjaman`
-    $peminjaman = Peminjaman::create([
-        'users_id' => $validatedData['users_id'],
-        'tanggal_pinjam' => $validatedData['tanggal_pinjam'],
-        'tanggal_jatuh_tempo' => $validatedData['tanggal_jatuh_tempo'],
-        'status' => $validatedData['status'],
-        'identitas' => $validatedData['identitas'],
-        'surat_permohonan' => $validatedData['surat_permohonan'],
-    ]);
-
-    // Store each item borrowed
-    foreach ($request->koleksi as $item) {
-        DetailPeminjaman::create([
-            'peminjaman_id' => $peminjaman->id,
-            'koleksi_id' => $item['id'],
-            'jumlah_dipinjam' => $item['jumlah_dipinjam'],
-            'kondisi' => 'baik' // Default condition
+        // Buat record `peminjaman` baru
+        $peminjaman = Peminjaman::create([
+            'users_id' => Auth::id(),
+            'tanggal_pinjam' => now(),
+            'tanggal_jatuh_tempo' => now()->addDays(7), // Tanggal jatuh tempo 7 hari
+            'status' => 'Pengajuan',
+            'identitas' => $request->identitas, // Ambil identitas peminjam
+            'surat_permohonan' => $request->surat_permohonan, // Ambil file surat permohonan
+        ], [
+            'users_id.required' => 'Pengguna harus diisi.',
+            'users_id.exists' => 'Pengguna tidak ditemukan.',
+            'tanggal_pinjam.required' => 'Tanggal pinjam harus diisi.',
+            'tanggal_pinjam.date' => 'Format tanggal pinjam tidak valid.',
+            'tanggal_pinjam.after_or_equal' => 'Tanggal pinjam tidak boleh sebelum hari ini.',
+            'tanggal_jatuh_tempo.required' => 'Tanggal jatuh tempo harus diisi.',
+            'tanggal_jatuh_tempo.date' => 'Format tanggal jatuh tempo tidak valid.',
+            'tanggal_jatuh_tempo.after_or_equal' => 'Tanggal jatuh tempo harus sama atau setelah tanggal pinjam.',
+            'status.required' => 'Status harus diisi.',
+            'status.in' => 'Status harus berupa salah satu dari: Pengajuan, Sedang di Pinjam, Terlambat, Ditolak, Selesai.',
+            'identitas.required' => 'Identitas harus diisi.',
+            'surat_permohonan.required' => 'File surat permohonan harus diunggah.',
+            'surat_permohonan.mimes' => 'Format file surat permohonan harus berupa: pdf, doc, atau docx.',
+            'surat_permohonan.max' => 'Ukuran file surat permohonan maksimal 2MB.',
+            'koleksi_id.exists' => 'Koleksi yang dipilih tidak ditemukan.',
         ]);
-    }
 
-    // Redirect atau kirim pesan sukses
-    return redirect()->route('peminjaman')->with('success', 'Peminjaman berhasil diajukan');
+        // Proses upload file identitas
+        if ($request->hasFile('identitas')) {
+            $validatedData['identitas'] = $request->file('identitas')->store('identitas', 'public');
+        }
+
+        // Proses upload file surat permohonan
+        if ($request->hasFile('surat_permohonan')) {
+            $validatedData['surat_permohonan'] = $request->file('surat_permohonan')->store('surat_permohonan', 'public');
+        }
+
+        // Masukkan setiap item di keranjang ke dalam tabel `detail_peminjaman`
+        foreach ($cartItems as $item) {
+            DetailPeminjaman::create([
+                'peminjaman_id' => $peminjaman->id,
+                'koleksi_id' => $item['id'],
+                'jumlah_dipinjam' => $item['quantity'],
+                'kondisi' => $item['condition'],
+            ]);
+        }
+
+        // Kosongkan sesi keranjang setelah checkout
+        session()->forget('keranjang');
+
+        return redirect()->route('keranjang.show')->with('success', 'Peminjaman berhasil diajukan!');
+
+
+    // // Validasi data input
+    // $validatedData = $request->validate([
+    //     // Tabel Peminjaman
+    //     'users_id' => 'required|exists:users,id', // Pastikan pengguna terdaftar di tabel users
+    //     'tanggal_pinjam' => 'required|date|after_or_equal:today', // Tanggal pinjam tidak boleh sebelum hari ini
+    //     'tanggal_jatuh_tempo' => 'required|date|after_or_equal:tanggal_pinjam', // Jatuh tempo harus setelah atau sama dengan tanggal pinjam
+    //     'status' => 'required|in:Pengajuan,Sedang di Pinjam,Terlambat,Ditolak,Dikembalikan', // Validasi status peminjaman
+    //     'identitas' => 'required|file|mimes:pdf,doc,docx|max:2048', // Validasi identitas peminjam
+    //     'surat_permohonan' => 'required|file|mimes:pdf,doc,docx|max:2048', // Validasi file surat permohonan (PDF, DOC, DOCX maksimal 2MB)
+
+    //     // Tabel Detail Peminjaman
+    //     'koleksi_id' => 'required|exists:kelola_koleksi,id', // Pastikan koleksi yang dipinjam ada di tabel kelola_koleksi
+    //     'jumlah_dipinjam' => 'required|integer|min:1', // Jumlah barang yang dipinjam
+    //     'kondisi' => 'required|string|max:255', // Kondisi barang saat dipinjam
+    // ], [
+    //     'users_id.required' => 'Pengguna harus diisi.',
+    //     'users_id.exists' => 'Pengguna tidak ditemukan.',
+    //     'tanggal_pinjam.required' => 'Tanggal pinjam harus diisi.',
+    //     'tanggal_pinjam.date' => 'Format tanggal pinjam tidak valid.',
+    //     'tanggal_pinjam.after_or_equal' => 'Tanggal pinjam tidak boleh sebelum hari ini.',
+    //     'tanggal_jatuh_tempo.required' => 'Tanggal jatuh tempo harus diisi.',
+    //     'tanggal_jatuh_tempo.date' => 'Format tanggal jatuh tempo tidak valid.',
+    //     'tanggal_jatuh_tempo.after_or_equal' => 'Tanggal jatuh tempo harus sama atau setelah tanggal pinjam.',
+    //     'status.required' => 'Status harus diisi.',
+    //     'status.in' => 'Status harus berupa salah satu dari: Pengajuan, Sedang di Pinjam, Terlambat, Ditolak, Selesai.',
+    //     'identitas.required' => 'Identitas harus diisi.',
+    //     'surat_permohonan.required' => 'File surat permohonan harus diunggah.',
+    //     'surat_permohonan.mimes' => 'Format file surat permohonan harus berupa: pdf, doc, atau docx.',
+    //     'surat_permohonan.max' => 'Ukuran file surat permohonan maksimal 2MB.',
+    //     'koleksi_id.exists' => 'Koleksi yang dipilih tidak ditemukan.',
+    // ]);
+
+    // // Proses upload file identitas
+    // if ($request->hasFile('identitas')) {
+    //     $validatedData['identitas'] = $request->file('identitas')->store('identitas', 'public');
+    // }
+
+    // // Proses upload file surat permohonan
+    // if ($request->hasFile('surat_permohonan')) {
+    //     $validatedData['surat_permohonan'] = $request->file('surat_permohonan')->store('surat_permohonan', 'public');
+    // }
+
+    // // Simpan data peminjaman ke tabel `peminjaman`
+    // $peminjaman = Peminjaman::create([
+    //     'users_id' => $validatedData['users_id'],
+    //     'tanggal_pinjam' => $validatedData['tanggal_pinjam'],
+    //     'tanggal_jatuh_tempo' => $validatedData['tanggal_jatuh_tempo'],
+    //     'status' => $validatedData['status'],
+    //     'identitas' => $validatedData['identitas'],
+    //     'surat_permohonan' => $validatedData['surat_permohonan'],
+    // ]);
+
+    // // Store each item borrowed
+    // foreach ($request->koleksi as $item) {
+    //     DetailPeminjaman::create([
+    //         'peminjaman_id' => $peminjaman->id,
+    //         'koleksi_id' => $item['id'],
+    //         'jumlah_dipinjam' => $item['jumlah_dipinjam'],
+    //         'kondisi' => 'baik' // Default condition
+    //     ]);
+    // }
+
+    // // Redirect atau kirim pesan sukses
+    // return redirect()->route('peminjaman')->with('success', 'Peminjaman berhasil diajukan');
 }
 
 
@@ -116,13 +238,7 @@ class PeminjamanController extends Controller
      */
     public function edit(Peminjaman $peminjaman)
     {
-         // Memuat data peminjaman beserta detail peminjaman dan koleksi yang terkait
-        $peminjaman->load('detailPeminjaman.koleksi', 'user');
-
-        // Mengirim data ke frontend untuk ditampilkan di form edit
-        return Inertia::render('Peminjaman/Edit', [
-            'peminjaman' => $peminjaman
-        ]);
+    
     }
 
     /**
@@ -130,18 +246,7 @@ class PeminjamanController extends Controller
      */
     public function update(Request $request, Peminjaman $peminjaman)
 {
-    // Validate the incoming status field
-    $request->validate([
-        'status' => 'required|in:Pengajuan,Sedang di Pinjam,Terlambat,Ditolak,Selesai'
-    ]);
 
-    // Update the status of the peminjaman
-    $peminjaman->update([
-        'status' => $request->status
-    ]);
-
-    // Return back with a success message
-    return back()->with('success', 'Status peminjaman diperbarui');
 }
 
 
@@ -151,33 +256,28 @@ class PeminjamanController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Peminjaman $peminjaman)
+    public function removeFromCart($id)
 {
-    // Pastikan data peminjaman sudah ada sebelum dihapus
-    if (!$peminjaman) {
-        return redirect()->route('peminjaman')->with('error', 'Data peminjaman tidak ditemukan.');
+    // Ambil data keranjang dari sesi
+    $cart = session()->get('cart', []);
+
+    // Periksa jika item dengan id tersebut ada di dalam keranjang
+    if (isset($cart[$id])) {
+        // Hapus item dari keranjang
+        unset($cart[$id]);
+        
+        // Simpan kembali keranjang yang sudah diupdate ke sesi
+        session()->put('cart', $cart);
+        
+        // Mengembalikan response sukses
+        return response()->json(['flash' => ['success' => 'Item berhasil dihapus dari keranjang.']]);
     }
 
-    // Logika untuk memastikan status peminjaman bisa dihapus (opsional)
-    if ($peminjaman->status_peminjaman !== 'selesai') {
-        return redirect()->route('peminjaman')->with('error', 'Peminjaman yang belum selesai tidak dapat dihapus.');
-    }
-
-    // Hapus file surat permohonan jika ada
-    if ($peminjaman->surat_permohonan) {
-        Storage::disk('public')->delete($peminjaman->surat_permohonan);
-    }
-
-    // Hapus file identitas diri jika ada
-    if ($peminjaman->identitas_diri) {
-        Storage::disk('public')->delete($peminjaman->identitas_diri);
-    }
-
-    // Hapus data peminjaman
-    $peminjaman->delete();
-
-    // Redirect ke halaman daftar peminjaman dengan pesan sukses
-    return redirect()->route('peminjaman')->with('success', 'Data peminjaman dan file terkait berhasil dihapus.');
+    // Jika item tidak ditemukan, kembali dengan pesan error
+    return response()->json(['flash' => ['error' => 'Item tidak ditemukan di keranjang.']]);
 }
+
+
+
 
 }
