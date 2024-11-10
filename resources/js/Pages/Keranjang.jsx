@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "@inertiajs/react";
-import Navbar from "@/Components/Navbar/Navbar";
-import Modal from "@/Components/Modal/Modal";
-import Tambah from "./Tambah";
+import Navbar from "@/Components/Navbar/Navbar"; // Import Navbar
+import Modal from "@/Components/Modal/Modal"; // Import Modal
+import Tambah from "./Tambah"; // Import Komponen Tambah
 
 const Keranjang = ({ cartItems = [] }) => {
     const [items, setItems] = useState(
@@ -10,11 +10,9 @@ const Keranjang = ({ cartItems = [] }) => {
     );
 
     useEffect(() => {
-        // Update items if there's any change in cartItems prop
         setItems(Array.isArray(cartItems) ? cartItems : []);
     }, [cartItems]);
 
-    // Handle checkbox selection per item
     const handleCheck = (id) => {
         setItems((prevItems) =>
             prevItems.map((item) =>
@@ -25,51 +23,53 @@ const Keranjang = ({ cartItems = [] }) => {
         );
     };
 
-    // Modal control state
     const [isOpen, setIsOpen] = useState(false);
+
     const handleOpenModal = (event) => {
         event.preventDefault();
         setIsOpen(true);
     };
+
     const handleCloseModal = () => {
         setIsOpen(false);
     };
 
-    // Handle form submission inside modal
     const handleCreateSubmit = (formData) => {
         console.log("Form submitted:", formData);
         handleCloseModal();
     };
 
-    // State for search query
     const [searchQuery, setSearchQuery] = useState("");
 
-    // Handle quantity changes per item
     const handleQuantityChange = (id, value) => {
         if (value < 1) return;
-        setItems((prevItems) =>
-            prevItems.map((item) =>
-                item.koleksi_id === id ? { ...item, quantity: value } : item
-            )
+        Inertia.post(
+            route("keranjang.updateQuantity", id),
+            { quantity: value },
+            {
+                onSuccess: ({ item }) => {
+                    setItems((prevItems) =>
+                        prevItems.map((prevItem) =>
+                            prevItem.koleksi_id === item.koleksi_id
+                                ? { ...prevItem, quantity: item.quantity }
+                                : prevItem
+                        )
+                    );
+                },
+            }
         );
     };
 
-    // Handle delete item from cart
     const handleDelete = (id) => {
         if (
             confirm(
                 "Apakah Anda yakin ingin menghapus item ini dari keranjang?"
             )
         ) {
-            // Send a DELETE request to the backend to remove the item
             Inertia.delete(route("keranjang.remove", id), {
                 onSuccess: (response) => {
-                    // Check for success response
-                    if (response.props.flash.success) {
-                        // Show a success message to the user
+                    if (response.success) {
                         alert("Item berhasil dihapus dari keranjang.");
-
-                        // Remove the item from the local state (cart)
                         setItems((prevItems) =>
                             prevItems.filter((item) => item.koleksi_id !== id)
                         );
@@ -83,7 +83,6 @@ const Keranjang = ({ cartItems = [] }) => {
         }
     };
 
-    // Filter checked items for subtotal calculation
     const checkedItems = items.filter((item) => item.checked);
 
     return (
@@ -204,6 +203,7 @@ const Keranjang = ({ cartItems = [] }) => {
                         isOpen={isOpen}
                         onClose={handleCloseModal}
                         title="Tambah Peminjaman"
+                        logoSrc={null} // Pass null if you don't have a logoSrc
                     >
                         <Tambah onSubmit={handleCreateSubmit} />
                     </Modal>
