@@ -9,18 +9,19 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\InboundController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StorageController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OutboundController;
 use App\Http\Controllers\PeminjamanController;
-use App\Models\KelolaKoleksiSumberDayaGeologi;
 // use App\Http\Controllers\ManajemenUserController;
+use App\Models\KelolaKoleksiSumberDayaGeologi;
 use App\Http\Controllers\PersetujuanController;
 use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\KelolakoleksiController;
 use App\Http\Controllers\ManajemenAdminController;
 use App\Http\Controllers\KelolaKoleksiFosilController;
+use App\Http\Controllers\DashboardPeminjamanController;
 use App\Http\Controllers\KelolaKoleksiBatuanController;
 use App\Http\Controllers\KelolaKoleksiSumberDayaGeologiController;
-use App\Http\Controllers\CheckoutController;
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -82,31 +83,31 @@ Route::put('storage/{storage}/restore', [StorageController::class, 'restore'])
 
 
 // Route Peminjaman
-Route::get('peminjaman', [PeminjamanController::class, 'index'])
+Route::get('peminjaman', [DashboardPeminjamanController::class, 'index'])
     ->name('peminjaman')
     ->middleware('auth');
 // Route ke halaman create peminjaman
-Route::get('peminjaman/create', [PeminjamanController::class, 'create'])
+Route::get('peminjaman/create', [DashboardPeminjamanController::class, 'create'])
     ->name('peminjaman.create')
     ->middleware('auth');
 // proses create peminjaman
-Route::post('peminjaman', [PeminjamanController::class, 'store'])
+Route::post('peminjaman', [DashboardPeminjamanController::class, 'store'])
     ->name('peminjaman.store')
     ->middleware('auth');
 // route ke halaman edit peminjaman
-    Route::get('peminjaman/{peminjaman}/edit', [PeminjamanController::class, 'edit'])
+    Route::get('peminjaman/{peminjaman}/edit', [DashboardPeminjamanController::class, 'edit'])
     ->name('peminjaman.edit')
     ->middleware('auth');
 // proses edit peminjaman
-Route::put('peminjaman/{peminjaman}', [PeminjamanController::class, 'update'])
+Route::put('peminjaman/{peminjaman}', [DashboardPeminjamanController::class, 'update'])
     ->name('peminjaman.update')
     ->middleware('auth');
 // route ke halaman hapus peminjaman
-Route::delete('peminjaman/{peminjaman}', [PeminjamanController::class, 'destroy'])
+Route::delete('peminjaman/{peminjaman}', [DashboardPeminjamanController::class, 'destroy'])
     ->name('peminjaman.destroy')
     ->middleware('auth');
 // proses hapus peminjaman
-Route::put('peminjaman/{peminjaman}/restore', [PeminjamanController::class, 'restore'])
+Route::put('peminjaman/{peminjaman}/restore', [DashboardPeminjamanController::class, 'restore'])
     ->name('peminjaman.restore')
     ->middleware('auth');
 
