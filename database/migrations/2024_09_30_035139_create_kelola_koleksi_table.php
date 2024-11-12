@@ -13,60 +13,55 @@ return new class extends Migration
     {
         Schema::create('kelola_koleksi', function (Blueprint $table) {
             // halaman 1 47 field
-            
             $table->bigIncrements('id');
-            $table->string('kategori_bmn');
-            $table->string('nup_bmn');
-            // tambah field
-            $table->string('no_regis');
-            $table->string('no_inventaris');
-
-            $table->string('tipe_bmn'); 
-            $table->string('no_awal');
-            $table->string('satuan');
-            $table->string('kelompok_koleksi');
-            $table->string('jenis_koleksi');
-            // tambah field
-            $table->string('kode_koleksi');
-
-            $table->string('ruang_penyimpanan');
-            $table->string('lokasi_penyimpanan');
-            $table->string('lantai');
-            $table->integer('no_lajur');
-            $table->integer('no_lemari');
-            $table->integer('no_laci');
-            $table->integer('no_slot');
-
+            $table->string('kategori_bmn')->nullable();
+            $table->string('nup_bmn')->nullable();
+            $table->string('no_regis')->nullable();
+            $table->string('no_inventaris')->nullable();
+            $table->string('tipe_bmn')->nullable();
+            $table->string('no_awal')->nullable();
+            $table->string('satuan')->nullable();
+            $table->string('kelompok_koleksi')->nullable();
+            $table->string('jenis_koleksi')->nullable();
+            $table->string('kode_koleksi')->nullable();
+            $table->string('ruang_penyimpanan')->nullable();
+            $table->string('lokasi_penyimpanan')->nullable();
+            $table->string('lantai')->nullable();
+            $table->integer('no_lajur')->nullable();
+            $table->integer('no_lemari')->nullable();
+            $table->integer('no_laci')->nullable();
+            $table->integer('no_slot')->nullable();
+        
             // halaman 2
-            $table->string('kondisi');
-            $table->string('nama_koleksi');
-            $table->text('deskripsi_koleksi');
-            $table->text('keterangan_koleksi');
-            $table->string('umur_geologi');
-            $table->string('nama_formasi');
-            $table->string('ditemukan');
-            $table->string('pulau');
-            $table->string('provinsi');
-            $table->string('kota');
-            $table->string('alamat');
-            $table->string('latitude');
-            $table->string('longitude');
-            $table->string('elevasi');
-            $table->string('peta');
-            $table->string('skala');
-            $table->string('lembar_peta');
-
+            $table->string('kondisi')->nullable();
+            $table->string('nama_koleksi')->nullable();
+            $table->text('deskripsi_koleksi')->nullable();
+            $table->text('keterangan_koleksi')->nullable();
+            $table->string('umur_geologi')->nullable();
+            $table->string('nama_formasi')->nullable();
+            $table->string('ditemukan')->nullable();
+            $table->string('pulau')->nullable();
+            $table->string('provinsi')->nullable();
+            $table->string('kota')->nullable();
+            $table->string('alamat')->nullable();
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
+            $table->string('elevasi')->nullable();
+            $table->string('peta')->nullable();
+            $table->string('skala')->nullable();
+            $table->string('lembar_peta')->nullable();
+        
             // halaman 3
-            $table->string('cara_peroleh');
-            $table->integer('thn_peroleh');
-            $table->string('determinator');
-            $table->string('kolektor');
-            $table->string('kepemilikan_awal');
+            $table->string('cara_peroleh')->nullable();
+            $table->string('thn_peroleh')->nullable();
+            $table->string('determinator')->nullable();
+            $table->string('kolektor')->nullable();
+            $table->string('kepemilikan_awal')->nullable();
             $table->text('publikasi')->nullable();
             $table->string('url')->nullable();
-            $table->string('nilai_peroleh');
-            $table->string('nilai_buku');
-
+            $table->string('nilai_peroleh')->nullable();
+            $table->string('nilai_buku')->nullable();
+        
             // halaman 4
             $table->string('gambar_satu')->nullable();
             $table->string('gambar_dua')->nullable();
@@ -75,7 +70,7 @@ return new class extends Migration
             $table->string('audio')->nullable();
             $table->enum('status', ['ada', 'tidak ada'])->default('ada')->nullable();
             $table->timestamps();
-        });
+        });        
     }
 
     /**
