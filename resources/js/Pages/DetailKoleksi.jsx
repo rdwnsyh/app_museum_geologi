@@ -13,7 +13,7 @@ const DetailKoleksi = () => {
     // Initialize the form for adding items to the cart
     const { post, data, setData, reset } = useForm({
         koleksi_id: item.id || "",
-        quantity: 1, // default quantity
+        jumlah_dipinjam: 1, // default quantity
     });
 
     const handleAddToCart = (e) => {
@@ -23,7 +23,7 @@ const DetailKoleksi = () => {
             data,
             onSuccess: () => {
                 setSuccessMessage("Item berhasil ditambahkan ke keranjang!");
-                reset("quantity");
+                reset("jumlah_dipinjam");
             },
             onError: (errors) => {
                 console.error("Error adding to cart:", errors);

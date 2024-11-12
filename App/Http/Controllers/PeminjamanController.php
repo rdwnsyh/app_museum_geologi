@@ -31,10 +31,10 @@ class PeminjamanController extends Controller
             // Gabungkan informasi item dengan data dari database
             $cartItems[] = [
                 'id' => $itemId,
-                'koleksi_id' => $itemDetails->koleksi_id,
+                'koleksi_id' => $itemDetails->id, // Gunakan kunci yang benar untuk ID
                 'image_satu' => $itemDetails->gambar_satu,
                 'nama_koleksi' => $itemDetails->nama_koleksi,
-                'quantity' => $item['quantity'],
+                'jumlah_dipinjam' => $item['jumlah_dipinjam'] ?? 0, // Gunakan nilai default jika tidak ada
                 'checked' => $item['checked'] ?? false, // Default false for checked
             ];
         }
@@ -47,22 +47,17 @@ class PeminjamanController extends Controller
 }
 
 
-    public function addToCart(Request $request)
+public function addToCart(Request $request)
 {
     // Validasi input
     $request->validate([
         'koleksi_id' => 'required|exists:kelola_koleksi,id',  // Pastikan koleksi_id valid dan ada di database
-        'quantity' => 'required|integer|min:1',  // Pastikan quantity adalah angka dan minimal 1
+        'jumlah_dipinjam' => 'required|integer|min:1',  // Pastikan jumlah_dipinjam adalah angka dan minimal 1
     ]);
 
     // Ambil ID koleksi dan jumlah item yang ingin ditambahkan
     $itemId = $request->input('koleksi_id');
-    $quantity = $request->input('jumlah_dipinjam', 1); // Jika quantity tidak diberikan, default 1
-
-    // Debugging: periksa nilai itemId dan quantity
-    // dd($itemId, $quantity);  // Menghentikan eksekusi dan menampilkan nilai itemId dan quantity
-
-    $condition = $request->input('kondisi', 'Good'); // Kondisi default
+    $jumlah_dipinjam = $request->input('jumlah_dipinjam', 1); // Jika jumlah_dipinjam tidak diberikan, default ke 1
 
     // Ambil keranjang dari sesi
     $cart = session()->get('cart', []);
@@ -70,7 +65,11 @@ class PeminjamanController extends Controller
     // Cek apakah item sudah ada di keranjang
     if (isset($cart[$itemId])) {
         // Jika item sudah ada, tambahkan jumlahnya
-        $cart[$itemId]['quantity'] += $quantity;
+        if (!isset($cart[$itemId]['jumlah_dipinjam'])) {
+            // Jika kunci 'jumlah_dipinjam' belum diatur, inisialisasi dengan 0
+            $cart[$itemId]['jumlah_dipinjam'] = 0;
+        }
+        $cart[$itemId]['jumlah_dipinjam'] += $jumlah_dipinjam;
     } else {
         // Jika item belum ada, ambil data item dari database
         $item = KelolaKoleksi::find($itemId);
@@ -82,10 +81,10 @@ class PeminjamanController extends Controller
 
         // Simpan item ke dalam keranjang dengan atribut yang diperlukan
         $cart[$itemId] = [
-                'koleksi_id' => $item->koleksi_id,
-                'imageUrl' => $item->gambar_satu,
-                'nama_koleksi' => $item->nama_koleksi,
-                'quantity' => $item->jumlah_dipinjam,
+            'koleksi_id' => $item->id, // Pastikan Anda menggunakan kunci yang benar untuk ID
+            'imageUrl' => $item->gambar_satu,
+            'nama_koleksi' => $item->nama_koleksi,
+            'jumlah_dipinjam' => $jumlah_dipinjam, // Gunakan nilai dari input
         ];
     }
 
@@ -149,7 +148,7 @@ class PeminjamanController extends Controller
                 DetailPeminjaman::create([
                     'peminjaman_id' => $peminjaman->id,
                     'koleksi_id' => $id,
-                    'jumlah_dipinjam' => $item['quantity'],
+                    'jumlah_dipinjam' => $item['jumlah_dipinjam'],
                     'kondisi' => $item['kondisi'], // Kondisi diambil dari item keranjang
                 ]);
             }

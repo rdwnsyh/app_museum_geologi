@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "@inertiajs/react";
-import Navbar from "@/Components/Navbar/Navbar"; // Import Navbar
-import Modal from "@/Components/Modal/Modal"; // Import Modal
-import Tambah from "./Tambah"; // Import Komponen Tambah
+import Navbar from "@/Components/Navbar/Navbar";
+import Modal from "@/Components/Modal/Modal";
+import Tambah from "./Tambah";
 
 const Keranjang = ({ cartItems = [] }) => {
     const [items, setItems] = useState(
@@ -13,12 +13,11 @@ const Keranjang = ({ cartItems = [] }) => {
         setItems(Array.isArray(cartItems) ? cartItems : []);
     }, [cartItems]);
 
+    // Toggle the "checked" state of an item
     const handleCheck = (id) => {
         setItems((prevItems) =>
             prevItems.map((item) =>
-                item.koleksi_id === id
-                    ? { ...item, checked: !item.checked }
-                    : item
+                item.id === id ? { ...item, checked: !item.checked } : item
             )
         );
     };
@@ -41,25 +40,7 @@ const Keranjang = ({ cartItems = [] }) => {
 
     const [searchQuery, setSearchQuery] = useState("");
 
-    const handleQuantityChange = (id, value) => {
-        if (value < 1) return;
-        Inertia.post(
-            route("keranjang.updateQuantity", id),
-            { quantity: value },
-            {
-                onSuccess: ({ item }) => {
-                    setItems((prevItems) =>
-                        prevItems.map((prevItem) =>
-                            prevItem.koleksi_id === item.koleksi_id
-                                ? { ...prevItem, quantity: item.quantity }
-                                : prevItem
-                        )
-                    );
-                },
-            }
-        );
-    };
-
+    // Handle deleting an item from the cart
     const handleDelete = (id) => {
         if (
             confirm(
@@ -68,12 +49,10 @@ const Keranjang = ({ cartItems = [] }) => {
         ) {
             Inertia.delete(route("keranjang.remove", id), {
                 onSuccess: (response) => {
-                    if (response.success) {
-                        alert("Item berhasil dihapus dari keranjang.");
-                        setItems((prevItems) =>
-                            prevItems.filter((item) => item.koleksi_id !== id)
-                        );
-                    }
+                    alert("Item berhasil dihapus dari keranjang.");
+                    setItems((prevItems) =>
+                        prevItems.filter((item) => item.id !== id)
+                    );
                 },
                 onError: (errors) => {
                     console.error(errors);
@@ -81,6 +60,17 @@ const Keranjang = ({ cartItems = [] }) => {
                 },
             });
         }
+    };
+
+    // Handle quantity change for an item
+    const handleQuantityChange = (id, jumlah_dipinjam) => {
+        setItems((prevItems) =>
+            prevItems.map((item) =>
+                item.id === id
+                    ? { ...item, jumlah_dipinjam: jumlah_dipinjam }
+                    : item
+            )
+        );
     };
 
     const checkedItems = items.filter((item) => item.checked);
@@ -123,7 +113,7 @@ const Keranjang = ({ cartItems = [] }) => {
                                         Koleksi
                                     </th>
                                     <th className="px-4 py-2 text-left">
-                                        Quantity
+                                        Jumlah
                                     </th>
                                     <th className="px-4 py-2 text-left">
                                         Actions
@@ -132,20 +122,20 @@ const Keranjang = ({ cartItems = [] }) => {
                             </thead>
                             <tbody className="divide-y divide-gray-200">
                                 {items.map((item) => (
-                                    <tr key={item.koleksi_id}>
+                                    <tr key={item.id}>
                                         <td className="px-4 py-2 text-left">
                                             <input
                                                 type="checkbox"
                                                 checked={item.checked}
                                                 onChange={() =>
-                                                    handleCheck(item.koleksi_id)
+                                                    handleCheck(item.id)
                                                 }
                                                 aria-label={`Select ${item.nama_koleksi}`}
                                             />
                                         </td>
                                         <td className="px-4 py-2 border-b border-gray-200">
                                             <img
-                                                src={item.imageUrl}
+                                                src={item.image_satu}
                                                 alt={item.nama_koleksi}
                                                 className="w-16 h-16 object-cover"
                                             />
@@ -156,11 +146,11 @@ const Keranjang = ({ cartItems = [] }) => {
                                         <td className="px-4 py-2 border-b border-gray-200">
                                             <input
                                                 type="number"
-                                                value={item.quantity}
+                                                value={item.jumlah_dipinjam}
                                                 min="1"
                                                 onChange={(e) =>
                                                     handleQuantityChange(
-                                                        item.koleksi_id,
+                                                        item.id,
                                                         parseInt(e.target.value)
                                                     )
                                                 }
@@ -170,9 +160,7 @@ const Keranjang = ({ cartItems = [] }) => {
                                         <td className="px-4 py-2 border-b border-gray-200">
                                             <button
                                                 onClick={() =>
-                                                    handleDelete(
-                                                        item.koleksi_id
-                                                    )
+                                                    handleDelete(item.id)
                                                 }
                                                 className="text-red-600 hover:text-red-800"
                                             >
@@ -203,7 +191,7 @@ const Keranjang = ({ cartItems = [] }) => {
                         isOpen={isOpen}
                         onClose={handleCloseModal}
                         title="Tambah Peminjaman"
-                        logoSrc={null} // Pass null if you don't have a logoSrc
+                        logoSrc={null}
                     >
                         <Tambah onSubmit={handleCreateSubmit} />
                     </Modal>
