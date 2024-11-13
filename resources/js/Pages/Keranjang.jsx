@@ -1,8 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "@inertiajs/react";
 import Navbar from "@/Components/Navbar/Navbar";
-import Modal from "@/Components/Modal/Modal";
-import Tambah from "./Tambah";
 
 const Keranjang = ({ cartItems = [] }) => {
     const [items, setItems] = useState(
@@ -13,6 +10,8 @@ const Keranjang = ({ cartItems = [] }) => {
         setItems(Array.isArray(cartItems) ? cartItems : []);
     }, [cartItems]);
 
+    const [searchQuery, setSearchQuery] = useState("");
+
     // Toggle the "checked" state of an item
     const handleCheck = (id) => {
         setItems((prevItems) =>
@@ -20,46 +19,6 @@ const Keranjang = ({ cartItems = [] }) => {
                 item.id === id ? { ...item, checked: !item.checked } : item
             )
         );
-    };
-
-    const [isOpen, setIsOpen] = useState(false);
-
-    const handleOpenModal = (event) => {
-        event.preventDefault();
-        setIsOpen(true);
-    };
-
-    const handleCloseModal = () => {
-        setIsOpen(false);
-    };
-
-    const handleCreateSubmit = (formData) => {
-        console.log("Form submitted:", formData);
-        handleCloseModal();
-    };
-
-    const [searchQuery, setSearchQuery] = useState("");
-
-    // Handle deleting an item from the cart
-    const handleDelete = (id) => {
-        if (
-            confirm(
-                "Apakah Anda yakin ingin menghapus item ini dari keranjang?"
-            )
-        ) {
-            Inertia.delete(route("keranjang.remove", id), {
-                onSuccess: (response) => {
-                    alert("Item berhasil dihapus dari keranjang.");
-                    setItems((prevItems) =>
-                        prevItems.filter((item) => item.id !== id)
-                    );
-                },
-                onError: (errors) => {
-                    console.error(errors);
-                    alert("Gagal menghapus item dari keranjang.");
-                },
-            });
-        }
     };
 
     // Handle quantity change for an item
@@ -74,6 +33,14 @@ const Keranjang = ({ cartItems = [] }) => {
     };
 
     const checkedItems = items.filter((item) => item.checked);
+
+    // Navigate to the form page
+    const handlePinjamClick = () => {
+        Inertia.visit(route("pinjam.create"), {
+            method: "get",
+            data: { cartItems: checkedItems }, // Pass selected items to the next page
+        });
+    };
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -99,25 +66,14 @@ const Keranjang = ({ cartItems = [] }) => {
                                                     }))
                                                 );
                                             }}
-                                            checked={
-                                                checkedItems.length ===
-                                                items.length
-                                            }
+                                            checked={checkedItems.length === items.length}
                                             aria-label="Select all items"
                                         />
                                     </th>
-                                    <th className="px-4 py-2 text-left">
-                                        Gambar
-                                    </th>
-                                    <th className="px-4 py-2 text-left">
-                                        Koleksi
-                                    </th>
-                                    <th className="px-4 py-2 text-left">
-                                        Jumlah
-                                    </th>
-                                    <th className="px-4 py-2 text-left">
-                                        Actions
-                                    </th>
+                                    <th className="px-4 py-2 text-left">Gambar</th>
+                                    <th className="px-4 py-2 text-left">Koleksi</th>
+                                    <th className="px-4 py-2 text-left">Jumlah</th>
+                                    <th className="px-4 py-2 text-left">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200">
@@ -159,9 +115,9 @@ const Keranjang = ({ cartItems = [] }) => {
                                         </td>
                                         <td className="px-4 py-2 border-b border-gray-200">
                                             <button
-                                                onClick={() =>
-                                                    handleDelete(item.id)
-                                                }
+                                                onClick={() => {
+                                                    // handleDelete logic
+                                                }}
                                                 className="text-red-600 hover:text-red-800"
                                             >
                                                 Hapus
@@ -178,23 +134,14 @@ const Keranjang = ({ cartItems = [] }) => {
                             <h3 className="text-lg font-semibold">
                                 Subtotal: {checkedItems.length} item terpilih
                             </h3>
-                            <Link
-                                onClick={handleOpenModal}
+                            <button
+                                onClick={handlePinjamClick}
                                 className="bg-yellow-500 text-black py-2 px-4 rounded-md ml-2"
                             >
                                 Pinjam Sekarang
-                            </Link>
+                            </button>
                         </div>
                     </div>
-
-                    <Modal
-                        isOpen={isOpen}
-                        onClose={handleCloseModal}
-                        title="Tambah Peminjaman"
-                        logoSrc={null}
-                    >
-                        <Tambah onSubmit={handleCreateSubmit} />
-                    </Modal>
                 </div>
             </div>
         </div>

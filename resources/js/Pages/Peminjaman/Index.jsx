@@ -1,52 +1,44 @@
 import React, { useState } from "react";
-import { Link, router } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
 import Table from "@/Components/Table/Table";
 import SearchBar from "@/Components/SearchBar/SearchBar";
 import Pagination from "@/Components/Pagination/Pagination";
 import { ArrowDownToLine, Plus } from "lucide-react";
-import Modal from "@/Components/Modal/Modal"; 
-import Create from "./Create"; // Import Create component
+import NotificationModal from "@/Components/Modal/notif"; // Import Notification Modal
 
 function Index() {
-    // Static data for the table
-    const staticData = [
-        { id: 1, users_id: "John Doe", tanggal_pinjam: "2024-10-01", tanggal_jatuh_tempo: "2024-10-10", status: "Sedang dipinjam" },
-        { id: 2, users_id: "Jane Smith", tanggal_pinjam: "2024-09-15", tanggal_jatuh_tempo: "2024-09-25", status: "Kembali" },
-        { id: 3, users_id: "Alice Johnson", tanggal_pinjam: "2024-10-05", tanggal_jatuh_tempo: "2024-10-15", status: "Sedang dipinjam" },
-        { id: 4, users_id: "Bob Brown", tanggal_pinjam: "2024-09-20", tanggal_jatuh_tempo: "2024-09-30", status: "Kembali" },
-        { id: 5, users_id: "Charlie Davis", tanggal_pinjam: "2024-10-07", tanggal_jatuh_tempo: "2024-10-14", status: "Sedang dipinjam" },
-    ];
+    // Retrieve dynamic data from Inertia.js page props
+    const { peminjaman } = usePage().props;
 
-    const [isOpen, setIsOpen] = useState(false);
+    const data = peminjaman?.data || [];
+    const links = peminjaman?.meta?.links || [];
 
-    const handleOpenModal = (event) => {
-        event.preventDefault(); // Prevent default action
-        setIsOpen(true);
-    };    
-
-    const handleCloseModal = () => {
-        setIsOpen(false);
-    };
-
-    const handleCreateSubmit = (formData) => {
-        // Handle the form submission logic here
-        console.log('Form submitted:', formData);
-        // After successful submission, you can close the modal
-        handleCloseModal();
-    };
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false); // State for notification modal
+    const [notificationMessage, setNotificationMessage] = useState(""); // Store notification message
 
     const handleDelete = (id) => {
         if (window.confirm("Are you sure you want to delete this item?")) {
             router.delete(route("peminjaman.destroy", id), {
                 onSuccess: () => {
-                    // Optionally, you can trigger a refresh or update your state here
+                    // Optionally trigger a refresh or update your state here
                 },
                 onError: (error) => {
                     console.error("Failed to delete the item:", error);
                 },
             });
         }
+    };
+
+    const handleCreateSubmit = (formData) => {
+        console.log("Form submitted:", formData);
+
+        setNotificationMessage("Peminjaman successfully created!");
+        setIsNotificationOpen(true);
+    };
+
+    const closeNotificationModal = () => {
+        setIsNotificationOpen(false); // Close the notification modal
     };
 
     return (
@@ -56,9 +48,10 @@ function Index() {
             <div className="flex items-center justify-between mb-2">
                 <SearchBar />
                 <div className="flex items-center justify-end mb-2">
+                    {/* Link to navigate to Create page */}
                     <Link
                         className="bg-green-600 text-white py-2 px-4 mx-2 rounded hover:bg-green-900 transition flex items-center"
-                        onClick={handleOpenModal}
+                        href={route("peminjaman.create")} // Navigasi langsung ke halaman create
                     >
                         <Plus className="w-4 h-4 mr-2" />
                         <span className="hidden md:inline">Tambah</span>
@@ -80,11 +73,7 @@ function Index() {
                 </div>
             </div>
 
-            {/* Modal for creating new entry */}
-            <Modal isOpen={isOpen} onClose={handleCloseModal} title="Tambah Peminjaman">
-                <Create onSubmit={handleCreateSubmit} /> {/* Pass the submit handler */}
-            </Modal>
-
+            {/* Table for displaying dynamic peminjaman data */}
             <Table
                 columns={[
                     { label: "Nama Peminjam", name: "users_id" },
@@ -119,15 +108,22 @@ function Index() {
                         ),
                     },
                 ]}
-                rows={staticData} // Use static data as rows
+                rows={data}
             />
 
-            {/* Pagination component (optional) */}
-            {/* {links.length > 0 && <Pagination links={links} />} */}
+            {/* Pagination component */}
+            {links.length > 0 && <Pagination links={links} />}
+
+            {/* Notification Modal */}
+            <NotificationModal
+                isOpen={isNotificationOpen}
+                onClose={closeNotificationModal}
+                message={notificationMessage}
+            />
         </div>
     );
 }
 
-Index.layout = (page) => <MainLayout title="Kelola Koleksi">{page}</MainLayout>;
+Index.layout = (page) => <MainLayout title="Kelola Peminjaman">{page}</MainLayout>;
 
 export default Index;

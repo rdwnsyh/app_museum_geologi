@@ -1,164 +1,154 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { useForm } from "@inertiajs/react";
+import MainLayout from "@/Layouts/MainLayout";
+import LoadingButton from "@/Components/Button/LoadingButton";
+import TextInput from "@/Components/Form/TextInput";
+import FieldGroup from "@/Components/Form/FieldGroup";
+import FileInput from "@/Components/Form/FileInput";
+import { usePage } from '@inertiajs/react'; // Import usePage hook
 
-const Create = ({ onSubmit }) => {
-  const [formData, setFormData] = useState({
-    tanggal_pinjam: '',
-    tanggal_jatuh_tempo: '',
-    status: '',
-    identitas: null,
-    surat_permohonan: null,
-  });
+const Create = () => {
+    // Ambil user_id dari props yang dikirimkan oleh backend
+    const { user_id } = usePage().props;
 
-  const [tableData, setTableData] = useState([]);
+    const { data, setData, errors, post, processing } = useForm({
+        users_id: user_id, // Set user_id secara otomatis dari props
+        tanggal_pinjam: '',
+        tanggal_jatuh_tempo: '',
+        identitas: null,
+        surat_permohonan: null,
+    });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+    // State untuk modal notifikasi
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState("");
 
-  const handleFileChange = (e) => {
-    const { name, files } = e.target;
-    if (files.length > 0) {
-      setFormData({ ...formData, [name]: files[0] });
-    }
-  };
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        Object.entries(data).forEach(([key, value]) => {
+            formData.append(key, value);
+        });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const submissionData = new FormData();
-    for (const key in formData) {
-      submissionData.append(key, formData[key]);
-    }
-    onSubmit(submissionData);
-  };
-
-  const addRowToTable = () => {
-    const newRow = {
-      tanggal_pinjam: formData.tanggal_pinjam,
-      tanggal_jatuh_tempo: formData.tanggal_jatuh_tempo,
-      status: formData.status,
+        post(route("peminjaman.store"), {
+            data: formData,
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+            onSuccess: () => {
+                // Tampilkan modal notifikasi jika sukses
+                setNotificationMessage("Peminjaman berhasil dibuat!");
+                setIsModalOpen(true);
+            },
+            onError: (errors) => {
+                // Tampilkan modal notifikasi jika ada error
+                setNotificationMessage("Terjadi kesalahan saat membuat peminjaman.");
+                setIsModalOpen(true);
+            },
+        });
     };
-    setTableData([...tableData, newRow]);
-    setFormData({ ...formData, tanggal_pinjam: '', tanggal_jatuh_tempo: '', status: '' });
-  };
 
-  return (
-    <div className="p-4 overflow-hidden"> {/* Tambahkan padding dan sembunyikan overflow */}
-      <form onSubmit={handleSubmit} className="space-y-4">
+    const closeModal = () => {
+        setIsModalOpen(false);
+        Inertia.visit(route("peminjaman.index")); 
+    };
+
+    const handleFileChange = (name, file) => {
+        setData(name, file);
+    };
+
+    return (
         <div>
-          <label htmlFor="tanggal_pinjam" className="block text-sm font-medium text-gray-700">
-            Tanggal Pinjam
-          </label>
-          <input
-            type="date"
-            name="tanggal_pinjam"
-            value={formData.tanggal_pinjam}
-            onChange={handleInputChange}
-            required
-            className="mt-1 block w-full rounded-md border-gray-300"
-          />
-        </div>
+            <h1 className="mb-8 text-3xl font-bold">
+                <span className="font-medium text-indigo-600">Create Peminjaman</span>
+            </h1>
+            <div className="max-w-3xl mx-auto overflow-hidden bg-white rounded shadow">
+                <form onSubmit={handleSubmit} encType="multipart/form-data">
+                    <div className="grid gap-10 p-10 lg:grid-cols-2">
+                        {/* Input fields */}
+                        <FieldGroup label="Nama Peminjam" error={errors.users_id}>
+                            <TextInput
+                                name="users_id"
+                                error={errors.users_id}
+                                value={data.users_id}
+                                onChange={(e) => setData("users_id", e.target.value)}
+                                required
+                                disabled
+                            />
+                        </FieldGroup>
 
-        <div>
-          <label htmlFor="tanggal_jatuh_tempo" className="block text-sm font-medium text-gray-700">
-            Tanggal Jatuh Tempo
-          </label>
-          <input
-            type="date"
-            name="tanggal_jatuh_tempo"
-            value={formData.tanggal_jatuh_tempo}
-            onChange={handleInputChange}
-            required
-            className="mt-1 block w-full rounded-md border-gray-300"
-          />
-        </div>
+                        <FieldGroup label="Tanggal Pinjam" error={errors.tanggal_pinjam}>
+                            <TextInput
+                                type="date"
+                                name="tanggal_pinjam"
+                                error={errors.tanggal_pinjam}
+                                value={data.tanggal_pinjam}
+                                onChange={(e) => setData("tanggal_pinjam", e.target.value)}
+                                required
+                            />
+                        </FieldGroup>
 
-        <div>
-          <label htmlFor="status" className="block text-sm font-medium text-gray-700">
-            Status
-          </label>
-          <select
-            name="status"
-            value={formData.status}
-            onChange={handleInputChange}
-            required
-            className="mt-1 block w-full rounded-md border-gray-300"
-          >
-            <option value="">Pilih Status</option>
-            <option value="baru">Pengajuan</option>
-            <option value="aktif">Sedang di Pinjam</option>
-            <option value="menunggu">Terlambat</option>
-            <option value="ditolak">Ditolak</option>
-            <option value="selesai">Selesai</option>
-          </select>
-        </div>
+                        <FieldGroup label="Tanggal Jatuh Tempo" error={errors.tanggal_jatuh_tempo}>
+                            <TextInput
+                                type="date"
+                                name="tanggal_jatuh_tempo"
+                                error={errors.tanggal_jatuh_tempo}
+                                value={data.tanggal_jatuh_tempo}
+                                onChange={(e) => setData("tanggal_jatuh_tempo", e.target.value)}
+                                required
+                            />
+                        </FieldGroup>
 
-        <div>
-          <label htmlFor="identitas" className="block text-sm font-medium text-gray-700">
-            Identitas
-          </label>
-          <input
-            type="file"
-            name="identitas"
-            onChange={handleFileChange}
-            required
-            className="mt-1 block w-full rounded-md border-gray-300"
-          />
-        </div>
+                        <FieldGroup label="Identitas Diri" name="identitas" error={errors.identitas}>
+                            <FileInput
+                                name="identitas"
+                                error={errors.identitas}
+                                onFileChange={(file) => handleFileChange("identitas", file)}
+                            />
+                        </FieldGroup>
 
-        <div>
-          <label htmlFor="surat_permohonan" className="block text-sm font-medium text-gray-700">
-            Surat Permohonan
-          </label>
-          <input
-            type="file"
-            name="surat_permohonan"
-            onChange={handleFileChange}
-            required
-            className="mt-1 block w-full rounded-md border-gray-300"
-          />
-        </div>
+                        <FieldGroup label="Surat Permohonan" name="surat_permohonan" error={errors.surat_permohonan}>
+                            <FileInput
+                                name="surat_permohonan"
+                                error={errors.surat_permohonan}
+                                onFileChange={(file) => handleFileChange("surat_permohonan", file)}
+                            />
+                        </FieldGroup>
 
-        <div className="mt-4">
-          <h2 className="text-lg font-semibold">Data Peminjaman</h2>
-          <table className="min-w-full mt-2 border border-gray-300">
-            <thead>
-              <tr>
-                <th className="border border-gray-300 px-4 py-2">Tanggal Pinjam</th>
-                <th className="border border-gray-300 px-4 py-2">Tanggal Jatuh Tempo</th>
-                <th className="border border-gray-300 px-4 py-2">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tableData.map((row, index) => (
-                <tr key={index}>
-                  <td className="border border-gray-300 px-4 py-2">{row.tanggal_pinjam}</td>
-                  <td className="border border-gray-300 px-4 py-2">{row.tanggal_jatuh_tempo}</td>
-                  <td className="border border-gray-300 px-4 py-2">{row.status}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                    </div>
+                    <div className="flex items-center justify-between px-8 py-4 bg-gray-100 border-t border-gray-200">
+                        <LoadingButton
+                            loading={processing}
+                            type="submit"
+                            className="ml-auto bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-900 transition"
+                            disabled={processing}
+                        >
+                            Submit
+                        </LoadingButton>
+                    </div>
+                </form>
+            </div>
 
-        <div className="flex justify-end">
-          {/* <button 
-            type="button"
-            onClick={addRowToTable}
-            className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
-          >
-            Tambah Baris
-          </button> */}
-          <button 
-            type="submit" 
-            className="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded ml-2"
-          >
-            Simpan
-          </button>
+            {/* Modal notifikasi */}
+            {isModalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                        <h3 className="text-lg font-bold mb-4">{notificationMessage}</h3>
+                        <button
+                            className="mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-900 transition"
+                            onClick={closeModal}
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
-      </form>
-    </div>
-  );
+    );
 };
+
+Create.layout = (page) => (
+    <MainLayout title="Tambah Peminjaman" children={page} />
+);
 
 export default Create;
