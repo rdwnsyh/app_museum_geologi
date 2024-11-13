@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "@inertiajs/react"; // Impor Link dari Inertia.js
 import Navbar from "@/Components/Navbar/Navbar";
 
 const Keranjang = ({ cartItems = [] }) => {
@@ -34,14 +35,6 @@ const Keranjang = ({ cartItems = [] }) => {
 
     const checkedItems = items.filter((item) => item.checked);
 
-    // Navigate to the form page
-    const handlePinjamClick = () => {
-        Inertia.visit(route("pinjam.create"), {
-            method: "get",
-            data: { cartItems: checkedItems }, // Pass selected items to the next page
-        });
-    };
-
     return (
         <div className="flex flex-col min-h-screen">
             <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
@@ -66,14 +59,25 @@ const Keranjang = ({ cartItems = [] }) => {
                                                     }))
                                                 );
                                             }}
-                                            checked={checkedItems.length === items.length}
+                                            checked={
+                                                checkedItems.length ===
+                                                items.length
+                                            }
                                             aria-label="Select all items"
                                         />
                                     </th>
-                                    <th className="px-4 py-2 text-left">Gambar</th>
-                                    <th className="px-4 py-2 text-left">Koleksi</th>
-                                    <th className="px-4 py-2 text-left">Jumlah</th>
-                                    <th className="px-4 py-2 text-left">Actions</th>
+                                    <th className="px-4 py-2 text-left">
+                                        Gambar
+                                    </th>
+                                    <th className="px-4 py-2 text-left">
+                                        Koleksi
+                                    </th>
+                                    <th className="px-4 py-2 text-left">
+                                        Jumlah
+                                    </th>
+                                    <th className="px-4 py-2 text-left">
+                                        Actions
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200">
@@ -134,12 +138,14 @@ const Keranjang = ({ cartItems = [] }) => {
                             <h3 className="text-lg font-semibold">
                                 Subtotal: {checkedItems.length} item terpilih
                             </h3>
-                            <button
-                                onClick={handlePinjamClick}
+                            <Link
+                                href={route("keranjang.pinjam")} // Menggunakan Link untuk navigasi
+                                method="get"
+                                data={{ cartItems: checkedItems }} // Kirim data item yang dipilih
                                 className="bg-yellow-500 text-black py-2 px-4 rounded-md ml-2"
                             >
                                 Pinjam Sekarang
-                            </button>
+                            </Link>
                         </div>
                     </div>
                 </div>

@@ -94,11 +94,47 @@ public function addToCart(Request $request)
     return back()->with('success', 'Item berhasil ditambahkan ke keranjang.');
 }
 
-
-
     /**
      * Store a newly created resource in storage.
      */
+
+    public function borrow(Request $request)
+{
+    // Ambil data keranjang dari sesi
+    $cart = session()->get('cart', []);
+
+    // Ambil koleksi ID yang dipilih untuk checkout dari input request
+    $selectedIds = $request->input('selected_ids', []);
+
+    // Filter koleksi yang dipilih untuk checkout
+    $checkoutItems = [];
+    foreach ($cart as $itemId => $item) {
+        if (in_array($itemId, $selectedIds)) {
+            $itemDetails = KelolaKoleksi::find($itemId);
+            if ($itemDetails) {
+                // Gabungkan informasi item dengan data dari database
+                $checkoutItems[] = [
+                    'id' => $itemId,
+                    'koleksi_id' => $itemDetails->id, // Pastikan ID yang benar digunakan
+                    'image_satu' => $itemDetails->gambar_satu,
+                    'nama_koleksi' => $itemDetails->nama_koleksi,
+                    'jumlah_dipinjam' => $item['jumlah_dipinjam'] ?? 0,
+                    // Tambahkan informasi tambahan yang diperlukan
+                ];
+            }
+        }
+    }
+
+    // Simpan data checkout ke sesi
+    session()->put('checkout_items', $checkoutItems);
+
+    // Redirect ke halaman "Pinjam" dengan data koleksi yang akan di checkout
+    return Inertia::render('Pinjam', [
+        'checkoutItems' => $checkoutItems,
+    ]);
+}
+
+
     public function checkout(Request $request)
     {
         // Validasi data yang diperlukan untuk peminjaman
