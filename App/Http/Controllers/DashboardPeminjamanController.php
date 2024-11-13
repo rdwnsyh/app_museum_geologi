@@ -36,7 +36,35 @@ class DashboardPeminjamanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'users_id' => 'required|exists:users,id',
+            'tanggal_pinjam' => 'required|date',
+            'tanggal_jatuh_tempo' => 'required|date',
+            'identitas' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'surat_permohonan' => 'required|file|mimes:jpg,jpeg,png,docx,pdf|max:2048',
+        ]);
+
+        // Create new peminjaman record
+        $peminjaman = new Peminjaman([
+            'users_id' => $request->users_id,
+            'tanggal_pinjam' => $request->tanggal_pinjam,
+            'tanggal_jatuh_tempo' => $request->tanggal_jatuh_tempo,
+        ]);
+
+        // Handling file uploads
+        if ($request->hasFile('identitas')) {
+            $peminjaman->identitas = $request->file('identitas')->store('identitas');
+        }
+
+        if ($request->hasFile('surat_permohonan')) {
+            $peminjaman->surat_permohonan = $request->file('surat_permohonan')->store('surat_permohonan');
+        }
+
+        $peminjaman->save();
+
+        // Redirect to peminjaman.index with success message
+        return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil dibuat!');
+
     }
 
     /**

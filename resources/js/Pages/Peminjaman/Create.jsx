@@ -8,7 +8,6 @@ import FileInput from "@/Components/Form/FileInput";
 import { usePage } from '@inertiajs/react'; // Import usePage hook
 
 const Create = () => {
-    // Ambil user_id dari props yang dikirimkan oleh backend
     const { user_id } = usePage().props;
 
     const { data, setData, errors, post, processing } = useForm({
@@ -49,8 +48,8 @@ const Create = () => {
     };
 
     const closeModal = () => {
-        setIsModalOpen(false);
-        Inertia.visit(route("peminjaman.index")); 
+      setIsModalOpen(false);
+      Inertia.back();
     };
 
     const handleFileChange = (name, file) => {
@@ -73,7 +72,7 @@ const Create = () => {
                                 value={data.users_id}
                                 onChange={(e) => setData("users_id", e.target.value)}
                                 required
-                                disabled
+                                
                             />
                         </FieldGroup>
 
