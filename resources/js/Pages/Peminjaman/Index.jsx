@@ -9,8 +9,7 @@ import NotificationModal from "@/Components/Modal/notif"; // Import Notification
 
 function Index() {
     // Retrieve dynamic data from Inertia.js page props
-    const { peminjaman } = usePage().props;
-
+    const { peminjaman} = usePage().props;
     const data = peminjaman?.data || [];
     const links = peminjaman?.meta?.links || [];
 
@@ -21,20 +20,29 @@ function Index() {
         if (window.confirm("Are you sure you want to delete this item?")) {
             router.delete(route("peminjaman.destroy", id), {
                 onSuccess: () => {
-                    // Optionally trigger a refresh or update your state here
+                    setNotificationMessage("Peminjaman deleted successfully!");
+                    setIsNotificationOpen(true);
                 },
                 onError: (error) => {
-                    console.error("Failed to delete the item:", error);
+                    setNotificationMessage("Failed to delete the item.");
+                    setIsNotificationOpen(true);
                 },
             });
         }
     };
 
     const handleCreateSubmit = (formData) => {
-        console.log("Form submitted:", formData);
-
-        setNotificationMessage("Peminjaman successfully created!");
-        setIsNotificationOpen(true);
+        // Send form data to the server using Inertia
+        Inertia.post(route("peminjaman.store"), formData, {
+            onSuccess: () => {
+                setNotificationMessage("Peminjaman successfully created!");
+                setIsNotificationOpen(true);
+            },
+            onError: (error) => {
+                setNotificationMessage("Failed to create Peminjaman.");
+                setIsNotificationOpen(true);
+            }
+        });
     };
 
     const closeNotificationModal = () => {
@@ -76,7 +84,7 @@ function Index() {
             {/* Table for displaying dynamic peminjaman data */}
             <Table
                 columns={[
-                    { label: "Nama Peminjam", name: "users_id" },
+                    { label: "Nama Peminjam", name: "users_id", renderCell: (row) => row.user?.name },
                     { label: "Tanggal Pinjam", name: "tanggal_pinjam" },
                     { label: "Tanggal Jatuh Tempo", name: "tanggal_jatuh_tempo" },
                     {
@@ -110,6 +118,8 @@ function Index() {
                 ]}
                 rows={data}
             />
+
+            
 
             {/* Pagination component */}
             {links.length > 0 && <Pagination links={links} />}

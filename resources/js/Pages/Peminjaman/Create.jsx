@@ -8,50 +8,53 @@ import FileInput from "@/Components/Form/FileInput";
 import { usePage } from '@inertiajs/react'; // Import usePage hook
 
 const Create = () => {
-    const { user_id } = usePage().props;
+    const { users_id } = usePage().props; // Get users_id from the page props
 
     const { data, setData, errors, post, processing } = useForm({
-        users_id: user_id, // Set user_id secara otomatis dari props
+        users_id: users_id, // Automatically set users_id from the page props
         tanggal_pinjam: '',
         tanggal_jatuh_tempo: '',
         identitas: null,
         surat_permohonan: null,
     });
 
-    // State untuk modal notifikasi
+    // State for notification modal
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [notificationMessage, setNotificationMessage] = useState("");
 
+    // Handle form submission
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // Create a FormData object to send the files and form data
         const formData = new FormData();
         Object.entries(data).forEach(([key, value]) => {
-            formData.append(key, value);
+            formData.append(key, value); // Append each form data entry
         });
 
         post(route("peminjaman.store"), {
             data: formData,
             headers: {
-                "Content-Type": "multipart/form-data",
+                "Content-Type": "multipart/form-data", // Ensure the correct content type
             },
             onSuccess: () => {
-                // Tampilkan modal notifikasi jika sukses
                 setNotificationMessage("Peminjaman berhasil dibuat!");
-                setIsModalOpen(true);
+                setIsModalOpen(true); // Open modal on success
             },
-            onError: (errors) => {
-                // Tampilkan modal notifikasi jika ada error
+            onError: () => {
                 setNotificationMessage("Terjadi kesalahan saat membuat peminjaman.");
-                setIsModalOpen(true);
+                setIsModalOpen(true); // Open modal on error
             },
         });
     };
 
+    // Close modal and go back
     const closeModal = () => {
-      setIsModalOpen(false);
-      Inertia.back();
+        setIsModalOpen(false);
+        Inertia.back(); // Navigate back to previous page
     };
 
+    // Handle file change (for identitas and surat_permohonan)
     const handleFileChange = (name, file) => {
         setData(name, file);
     };
@@ -72,7 +75,6 @@ const Create = () => {
                                 value={data.users_id}
                                 onChange={(e) => setData("users_id", e.target.value)}
                                 required
-                                
                             />
                         </FieldGroup>
 
@@ -113,7 +115,6 @@ const Create = () => {
                                 onFileChange={(file) => handleFileChange("surat_permohonan", file)}
                             />
                         </FieldGroup>
-
                     </div>
                     <div className="flex items-center justify-between px-8 py-4 bg-gray-100 border-t border-gray-200">
                         <LoadingButton
@@ -128,7 +129,7 @@ const Create = () => {
                 </form>
             </div>
 
-            {/* Modal notifikasi */}
+            {/* Modal for notifications */}
             {isModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-96">
