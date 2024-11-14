@@ -1,19 +1,25 @@
 import { useState, useEffect } from "react";
-import { Link } from "@inertiajs/react"; // Impor Link dari Inertia.js
+import { useForm } from "@inertiajs/react"; // Menggunakan useForm untuk request POST
 import Navbar from "@/Components/Navbar/Navbar";
 
 const Keranjang = ({ cartItems = [] }) => {
     const [items, setItems] = useState(
-        Array.isArray(cartItems) ? cartItems : []
+        Array.isArray(cartItems)
+            ? cartItems.map((item) => ({ ...item, checked: false }))
+            : []
     );
 
     useEffect(() => {
-        setItems(Array.isArray(cartItems) ? cartItems : []);
+        setItems(
+            Array.isArray(cartItems)
+                ? cartItems.map((item) => ({ ...item, checked: false }))
+                : []
+        );
     }, [cartItems]);
 
     const [searchQuery, setSearchQuery] = useState("");
 
-    // Toggle the "checked" state of an item
+    // Handle Toggle checkbox for each item
     const handleCheck = (id) => {
         setItems((prevItems) =>
             prevItems.map((item) =>
@@ -33,7 +39,32 @@ const Keranjang = ({ cartItems = [] }) => {
         );
     };
 
+    // Filter checked items for borrowing
     const checkedItems = items.filter((item) => item.checked);
+
+    // Menggunakan useForm untuk menangani POST request
+    const { post } = useForm();
+
+    const handleBorrow = () => {
+        if (checkedItems.length === 0) {
+            alert("Pilih setidaknya satu item untuk dipinjam.");
+            return; // Hentikan jika tidak ada item yang dipilih
+        }
+
+        const borrowData = checkedItems.map((item) => ({
+            koleksi_id: item.id,
+            jumlah_dipinjam: item.jumlah_dipinjam,
+        }));
+
+        // Menambahkan selected_ids yang berisi id item yang dipilih
+        const selectedIds = checkedItems.map((item) => item.id);
+
+        // Mengirimkan data ke server
+        post(route("keranjang.pinjam"), {
+            borrowData, // Mengirimkan data item yang dipilih
+            selected_ids: selectedIds, // Mengirimkan id item yang dipilih
+        });
+    };
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -95,9 +126,9 @@ const Keranjang = ({ cartItems = [] }) => {
                                         </td>
                                         <td className="px-4 py-2 border-b border-gray-200">
                                             <img
-                                                src={item.image_satu}
+                                                src={item.gambar_satu}
                                                 alt={item.nama_koleksi}
-                                                className="w-16 h-16 object-cover"
+                                                className="w-20 h-20 object-cover"
                                             />
                                         </td>
                                         <td className="px-4 py-2 border-b border-gray-200">
@@ -107,20 +138,26 @@ const Keranjang = ({ cartItems = [] }) => {
                                             <input
                                                 type="number"
                                                 value={item.jumlah_dipinjam}
-                                                min="1"
                                                 onChange={(e) =>
                                                     handleQuantityChange(
                                                         item.id,
-                                                        parseInt(e.target.value)
+                                                        e.target.value
                                                     )
                                                 }
-                                                className="w-16 border border-gray-300 rounded"
+                                                min="1"
+                                                max="100"
+                                                className="w-12"
                                             />
                                         </td>
                                         <td className="px-4 py-2 border-b border-gray-200">
                                             <button
                                                 onClick={() => {
-                                                    // handleDelete logic
+                                                    setItems(
+                                                        items.filter(
+                                                            (i) =>
+                                                                i.id !== item.id
+                                                        )
+                                                    );
                                                 }}
                                                 className="text-red-600 hover:text-red-800"
                                             >
@@ -132,21 +169,13 @@ const Keranjang = ({ cartItems = [] }) => {
                             </tbody>
                         </table>
                     </div>
-
-                    <div className="bg-white shadow rounded-md p-4 mt-4">
-                        <div className="mt-4 flex justify-between items-center">
-                            <h3 className="text-lg font-semibold">
-                                Subtotal: {checkedItems.length} item terpilih
-                            </h3>
-                            <Link
-                                href={route("keranjang.pinjam")} // Menggunakan Link untuk navigasi
-                                method="get"
-                                data={{ cartItems: checkedItems }} // Kirim data item yang dipilih
-                                className="bg-yellow-500 text-black py-2 px-4 rounded-md ml-2"
-                            >
-                                Pinjam Sekarang
-                            </Link>
-                        </div>
+                    <div className="mt-4 flex justify-end">
+                        <button
+                            className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600"
+                            onClick={handleBorrow}
+                        >
+                            Pinjam
+                        </button>
                     </div>
                 </div>
             </div>

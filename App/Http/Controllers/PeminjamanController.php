@@ -19,107 +19,105 @@ class PeminjamanController extends Controller
      */
     // Menampilkan isi keranjang
     public function showCart()
-{
-    // Ambil data keranjang dari sesi
-    $cart = session()->get('cart', []);
+    {
+        // Ambil data keranjang dari sesi
+        $cart = session()->get('cart', []);
 
-    // Ambil data koleksi dari keranjang berdasarkan koleksi_id
-    $cartItems = [];
-    foreach ($cart as $itemId => $item) {
-        $itemDetails = KelolaKoleksi::find($itemId);
-        if ($itemDetails) {
-            // Gabungkan informasi item dengan data dari database
-            $cartItems[] = [
-                'id' => $itemId,
-                'koleksi_id' => $itemDetails->id, // Gunakan kunci yang benar untuk ID
-                'image_satu' => $itemDetails->gambar_satu,
-                'nama_koleksi' => $itemDetails->nama_koleksi,
-                'jumlah_dipinjam' => $item['jumlah_dipinjam'] ?? 0, // Gunakan nilai default jika tidak ada
+        // Ambil data koleksi dari keranjang berdasarkan koleksi_id
+        $cartItems = [];
+        foreach ($cart as $itemId => $item) {
+            $itemDetails = KelolaKoleksi::find($itemId);
+            if ($itemDetails) {
+                // Gabungkan informasi item dengan data dari database
+                $cartItems[] = [
+                    'id' => $itemId,
+                    'koleksi_id' => $itemDetails->id,
+                    'image_satu' => $itemDetails->gambar_satu,
+                    'nama_koleksi' => $itemDetails->nama_koleksi,
+                    'jumlah_dipinjam' => $item['jumlah_dipinjam'] ?? 0, // Gunakan nilai default jika tidak ada
+                    'checked' => $item['checked'] ?? false, // Default false for checked
+                ];
+            }
+        }
+
+        // Kirim data ke halaman frontend melalui Inertia
+        return Inertia::render('Keranjang', [
+            'cartItems' => $cartItems,
+        ]);
+    }
+
+    // Menambahkan item ke keranjang
+    public function addToCart(Request $request)
+    {
+        // Validasi input dengan batas maksimum jika ada
+        $request->validate([
+            'koleksi_id' => 'required|exists:kelola_koleksi,id',
+            'jumlah_dipinjam' => 'required|integer|min:1|max:100', // Sesuaikan max dengan kebutuhan Anda
+        ]);
+
+        // Ambil ID koleksi dan jumlah item yang ingin ditambahkan
+        $itemId = $request->input('koleksi_id');
+        $jumlah_dipinjam = $request->input('jumlah_dipinjam', 1); // Default ke 1 jika tidak diberikan
+
+        // Ambil keranjang dari sesi
+        $cart = session()->get('cart', []);
+
+        // Cek apakah item sudah ada di keranjang
+        if (isset($cart[$itemId])) {
+            // Jika item sudah ada, tambahkan jumlahnya
+            $cart[$itemId]['jumlah_dipinjam'] += $jumlah_dipinjam;
+        } else {
+            // Jika item belum ada, ambil data item dari database
+            $item = KelolaKoleksi::find($itemId);
+
+            // Cek jika item tidak ditemukan, kembali dengan pesan error (hanya untuk berjaga-jaga)
+            if (!$item) {
+                return back()->with('error', 'Item tidak ditemukan.');
+            }
+
+            // Simpan item ke dalam keranjang dengan atribut yang diperlukan
+            $cart[$itemId] = [
+                'koleksi_id' => $item->id,
+                'gambar_satu' => $item->gambar_satu,
+                'nama_koleksi' => $item->nama_koleksi,
+                'jumlah_dipinjam' => $jumlah_dipinjam,
                 'checked' => $item['checked'] ?? false, // Default false for checked
             ];
         }
+
+        // Simpan data keranjang ke sesi
+        session()->put('cart', $cart);
+
+        return back()->with('success', 'Item berhasil ditambahkan ke keranjang.');
     }
 
-    // Kirim data ke halaman frontend melalui Inertia
-    return Inertia::render('Keranjang', [
-        'cartItems' => $cartItems,
-    ]);
-}
-
-
-public function addToCart(Request $request)
+    // Memproses peminjaman
+    public function pinjam(Request $request)
 {
-    // Validasi input
-    $request->validate([
-        'koleksi_id' => 'required|exists:kelola_koleksi,id',  // Pastikan koleksi_id valid dan ada di database
-        'jumlah_dipinjam' => 'required|integer|min:1',  // Pastikan jumlah_dipinjam adalah angka dan minimal 1
-    ]);
-
-    // Ambil ID koleksi dan jumlah item yang ingin ditambahkan
-    $itemId = $request->input('koleksi_id');
-    $jumlah_dipinjam = $request->input('jumlah_dipinjam', 1); // Jika jumlah_dipinjam tidak diberikan, default ke 1
-
-    // Ambil keranjang dari sesi
+    // Ambil data dari request
     $cart = session()->get('cart', []);
+    $selectedIds = $request->input('selected_ids', []); // Ambil selected_ids
 
-    // Cek apakah item sudah ada di keranjang
-    if (isset($cart[$itemId])) {
-        // Jika item sudah ada, tambahkan jumlahnya
-        if (!isset($cart[$itemId]['jumlah_dipinjam'])) {
-            // Jika kunci 'jumlah_dipinjam' belum diatur, inisialisasi dengan 0
-            $cart[$itemId]['jumlah_dipinjam'] = 0;
-        }
-        $cart[$itemId]['jumlah_dipinjam'] += $jumlah_dipinjam;
-    } else {
-        // Jika item belum ada, ambil data item dari database
-        $item = KelolaKoleksi::find($itemId);
-        
-        // Cek jika item tidak ditemukan, kembali dengan pesan error
-        if (!$item) {
-            return back()->with('error', 'Item tidak ditemukan.');
-        }
 
-        // Simpan item ke dalam keranjang dengan atribut yang diperlukan
-        $cart[$itemId] = [
-            'koleksi_id' => $item->id, // Pastikan Anda menggunakan kunci yang benar untuk ID
-            'imageUrl' => $item->gambar_satu,
-            'nama_koleksi' => $item->nama_koleksi,
-            'jumlah_dipinjam' => $jumlah_dipinjam, // Gunakan nilai dari input
-        ];
+    // Cek jika cart kosong
+    if (empty($cart)) {
+        return redirect()->route('keranjang')->with('error', 'Keranjang Anda kosong.');
     }
-
-    // Simpan data keranjang ke sesi
-    session()->put('cart', $cart);
-
-    return back()->with('success', 'Item berhasil ditambahkan ke keranjang.');
-}
-
-    /**
-     * Store a newly created resource in storage.
-     */
-
-    public function borrow(Request $request)
-{
-    // Ambil data keranjang dari sesi
-    $cart = session()->get('cart', []);
-
-    // Ambil koleksi ID yang dipilih untuk checkout dari input request
-    $selectedIds = $request->input('selected_ids', []);
 
     // Filter koleksi yang dipilih untuk checkout
     $checkoutItems = [];
     foreach ($cart as $itemId => $item) {
         if (in_array($itemId, $selectedIds)) {
+            // Cari detail koleksi dari database
             $itemDetails = KelolaKoleksi::find($itemId);
             if ($itemDetails) {
                 // Gabungkan informasi item dengan data dari database
                 $checkoutItems[] = [
                     'id' => $itemId,
-                    'koleksi_id' => $itemDetails->id, // Pastikan ID yang benar digunakan
-                    'image_satu' => $itemDetails->gambar_satu,
+                    'koleksi_id' => $itemDetails->id,
                     'nama_koleksi' => $itemDetails->nama_koleksi,
-                    'jumlah_dipinjam' => $item['jumlah_dipinjam'] ?? 0,
-                    // Tambahkan informasi tambahan yang diperlukan
+                    'gambar_satu' => $itemDetails->gambar_satu,
+                    'jumlah_dipinjam' => $item['jumlah_dipinjam'], // Ambil jumlah dari sesi keranjang
                 ];
             }
         }
@@ -128,11 +126,15 @@ public function addToCart(Request $request)
     // Simpan data checkout ke sesi
     session()->put('checkout_items', $checkoutItems);
 
-    // Redirect ke halaman "Pinjam" dengan data koleksi yang akan di checkout
     return Inertia::render('Pinjam', [
         'checkoutItems' => $checkoutItems,
+        'user' => auth()->user(), // Jika menggunakan autentikasi pengguna
     ]);
 }
+
+
+
+
 
 
     public function checkout(Request $request)
@@ -204,7 +206,7 @@ public function addToCart(Request $request)
             // Kembali dengan pesan error
             return back()->with('error', 'Terjadi kesalahan saat memproses peminjaman: ' . $e->getMessage());
         }
-
+    }
 
     // // Validasi data input
     // $validatedData = $request->validate([
@@ -270,7 +272,6 @@ public function addToCart(Request $request)
 
     // // Redirect atau kirim pesan sukses
     // return redirect()->route('peminjaman')->with('success', 'Peminjaman berhasil diajukan');
-}
 
 
     /**
