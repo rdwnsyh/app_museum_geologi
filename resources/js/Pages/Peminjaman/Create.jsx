@@ -5,17 +5,18 @@ import LoadingButton from "@/Components/Button/LoadingButton";
 import TextInput from "@/Components/Form/TextInput";
 import FieldGroup from "@/Components/Form/FieldGroup";
 import FileInput from "@/Components/Form/FileInput";
-import { usePage } from '@inertiajs/react'; // Import usePage hook
+import { usePage, Inertia } from '@inertiajs/react'; // Import usePage and Inertia
 
 const Create = () => {
-    const { users_id } = usePage().props; // Get users_id from the page props
+    const { users_id, koleksi } = usePage().props; // Get users_id and koleksi data from the page props
 
     const { data, setData, errors, post, processing } = useForm({
-        users_id: users_id, // Automatically set users_id from the page props
+        users_id: users_id || "", // Default to an empty string if users_id is undefined
         tanggal_pinjam: '',
         tanggal_jatuh_tempo: '',
         identitas: null,
         surat_permohonan: null,
+        items: [], // Make sure items array is initialized, assuming you will pass it via props
     });
 
     // State for notification modal
@@ -29,7 +30,7 @@ const Create = () => {
         // Create a FormData object to send the files and form data
         const formData = new FormData();
         Object.entries(data).forEach(([key, value]) => {
-            formData.append(key, value); // Append each form data entry
+            if (value) formData.append(key, value); // Append only if value is not null
         });
 
         post(route("peminjaman.store"), {
@@ -57,6 +58,19 @@ const Create = () => {
     // Handle file change (for identitas and surat_permohonan)
     const handleFileChange = (name, file) => {
         setData(name, file);
+    };
+
+    // Handle adding items to the peminjaman
+    const handleAddItem = (item) => {
+        const newItem = {
+            id: item.id,
+            nama_koleksi: item.nama_koleksi,
+            jumlah_dipinjam: 1, // Default quantity
+            image_satu: item.image_satu,
+        };
+
+        // Add item to the items array in form data
+        setData("items", [...data.items, newItem]);
     };
 
     return (
@@ -116,6 +130,95 @@ const Create = () => {
                             />
                         </FieldGroup>
                     </div>
+
+                    {/* Table for showing available koleksi */}
+                    <div className="mt-6">
+                        <h3 className="font-semibold mb-2">Koleksi yang Tersedia</h3>
+                        <div className="overflow-x-auto bg-gray-50 rounded-lg shadow">
+                            <table className="min-w-full table-auto">
+                                <thead className="bg-indigo-600 text-white">
+                                    <tr>
+                                        <th className="px-4 py-2 text-left">Nama Koleksi</th>
+                                        <th className="px-4 py-2 text-left">Jumlah Tersedia</th>
+                                        <th className="px-4 py-2 text-left">Gambar</th>
+                                        <th className="px-4 py-2 text-left">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {koleksi && koleksi.length > 0 ? (
+                                        koleksi.map((item) => (
+                                            <tr key={item.id} className="border-b">
+                                                <td className="px-4 py-2">{item.nama_koleksi}</td>
+                                                <td className="px-4 py-2">{item.jumlah_tersedia}</td>
+                                                <td className="px-4 py-2">
+                                                    <img
+                                                        src={item.image_satu}
+                                                        alt={item.nama_koleksi}
+                                                        className="w-12 h-12 object-cover rounded"
+                                                    />
+                                                </td>
+                                                <td className="px-4 py-2">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleAddItem(item)}
+                                                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                                    >
+                                                        Tambah
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="4" className="px-4 py-2 text-center text-gray-500">
+                                                Tidak ada koleksi yang tersedia
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {/* Table for selected items */}
+                    <div className="mt-6">
+                        <h3 className="font-semibold mb-2">Items yang Dipilih</h3>
+                        <div className="overflow-x-auto bg-gray-50 rounded-lg shadow">
+                            <table className="min-w-full table-auto">
+                                <thead className="bg-indigo-600 text-white">
+                                    <tr>
+                                        <th className="px-4 py-2 text-left">Nama Koleksi</th>
+                                        <th className="px-4 py-2 text-left">Jumlah Dipinjam</th>
+                                        <th className="px-4 py-2 text-left">Gambar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {data.items && data.items.length > 0 ? (
+                                        data.items.map((item) => (
+                                            <tr key={item.id} className="border-b">
+                                                <td className="px-4 py-2">{item.nama_koleksi}</td>
+                                                <td className="px-4 py-2">{item.jumlah_dipinjam}</td>
+                                                <td className="px-4 py-2">
+                                                    <img
+                                                        src={item.image_satu}
+                                                        alt={item.nama_koleksi}
+                                                        className="w-12 h-12 object-cover rounded"
+                                                    />
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="3" className="px-4 py-2 text-center text-gray-500">
+                                                Tidak ada item yang dipilih
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                     <div className="flex items-center justify-between px-8 py-4 bg-gray-100 border-t border-gray-200">
                         <LoadingButton
                             loading={processing}

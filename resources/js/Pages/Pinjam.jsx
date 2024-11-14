@@ -6,7 +6,7 @@ import TextInput from "@/Components/Form/TextInput";
 import FieldGroup from "@/Components/Form/FieldGroup";
 import FileInput from "@/Components/Form/FileInput";
 
-const Pinjam = ({ checkoutItems = [] }) => {
+const Pinjam = ({ checkoutItems = [], koleksi = [] }) => {
     // Initialize form data using useForm from Inertia
     const { data, setData, post, errors, processing } = useForm({
         items: checkoutItems, // Use the items passed from the backend
@@ -20,6 +20,20 @@ const Pinjam = ({ checkoutItems = [] }) => {
     // Handle file input change
     const handleFileChange = (fieldName, file) => {
         setData(fieldName, file);
+    };
+
+    // Handle adding item to the list
+    const handleAddItem = (item) => {
+        // Check if item already exists
+        const isItemSelected = data.items.some((selectedItem) => selectedItem.id === item.id);
+        if (!isItemSelected) {
+            setData("items", [...data.items, { ...item, jumlah_dipinjam: 1 }]);
+        }
+    };
+
+    // Handle removing item from the list
+    const handleRemoveItem = (itemId) => {
+        setData("items", data.items.filter((item) => item.id !== itemId));
     };
 
     // Handle form submission
@@ -95,23 +109,52 @@ const Pinjam = ({ checkoutItems = [] }) => {
                         </FieldGroup>
                     </div>
 
+                    {/* Table for selected items */}
                     <div className="mt-6">
                         <h3 className="font-semibold mb-2">Items yang Dipilih</h3>
-                        <ul className="space-y-2">
-                            {data.items.map((item) => (
-                                <li key={item.id} className="flex justify-between items-center border-b py-2">
-                                    <div className="flex items-center">
-                                        <img
-                                            src={item.image_satu}
-                                            alt={item.nama_koleksi}
-                                            className="w-12 h-12 object-cover rounded mr-4"
-                                        />
-                                        <span>{item.nama_koleksi}</span>
-                                    </div>
-                                    <span>{item.jumlah_dipinjam}</span>
-                                </li>
-                            ))}
-                        </ul>
+                        <div className="overflow-x-auto bg-gray-50 rounded-lg shadow">
+                            <table className="min-w-full table-auto">
+                                <thead className="bg-indigo-600 text-white">
+                                    <tr>
+                                        <th className="px-4 py-2 text-left">Nama Koleksi</th>
+                                        <th className="px-4 py-2 text-left">Jumlah Dipinjam</th>
+                                        <th className="px-4 py-2 text-left">Gambar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {data.items && data.items.length > 0 ? (
+                                        data.items.map((item) => (
+                                            <tr key={item.id} className="border-b">
+                                                <td className="px-4 py-2">{item.nama_koleksi}</td>
+                                                <td className="px-4 py-2">{item.jumlah_dipinjam}</td>
+                                                <td className="px-4 py-2">
+                                                    <img
+                                                        src={item.image_satu}
+                                                        alt={item.nama_koleksi}
+                                                        className="w-12 h-12 object-cover rounded"
+                                                    />
+                                                </td>
+                                                <td className="px-4 py-2">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleRemoveItem(item.id)}
+                                                        className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                                                    >
+                                                        Hapus
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="4" className="px-4 py-2 text-center text-gray-500">
+                                                Tidak ada item yang dipilih
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <button

@@ -14,7 +14,7 @@ class DashboardPeminjamanController extends Controller
     public function index()
     {
         // Mengambil semua data pengguna yang akan meminjam koleksi dari tabel Cart
-        $collectionsToBorrow = Peminjaman::with('user', 'items.koleksi')  // Memuat relasi user, items, dan koleksi
+        $collectionsToBorrow = Peminjaman::with('users', 'items.koleksi')  // Memuat relasi user, items, dan koleksi
             ->get(); // Mengambil semua data
 
         // Mengembalikan data ke frontend (dashboard) menggunakan Inertia
@@ -29,7 +29,7 @@ class DashboardPeminjamanController extends Controller
     public function create()
     {
         return Inertia::render('Peminjaman/Create', [
-            'users_id' => auth()->user()->id, // Pass the current authenticated user's ID
+            'users_id' => auth()->users()->id, // Pass the current authenticated user's ID
         ]);
     }
 

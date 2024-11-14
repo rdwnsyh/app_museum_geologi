@@ -23,7 +23,7 @@ class Peminjaman extends Model
      ];
  
      // Relasi ke User
-     public function user()
+     public function users()
     {
         return $this->belongsTo(User::class, 'users_id');
     }
