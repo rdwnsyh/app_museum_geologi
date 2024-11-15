@@ -131,55 +131,6 @@ const Create = () => {
                         </FieldGroup>
                     </div>
 
-                    {/* Table for showing available koleksi */}
-                    <div className="mt-6">
-                        <h3 className="font-semibold mb-2">Koleksi yang Tersedia</h3>
-                        <div className="overflow-x-auto bg-gray-50 rounded-lg shadow">
-                            <table className="min-w-full table-auto">
-                                <thead className="bg-indigo-600 text-white">
-                                    <tr>
-                                        <th className="px-4 py-2 text-left">Nama Koleksi</th>
-                                        <th className="px-4 py-2 text-left">Jumlah Tersedia</th>
-                                        <th className="px-4 py-2 text-left">Gambar</th>
-                                        <th className="px-4 py-2 text-left">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {koleksi && koleksi.length > 0 ? (
-                                        koleksi.map((item) => (
-                                            <tr key={item.id} className="border-b">
-                                                <td className="px-4 py-2">{item.nama_koleksi}</td>
-                                                <td className="px-4 py-2">{item.jumlah_tersedia}</td>
-                                                <td className="px-4 py-2">
-                                                    <img
-                                                        src={item.image_satu}
-                                                        alt={item.nama_koleksi}
-                                                        className="w-12 h-12 object-cover rounded"
-                                                    />
-                                                </td>
-                                                <td className="px-4 py-2">
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => handleAddItem(item)}
-                                                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                                                    >
-                                                        Tambah
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td colSpan="4" className="px-4 py-2 text-center text-gray-500">
-                                                Tidak ada koleksi yang tersedia
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
                     {/* Table for selected items */}
                     <div className="mt-6">
                         <h3 className="font-semibold mb-2">Items yang Dipilih</h3>

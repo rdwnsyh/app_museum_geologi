@@ -93,11 +93,10 @@ class PeminjamanController extends Controller
 
     // Memproses peminjaman
     public function pinjam(Request $request)
-{
+    {
     // Ambil data dari request
     $cart = session()->get('cart', []);
-    $selectedIds = $request->input('selected_ids', []); // Ambil selected_ids
-
+    $selectedIds = $request->input('selected_ids', []); // Ambil selected_ids yang dikirim dari frontend
 
     // Cek jika cart kosong
     if (empty($cart)) {
@@ -126,16 +125,12 @@ class PeminjamanController extends Controller
     // Simpan data checkout ke sesi
     session()->put('checkout_items', $checkoutItems);
 
+    // Kirim data ke halaman Pinjam dengan informasi koleksi yang dipilih
     return Inertia::render('Pinjam', [
         'checkoutItems' => $checkoutItems,
         'user' => auth()->user(), // Jika menggunakan autentikasi pengguna
     ]);
-}
-
-
-
-
-
+    }
 
     public function checkout(Request $request)
     {
