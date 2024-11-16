@@ -40,9 +40,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/keranjang/add', [PeminjamanController::class, 'addToCart'])->name('keranjang.add');
     
     // Proses checkout dari keranjang
-    Route::post('/keranjang/pinjam', [PeminjamanController::class, 'pinjam'])->name('keranjang.pinjam');
+    Route::get('/keranjang/pinjam', [PeminjamanController::class, 'pinjam'])->name('keranjang.pinjam');
     // Proses checkout dari keranjang
-    Route::post('/keranjang/checkout', [PeminjamanController::class, 'checkout'])->name('keranjang.checkout');
+    Route::post('/keranjang', [PeminjamanController::class, 'checkout'])->name('keranjang.checkout');
+
     // Menghapus item dari keranjang
     Route::delete('/keranjang/remove/{id}', [PeminjamanController::class, 'removeFromCart'])->name('keranjang.remove');
 });

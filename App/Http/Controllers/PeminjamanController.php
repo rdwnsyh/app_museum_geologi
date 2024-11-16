@@ -133,75 +133,77 @@ class PeminjamanController extends Controller
     }
 
     public function checkout(Request $request)
-    {
-        // Validasi data yang diperlukan untuk peminjaman
-        $validator = Validator::make($request->all(), [
-            'users_id' => 'required|exists:users,id', // Pastikan pengguna terdaftar di tabel users
-            'tanggal_pinjam' => 'required|date|after_or_equal:today', // Tanggal pinjam tidak boleh sebelum hari ini
-            'tanggal_jatuh_tempo' => 'required|date|after_or_equal:tanggal_pinjam', // Jatuh tempo harus setelah atau sama dengan tanggal pinjam
-            'status' => 'required|in:Pengajuan,Sedang di Pinjam,Terlambat,Ditolak,Selesai', // Validasi status peminjaman
-            'identitas' => 'required|file|mimes:pdf,doc,docx|max:2048', // Validasi file identitas peminjam
-            'surat_permohonan' => 'required|file|mimes:pdf,doc,docx|max:2048', // Validasi file surat permohonan (PDF, DOC, DOCX maksimal 2MB)
+{
+    // Validasi data yang diperlukan untuk peminjaman
+    $validator = Validator::make($request->all(), [
+        'users_id' => 'required|exists:users,id', // Pastikan pengguna terdaftar di tabel users
+        'tanggal_pinjam' => 'required|date|after_or_equal:today', // Tanggal pinjam tidak boleh sebelum hari ini
+        'tanggal_jatuh_tempo' => 'required|date|after_or_equal:tanggal_pinjam', // Jatuh tempo harus setelah atau sama dengan tanggal pinjam
+        'status' => 'required|in:Pengajuan,Sedang di Pinjam,Terlambat,Ditolak,Selesai', // Validasi status peminjaman
+        'identitas' => 'required|file|mimes:pdf,doc,docx|max:2048', // Validasi file identitas peminjam
+        'surat_permohonan' => 'required|file|mimes:pdf,doc,docx|max:2048', // Validasi file surat permohonan (PDF, DOC, DOCX maksimal 2MB)
 
-            // Validasi untuk detail peminjaman
-            'detail_peminjaman.*.koleksi_id' => 'required|exists:kelola_koleksi,id', // Pastikan koleksi_id valid
-            'detail_peminjaman.*.jumlah_dipinjam' => 'required|integer|min:1', // Jumlah barang yang dipinjam harus lebih dari 0
-            'detail_peminjaman.*.kondisi' => 'required|string|max:255', // Kondisi barang harus diisi dan maksimal 255 karakter
+        // Validasi untuk detail peminjaman
+        'detail_peminjaman.*.koleksi_id' => 'required|exists:kelola_koleksi,id', // Pastikan koleksi_id valid
+        'detail_peminjaman.*.jumlah_dipinjam' => 'required|integer|min:1', // Jumlah barang yang dipinjam harus lebih dari 0
+        'detail_peminjaman.*.kondisi' => 'required|string|max:255', // Kondisi barang harus diisi dan maksimal 255 karakter
+    ]);
+
+    // Jika validasi gagal, kembalikan dengan pesan error
+    if ($validator->fails()) {
+        return back()->withErrors($validator)->withInput();
+    }
+
+    // Ambil item dari keranjang di sesi
+    $cart = session()->get('cart', []);
+
+    // Periksa apakah keranjang kosong
+    if (empty($cart)) {
+        return back()->with('error', 'Keranjang kosong. Tidak ada item untuk dipinjam.');
+    }
+
+    // Mulai transaksi
+    DB::beginTransaction();
+
+    try {
+        // Buat data peminjaman baru
+        $peminjaman = Peminjaman::create([
+            'users_id' => Auth::id(),
+            'tanggal_pinjam' => $request->tanggal_pinjam,
+            'tanggal_jatuh_tempo' => $request->tanggal_jatuh_tempo,
+            'status' => 'Pengajuan', // Status default adalah Pengajuan
+            'identitas' => $request->file('identitas')->store('identitas_peminjam'), // Simpan file identitas
+            'surat_permohonan' => $request->file('surat_permohonan')->store('surat_permohonan'), // Simpan file surat permohonan
         ]);
 
-        // Jika validasi gagal, kembalikan dengan pesan error
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
-        // Ambil item dari keranjang di sesi
-        $cart = session()->get('cart', []);
-
-        // Periksa apakah keranjang kosong
-        if (empty($cart)) {
-            return back()->with('error', 'Keranjang kosong. Tidak ada item untuk dipinjam.');
-        }
-
-        // Mulai transaksi
-        DB::beginTransaction();
-
-        try {
-            // Buat data peminjaman baru
-            $peminjaman = Peminjaman::create([
-                'users_id' => Auth::id(),
-                'tanggal_pinjam' => $request->tanggal_pinjam,
-                'tanggal_jatuh_tempo' => $request->tanggal_jatuh_tempo,
-                'status' => 'Pengajuan', // Status default adalah Pengajuan
-                'identitas' => $request->file('identitas')->store('identitas_peminjam'), // Simpan file identitas
-                'surat_permohonan' => $request->file('surat_permohonan')->store('surat_permohonan'), // Simpan file surat permohonan
+        // Buat data detail peminjaman untuk setiap item di keranjang
+        foreach ($cart as $id => $item) {
+            DetailPeminjaman::create([
+                'peminjaman_id' => $peminjaman->id,
+                'koleksi_id' => $id,
+                'jumlah_dipinjam' => $item['jumlah_dipinjam'],
+                'kondisi' => $item['kondisi'] ?? 'Baik', // Kondisi diambil dari item keranjang
             ]);
-
-            // Buat data detail peminjaman untuk setiap item di keranjang
-            foreach ($cart as $id => $item) {
-                DetailPeminjaman::create([
-                    'peminjaman_id' => $peminjaman->id,
-                    'koleksi_id' => $id,
-                    'jumlah_dipinjam' => $item['jumlah_dipinjam'],
-                    'kondisi' => $item['kondisi'], // Kondisi diambil dari item keranjang
-                ]);
-            }
-
-            // Hapus keranjang dari sesi
-            session()->forget('cart');
-
-            // Komit transaksi
-            DB::commit();
-
-            // Kembali ke halaman dengan pesan sukses
-            return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil diajukan');
-        } catch (\Exception $e) {
-            // Rollback transaksi jika terjadi kesalahan
-            DB::rollback();
-
-            // Kembali dengan pesan error
-            return back()->with('error', 'Terjadi kesalahan saat memproses peminjaman: ' . $e->getMessage());
         }
+
+        // Hapus keranjang dari sesi
+        session()->forget('cart');
+
+        // Komit transaksi
+        DB::commit();
+
+        // Kembali ke halaman dengan pesan sukses
+        return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil diajukan');
+    } catch (\Exception $e) {
+        // Rollback transaksi jika terjadi kesalahan
+        DB::rollback();
+
+        // Kembali dengan pesan error
+        return back()->with('error', 'Terjadi kesalahan saat memproses peminjaman: ' . $e->getMessage());
     }
+}
+
+
 
     // // Validasi data input
     // $validatedData = $request->validate([
