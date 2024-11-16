@@ -19,32 +19,32 @@ class PeminjamanController extends Controller
      */
     // Menampilkan isi keranjang
     public function showCart()
-    {
-        // Ambil data keranjang dari sesi
-        $cart = session()->get('cart', []);
+{
+    // Ambil data keranjang dari sesi
+    $cart = session()->get('cart', []);
 
-        // Ambil data koleksi dari keranjang berdasarkan koleksi_id
-        $cartItems = [];
-        foreach ($cart as $itemId => $item) {
-            $itemDetails = KelolaKoleksi::find($itemId);
-            if ($itemDetails) {
-                // Gabungkan informasi item dengan data dari database
-                $cartItems[] = [
-                    'id' => $itemId,
-                    'koleksi_id' => $itemDetails->id,
-                    'image_satu' => $itemDetails->gambar_satu,
-                    'nama_koleksi' => $itemDetails->nama_koleksi,
-                    'jumlah_dipinjam' => $item['jumlah_dipinjam'] ?? 0, // Gunakan nilai default jika tidak ada
-                    'checked' => $item['checked'] ?? false, // Default false for checked
-                ];
-            }
+    // Siapkan item keranjang dengan detail dari database
+    $cartItems = [];
+    foreach ($cart as $itemId => $item) {
+        $itemDetails = KelolaKoleksi::find($itemId);
+        if ($itemDetails) {
+            $cartItems[] = [
+                'id' => $itemId,
+                'koleksi_id' => $itemDetails->id,
+                'image_satu' => $itemDetails->gambar_satu,
+                'nama_koleksi' => $itemDetails->nama_koleksi,
+                'jumlah_dipinjam' => $item['jumlah_dipinjam'] ?? 0,
+                'checked' => isset($item['checked']) ? (bool)$item['checked'] : false, // Konversi ke boolean
+            ];
         }
-
-        // Kirim data ke halaman frontend melalui Inertia
-        return Inertia::render('Keranjang', [
-            'cartItems' => $cartItems,
-        ]);
     }
+
+    // Kirim item keranjang ke frontend menggunakan Inertia
+    return Inertia::render('Keranjang', [
+        'cartItems' => $cartItems,
+    ]);
+}
+
 
     // Menambahkan item ke keranjang
     public function addToCart(Request $request)
@@ -55,12 +55,14 @@ class PeminjamanController extends Controller
             'jumlah_dipinjam' => 'required|integer|min:1|max:100', // Sesuaikan max dengan kebutuhan Anda
         ]);
 
+
         // Ambil ID koleksi dan jumlah item yang ingin ditambahkan
         $itemId = $request->input('koleksi_id');
         $jumlah_dipinjam = $request->input('jumlah_dipinjam', 1); // Default ke 1 jika tidak diberikan
 
         // Ambil keranjang dari sesi
         $cart = session()->get('cart', []);
+
 
         // Cek apakah item sudah ada di keranjang
         if (isset($cart[$itemId])) {
@@ -93,44 +95,46 @@ class PeminjamanController extends Controller
 
     // Memproses peminjaman
     public function pinjam(Request $request)
-    {
-    // Ambil data dari request
+{
+    // Ambil data keranjang dari sesi
     $cart = session()->get('cart', []);
-    $selectedIds = $request->input('selected_ids', []); // Ambil selected_ids yang dikirim dari frontend
-
-    // Cek jika cart kosong
+    $borrowData = $request->input('borrowData', []); // Menyesuaikan dengan data yang dikirim dari React form
+    
+    // Pastikan keranjang tidak kosong
     if (empty($cart)) {
         return redirect()->route('keranjang')->with('error', 'Keranjang Anda kosong.');
     }
 
-    // Filter koleksi yang dipilih untuk checkout
+    // Filter item yang dipilih untuk checkout
     $checkoutItems = [];
     foreach ($cart as $itemId => $item) {
-        if (in_array($itemId, $selectedIds)) {
-            // Cari detail koleksi dari database
+        if (in_array($itemId, $borrowData)) {
             $itemDetails = KelolaKoleksi::find($itemId);
             if ($itemDetails) {
-                // Gabungkan informasi item dengan data dari database
                 $checkoutItems[] = [
                     'id' => $itemId,
                     'koleksi_id' => $itemDetails->id,
                     'nama_koleksi' => $itemDetails->nama_koleksi,
                     'gambar_satu' => $itemDetails->gambar_satu,
-                    'jumlah_dipinjam' => $item['jumlah_dipinjam'], // Ambil jumlah dari sesi keranjang
+                    'jumlah_dipinjam' => $item['jumlah_dipinjam'],
                 ];
             }
         }
     }
-
-    // Simpan data checkout ke sesi
+    
+    // Simpan item checkout di sesi
     session()->put('checkout_items', $checkoutItems);
 
-    // Kirim data ke halaman Pinjam dengan informasi koleksi yang dipilih
+    // Tampilkan halaman Pinjam dengan item yang dipilih
     return Inertia::render('Pinjam', [
         'checkoutItems' => $checkoutItems,
-        'user' => auth()->user(), // Jika menggunakan autentikasi pengguna
+        'user' => auth()->user(),
     ]);
-    }
+}
+
+
+    
+
 
     public function checkout(Request $request)
 {
@@ -139,9 +143,9 @@ class PeminjamanController extends Controller
         'users_id' => 'required|exists:users,id', // Pastikan pengguna terdaftar di tabel users
         'tanggal_pinjam' => 'required|date|after_or_equal:today', // Tanggal pinjam tidak boleh sebelum hari ini
         'tanggal_jatuh_tempo' => 'required|date|after_or_equal:tanggal_pinjam', // Jatuh tempo harus setelah atau sama dengan tanggal pinjam
-        'status' => 'required|in:Pengajuan,Sedang di Pinjam,Terlambat,Ditolak,Selesai', // Validasi status peminjaman
-        'identitas' => 'required|file|mimes:pdf,doc,docx|max:2048', // Validasi file identitas peminjam
-        'surat_permohonan' => 'required|file|mimes:pdf,doc,docx|max:2048', // Validasi file surat permohonan (PDF, DOC, DOCX maksimal 2MB)
+        'status' => 'in:Pengajuan,Sedang di Pinjam,Terlambat,Ditolak,Selesai' ?? 'Pengajuan', // Validasi status peminjaman
+        'identitas' => 'required|file|mimes:pdf,doc,docx,jpeg,png,jpg|max:2048', // Validasi file identitas peminjam
+        'surat_permohonan' => 'required|file|mimes:pdf,doc,docx,jpeg,png,jpg|max:2048', // Validasi file surat permohonan (PDF, DOC, DOCX maksimal 2MB)
 
         // Validasi untuk detail peminjaman
         'detail_peminjaman.*.koleksi_id' => 'required|exists:kelola_koleksi,id', // Pastikan koleksi_id valid
@@ -172,7 +176,7 @@ class PeminjamanController extends Controller
             'tanggal_pinjam' => $request->tanggal_pinjam,
             'tanggal_jatuh_tempo' => $request->tanggal_jatuh_tempo,
             'status' => 'Pengajuan', // Status default adalah Pengajuan
-            'identitas' => $request->file('identitas')->store('identitas_peminjam'), // Simpan file identitas
+            'identitas' => $request->file('identitas')->store('identitas'), // Simpan file identitas
             'surat_permohonan' => $request->file('surat_permohonan')->store('surat_permohonan'), // Simpan file surat permohonan
         ]);
 

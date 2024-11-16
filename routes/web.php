@@ -36,11 +36,12 @@ Route::get('/detail/{id}/{type}', [SearchController::class, 'detail'])->name('de
 Route::middleware(['auth'])->group(function () {
     // Menampilkan isi keranjang
     Route::get('/keranjang', [PeminjamanController::class, 'showCart'])->name('keranjang');
-    // Menambahkan item ke keranjang
+    // Menambahkan item ke kyeranjang
     Route::post('/keranjang/add', [PeminjamanController::class, 'addToCart'])->name('keranjang.add');
     
     // Proses checkout dari keranjang
-    Route::get('/keranjang/pinjam', [PeminjamanController::class, 'pinjam'])->name('keranjang.pinjam');
+    Route::match(['get', 'post'], '/keranjang/pinjam', [PeminjamanController::class, 'pinjam'])->name('keranjang.pinjam');
+
     // Proses checkout dari keranjang
     Route::post('/keranjang', [PeminjamanController::class, 'checkout'])->name('keranjang.checkout');
 

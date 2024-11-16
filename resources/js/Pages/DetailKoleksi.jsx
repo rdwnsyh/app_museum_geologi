@@ -18,13 +18,13 @@ const DetailKoleksi = () => {
 
     const handleAddToCart = (e) => {
         e.preventDefault();
-    
+
         post("/keranjang/add", {
             data,
             onSuccess: () => {
                 setSuccessMessage("Item berhasil ditambahkan ke keranjang!");
                 reset("jumlah_dipinjam");
-    
+
                 // Reset the success message after 3 seconds
                 setTimeout(() => {
                     setSuccessMessage("");
@@ -77,10 +77,18 @@ const DetailKoleksi = () => {
                     <div className="md:col-span-1">
                         <div className="flex flex-col items-center">
                             <div className="overflow-x-auto whitespace-nowrap mb-8">
-                                {[item.gambar_satu, item.gambar_dua, item.gambar_tiga].map((gambar, index) => (
+                                {[
+                                    item.gambar_satu,
+                                    item.gambar_dua,
+                                    item.gambar_tiga,
+                                ].map((gambar, index) => (
                                     <img
                                         key={index}
-                                        src={gambar ? `/storage/${gambar}` : "/batu.png"}
+                                        src={
+                                            gambar
+                                                ? `/storage/${gambar}`
+                                                : "/batu.png"
+                                        }
                                         alt={item.nama_koleksi}
                                         className="inline-block w-full h-auto rounded-md"
                                     />
@@ -96,17 +104,38 @@ const DetailKoleksi = () => {
                             <div className="shadow overflow-hidden sm:rounded-md">
                                 <div className="px-4 py-5 bg-white sm:p-6">
                                     <div className="grid grid-cols-1 gap-6">
-                                        {[{ label: "Name:", value: item.nama_koleksi },
-                                          { label: "Type:", value: item.tipe_bmn || "-" },
-                                          { label: "Dimensi:", value: item.dimensions || "-" },
-                                          { label: "Lokasi Temuan:", value: item.ditemukan || "-" },
-                                          { label: "Deskripsi:", value: item.deskripsi_koleksi || "-" }].map((field, index) => (
-                                              <div key={index}>
-                                                  <label className="block text-sm font-medium text-gray-700">
-                                                      {field.label}
-                                                  </label>
-                                                  <p className="mt-1 text-gray-900">{field.value}</p>
-                                              </div>
+                                        {[
+                                            {
+                                                label: "Name:",
+                                                value: item.nama_koleksi,
+                                            },
+                                            {
+                                                label: "Type:",
+                                                value: item.tipe_bmn || "-",
+                                            },
+                                            {
+                                                label: "Dimensi:",
+                                                value: item.dimensions || "-",
+                                            },
+                                            {
+                                                label: "Lokasi Temuan:",
+                                                value: item.ditemukan || "-",
+                                            },
+                                            {
+                                                label: "Deskripsi:",
+                                                value:
+                                                    item.deskripsi_koleksi ||
+                                                    "-",
+                                            },
+                                        ].map((field, index) => (
+                                            <div key={index}>
+                                                <label className="block text-sm font-medium text-gray-700">
+                                                    {field.label}
+                                                </label>
+                                                <p className="mt-1 text-gray-900">
+                                                    {field.value}
+                                                </p>
+                                            </div>
                                         ))}
                                     </div>
                                 </div>
@@ -147,7 +176,9 @@ const DetailKoleksi = () => {
                 {successMessage && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                         <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
-                            <p className="text-lg font-semibold text-green-600">{successMessage}</p>
+                            <p className="text-lg font-semibold text-green-600">
+                                {successMessage}
+                            </p>
                             <button
                                 onClick={() => setSuccessMessage("")}
                                 className="mt-4 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"
@@ -176,7 +207,8 @@ const DetailKoleksi = () => {
                                         src={currentAudio}
                                         type="audio/mpeg"
                                     />
-                                    Your browser does not support the audio element.
+                                    Your browser does not support the audio
+                                    element.
                                 </audio>
                             )}
                             {currentVideo && (
@@ -185,7 +217,8 @@ const DetailKoleksi = () => {
                                         src={currentVideo}
                                         type="video/mp4"
                                     />
-                                    Your browser does not support the video element.
+                                    Your browser does not support the video
+                                    element.
                                 </video>
                             )}
                         </div>

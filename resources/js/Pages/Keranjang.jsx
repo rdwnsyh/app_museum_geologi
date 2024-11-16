@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useForm } from "@inertiajs/react"; // Menggunakan useForm untuk request POST
+import { useForm } from "@inertiajs/react"; // Using useForm for POST requests
 import Navbar from "@/Components/Navbar/Navbar";
 
 const Keranjang = ({ cartItems = [] }) => {
@@ -42,13 +42,13 @@ const Keranjang = ({ cartItems = [] }) => {
     // Filter checked items for borrowing
     const checkedItems = items.filter((item) => item.checked);
 
-    // Menggunakan useForm untuk menangani POST request
+    // Using useForm for handling POST request
     const { post } = useForm();
 
     const handleBorrow = () => {
         if (checkedItems.length === 0) {
             alert("Pilih setidaknya satu item untuk dipinjam.");
-            return; // Hentikan jika tidak ada item yang dipilih
+            return; // Stop if no items are selected
         }
 
         const borrowData = checkedItems.map((item) => ({
@@ -56,13 +56,9 @@ const Keranjang = ({ cartItems = [] }) => {
             jumlah_dipinjam: item.jumlah_dipinjam,
         }));
 
-        // Menambahkan selected_ids yang berisi id item yang dipilih
-        const selectedIds = checkedItems.map((item) => item.id);
-
-        // Mengirimkan data ke server
+        // Sending the data to the server using a POST request
         post(route("keranjang.pinjam"), {
-            borrowData, // Mengirimkan data item yang dipilih
-            selected_ids: selectedIds, // Mengirimkan id item yang dipilih
+            borrowData: borrowData,
         });
     };
 

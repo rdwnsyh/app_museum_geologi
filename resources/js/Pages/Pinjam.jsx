@@ -6,41 +6,40 @@ import FieldGroup from "@/Components/Form/FieldGroup";
 import FileInput from "@/Components/Form/FileInput";
 
 const Pinjam = ({ checkoutItems = [], user }) => {
-    // Initialize form data using useForm from Inertia
+    // Inisialisasi data form menggunakan useForm dari Inertia
     const { data, setData, post, errors, processing } = useForm({
-        items: checkoutItems, // Use the items passed from the backend
+        items: checkoutItems, // Gunakan items yang dikirim dari backend
         tanggal_pinjam: "",
         tanggal_jatuh_tempo: "",
-        users_id: user.id, // Assuming `user` object contains `id` and `name`
+        users_id: user.id, // Asumsi `user` memiliki properti `id` dan `name`
         identitas: null,
         surat_permohonan: null,
     });
 
-    // Handle file input change
+    // Mengelola perubahan file input
     const handleFileChange = (fieldName, file) => {
         setData(fieldName, file);
     };
 
-    // Handle form submission
+    // Mengelola pengiriman form
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Prepare the detail_peminjaman array
+        // Menyiapkan array detail_peminjaman
         const detailPeminjaman = data.items.map((item) => ({
             koleksi_id: item.koleksi_id,
             jumlah_dipinjam: item.jumlah_dipinjam,
-            kondisi: item.kondisi, // If applicable
+            kondisi: item.kondisi, // Jika diperlukan
         }));
 
-        // Add the `detail_peminjaman` data to the form data
+        // Menambahkan data `detail_peminjaman` ke data form
         const formData = {
             ...data,
             detail_peminjaman: detailPeminjaman,
         };
 
-        // Use the correct route name
+        // Mengirim data form ke server
         post(route("keranjang.checkout"), {
-            // or "peminjaman.checkout"
             data: formData,
             onSuccess: () => {
                 alert("Peminjaman berhasil dibuat!");
@@ -61,17 +60,17 @@ const Pinjam = ({ checkoutItems = [], user }) => {
                     className="bg-white shadow-md p-6 rounded-md max-w-3xl mx-auto"
                 >
                     <div className="grid gap-6 sm:grid-cols-2">
-                        {/* Display the user name */}
+                        {/* Menampilkan nama pengguna */}
                         <FieldGroup label="Nama Peminjam">
                             <TextInput
                                 name="nama_lengkap"
-                                value={user.nama_lengkap} // Display user name
+                                value={user.nama_lengkap} // Menampilkan nama pengguna
                                 readOnly
                                 className="bg-gray-100"
                             />
                         </FieldGroup>
 
-                        {/* Input fields */}
+                        {/* Input Tanggal Pinjam */}
                         <FieldGroup
                             label="Tanggal Pinjam"
                             error={errors.tanggal_pinjam}
@@ -88,6 +87,7 @@ const Pinjam = ({ checkoutItems = [], user }) => {
                             />
                         </FieldGroup>
 
+                        {/* Input Tanggal Jatuh Tempo */}
                         <FieldGroup
                             label="Tanggal Jatuh Tempo"
                             error={errors.tanggal_jatuh_tempo}
@@ -107,6 +107,7 @@ const Pinjam = ({ checkoutItems = [], user }) => {
                             />
                         </FieldGroup>
 
+                        {/* Input Identitas Diri */}
                         <FieldGroup
                             label="Identitas Diri"
                             error={errors.identitas}
@@ -120,6 +121,7 @@ const Pinjam = ({ checkoutItems = [], user }) => {
                             />
                         </FieldGroup>
 
+                        {/* Input Surat Permohonan */}
                         <FieldGroup
                             label="Surat Permohonan"
                             error={errors.surat_permohonan}
@@ -134,7 +136,7 @@ const Pinjam = ({ checkoutItems = [], user }) => {
                         </FieldGroup>
                     </div>
 
-                    {/* Table for selected items */}
+                    {/* Tabel item yang dipilih */}
                     <div className="mt-6">
                         <h3 className="font-semibold mb-2">
                             Items yang Dipilih
