@@ -141,6 +141,7 @@ class PeminjamanController extends Controller
     // Validasi data yang diperlukan untuk peminjaman
     $validator = Validator::make($request->all(), [
         'users_id' => 'required|exists:users,id', // Pastikan pengguna terdaftar di tabel users
+        'keperluan' => 'required|string|max:255', //
         'tanggal_pinjam' => 'required|date|after_or_equal:today', // Tanggal pinjam tidak boleh sebelum hari ini
         'tanggal_jatuh_tempo' => 'required|date|after_or_equal:tanggal_pinjam', // Jatuh tempo harus setelah atau sama dengan tanggal pinjam
         'status' => 'in:Pengajuan,Sedang di Pinjam,Terlambat,Ditolak,Selesai' ?? 'Pengajuan', // Validasi status peminjaman
@@ -173,6 +174,7 @@ class PeminjamanController extends Controller
         // Buat data peminjaman baru
         $peminjaman = Peminjaman::create([
             'users_id' => Auth::id(),
+            'keperluan' => $request->keperluan,
             'tanggal_pinjam' => $request->tanggal_pinjam,
             'tanggal_jatuh_tempo' => $request->tanggal_jatuh_tempo,
             'status' => 'Pengajuan', // Status default adalah Pengajuan

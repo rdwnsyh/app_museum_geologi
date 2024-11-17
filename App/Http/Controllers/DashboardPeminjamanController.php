@@ -12,30 +12,25 @@ class DashboardPeminjamanController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        // Mengambil semua data pengguna yang akan meminjam koleksi dari tabel Cart
-        $collectionsToBorrow = Peminjaman::with('users', 'items.koleksi')  // Memuat relasi user, items, dan koleksi
-            ->get(); // Mengambil semua data
+{
+    // Mengambil data dari tabel `peminjaman` beserta data terkait dari tabel `detail_peminjaman`
+    $dataPeminjaman = Peminjaman::with(['detailPeminjaman.koleksi', 'users'])->get();
+        // ->where('status', 'Pengajuan') // Contoh kondisi, sesuaikan dengan kebutuhan
+    // dd($dataPeminjaman);
 
-        // Mengembalikan data ke frontend (dashboard) menggunakan Inertia
-        return Inertia::render('Peminjaman/Index', [
-            'borrowedCollections' => $collectionsToBorrow,
-        ]);
-    }
+    // Mengirim data ke frontend menggunakan Inertia
+    return Inertia::render('Peminjaman/Index', [
+        'dataPeminjaman' => $dataPeminjaman
+    ]);
+}
+
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
 {
-    $peminjaman = Peminjaman::with('items')->get(); // Or with()->find() if fetching a specific record
-    $items = Item::all(); // Or fetch only the items you need
-
-    return inertia('Peminjaman/Create', [
-        'users' => Auth::user(),
-        'items' => $items, // Pass the items to the view
-        'peminjaman' => $peminjaman
-    ]);
+    
 }
 
     /**

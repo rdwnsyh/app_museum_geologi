@@ -9,7 +9,7 @@ import NotificationModal from "@/Components/Modal/notif"; // Import Notification
 
 function Index() {
     // Retrieve dynamic data from Inertia.js page props
-    const { peminjaman} = usePage().props;
+    const { peminjaman } = usePage().props;
     const data = peminjaman?.data || [];
     const links = peminjaman?.meta?.links || [];
 
@@ -41,7 +41,7 @@ function Index() {
             onError: (error) => {
                 setNotificationMessage("Failed to create Peminjaman.");
                 setIsNotificationOpen(true);
-            }
+            },
         });
     };
 
@@ -84,9 +84,16 @@ function Index() {
             {/* Table for displaying dynamic peminjaman data */}
             <Table
                 columns={[
-                    { label: "Nama Peminjam", name: "users_id", renderCell: (row) => row.user?.name },
+                    {
+                        label: "Nama Peminjam",
+                        name: "users_id",
+                        renderCell: (row) => row.user?.name,
+                    },
                     { label: "Tanggal Pinjam", name: "tanggal_pinjam" },
-                    { label: "Tanggal Jatuh Tempo", name: "tanggal_jatuh_tempo" },
+                    {
+                        label: "Tanggal Jatuh Tempo",
+                        name: "tanggal_jatuh_tempo",
+                    },
                     {
                         label: "Status",
                         name: "status",
@@ -119,8 +126,6 @@ function Index() {
                 rows={data}
             />
 
-            
-
             {/* Pagination component */}
             {links.length > 0 && <Pagination links={links} />}
 
@@ -134,6 +139,8 @@ function Index() {
     );
 }
 
-Index.layout = (page) => <MainLayout title="Kelola Peminjaman">{page}</MainLayout>;
+Index.layout = (page) => (
+    <MainLayout title="Kelola Peminjaman">{page}</MainLayout>
+);
 
 export default Index;

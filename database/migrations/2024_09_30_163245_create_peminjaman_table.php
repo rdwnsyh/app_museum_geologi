@@ -12,6 +12,7 @@ return new class extends Migration
         Schema::create('peminjaman', function (Blueprint $table) {
             $table->bigIncrements('id'); // Primary key
             $table->unsignedBigInteger('users_id'); // Foreign key ke tabel Pengguna
+            $table->string('keperluan'); // Status peminjaman
             $table->date('tanggal_pinjam'); // Tanggal saat barang dipinjam
             $table->date('tanggal_jatuh_tempo'); // Tanggal jatuh tempo pengembalian
             $table->enum('status', ['Pengajuan', 'Sedang di Pinjam', 'Terlambat', 'Ditolak', 'Selesai'])->default('Pengajuan'); // Status peminjaman
