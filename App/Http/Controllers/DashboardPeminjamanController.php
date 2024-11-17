@@ -27,11 +27,16 @@ class DashboardPeminjamanController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        return Inertia::render('Peminjaman/Create', [
-            'users_id' => auth()->users()->id, // Pass the current authenticated user's ID
-        ]);
-    }
+{
+    $peminjaman = Peminjaman::with('items')->get(); // Or with()->find() if fetching a specific record
+    $items = Item::all(); // Or fetch only the items you need
+
+    return inertia('Peminjaman/Create', [
+        'users' => Auth::user(),
+        'items' => $items, // Pass the items to the view
+        'peminjaman' => $peminjaman
+    ]);
+}
 
     /**
      * Store a newly created resource in storage.

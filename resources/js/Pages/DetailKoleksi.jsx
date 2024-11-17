@@ -183,7 +183,7 @@ const DetailKoleksi = () => {
                                 onClick={() => setSuccessMessage("")}
                                 className="mt-4 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"
                             >
-                                Close
+                                Oke
                             </button>
                         </div>
                     </div>
