@@ -57,13 +57,13 @@ function Index() {
                 <SearchBar />
                 <div className="flex items-center justify-end mb-2">
                     {/* Link to navigate to Create page */}
-                    <Link
+                    {/* <Link
                         className="bg-green-600 text-white py-2 px-4 mx-2 rounded hover:bg-green-900 transition flex items-center"
                         href={route("peminjaman.create")} // Navigasi langsung ke halaman create
                     >
                         <Plus className="w-4 h-4 mr-2" />
                         <span className="hidden md:inline">Tambah</span>
-                    </Link>
+                    </Link> */}
                     <Link
                         className="bg-blue-600 text-white py-2 px-4 mx-2 rounded hover:bg-blue-900 transition flex items-center"
                         href="#"

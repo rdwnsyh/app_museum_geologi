@@ -40,6 +40,7 @@ class DashboardPeminjamanController extends Controller
     {
         $validated = $request->validate([
             'users_id' => 'required|exists:users,id',
+            'keperluan' => 'required|string|max:255', //
             'tanggal_pinjam' => 'required|date',
             'tanggal_jatuh_tempo' => 'required|date',
             'identitas' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',

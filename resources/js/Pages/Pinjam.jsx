@@ -91,6 +91,22 @@ const Pinjam = ({ checkoutItems = [], user }) => {
 
                         {/* Input Tanggal Pinjam */}
                         <FieldGroup
+                            label="Keperluan"
+                            error={errors.keperluan}
+                        >
+                            <TextInput
+                                type="text"
+                                name="keperluan"
+                                error={errors.keperluan}
+                                value={data.keperluan}
+                                onChange={(e) =>
+                                    setData("keperluan", e.target.value)
+                                }
+                                required
+                            />
+                        </FieldGroup>
+
+                        <FieldGroup
                             label="Tanggal Pinjam"
                             error={errors.tanggal_pinjam}
                         >
