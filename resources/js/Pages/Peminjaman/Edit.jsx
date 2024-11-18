@@ -11,11 +11,11 @@ const Edit = () => {
 
     // Initialize form data
     const { data, setData, errors, post, put, processing } = useForm({
-        items: peminjaman?.detailPeminjaman || [],  // Use 'detailPeminjaman' here, since it contains the items
+        items: peminjaman?.detailPeminjaman || [], // Use 'detailPeminjaman' here, since it contains the items
         keperluan: peminjaman?.keperluan || "",
         tanggal_pinjam: peminjaman?.tanggal_pinjam || "",
         tanggal_jatuh_tempo: peminjaman?.tanggal_jatuh_tempo || "",
-        users_id: peminjaman?.user?.id || "",
+        users_id: peminjaman?.users?.id || "",
         identitas: peminjaman?.identitas || null,
         surat_permohonan: peminjaman?.surat_permohonan || null,
     });
@@ -25,10 +25,10 @@ const Edit = () => {
 
     // Handle file input change
     function handleFileChange(name, file) {
-        console.log(name, file);  // Debugging: ensure file is selected and passed correctly
-        setData(name, file);  // Update form state with selected file
+        console.log(name, file); // Debugging: ensure file is selected and passed correctly
+        setData(name, file); // Update form state with selected file
     }
-    
+
     function handleSubmit(e) {
         e.preventDefault();
         const formData = new FormData();
@@ -37,7 +37,7 @@ const Edit = () => {
         Object.entries(data).forEach(([key, value]) => {
             if (value instanceof File) {
                 console.log(`Appending file: ${key}`, value); // Check if file is present
-                formData.append(key, value);  // Append file data
+                formData.append(key, value); // Append file data
             } else if (Array.isArray(value)) {
                 formData.append(key, JSON.stringify(value));
             } else if (value !== null) {
@@ -45,7 +45,7 @@ const Edit = () => {
             }
         });
 
-        console.log([...formData.entries()]);  // Check form data before sending
+        console.log([...formData.entries()]); // Check form data before sending
 
         // Submit the form using `put` from Inertia
         if (step === 4) {
@@ -60,15 +60,18 @@ const Edit = () => {
         } else {
             setStep(step + 1);
         }
-
-    }    
-       
+    }
 
     return (
         <div>
-            <Head title={`edit ${peminjaman?.users?.nama_lengkap || "unknown"}`} />
+            <Head
+                title={`edit ${peminjaman?.users?.nama_lengkap || "unknown"}`}
+            />
             <h1 className="mb-8 text-3xl font-bold">
-                <Link href={route("peminjaman")} className="text-indigo-600 hover:text-indigo-700">
+                <Link
+                    href={route("peminjaman")}
+                    className="text-indigo-600 hover:text-indigo-700"
+                >
                     Edit Peminjaman
                 </Link>
                 <span className="mx-2 font-medium text-indigo-600">/</span>
@@ -81,7 +84,10 @@ const Edit = () => {
                         <FieldGroup label="Nama Peminjam">
                             <TextInput
                                 name="nama_lengkap"
-                                value={peminjaman?.users?.nama_lengkap || "Nama tidak tersedia"} // Using peminjaman?.user
+                                value={
+                                    peminjaman?.users?.nama_lengkap ||
+                                    "Nama tidak tersedia"
+                                } // Using peminjaman?.user
                                 readOnly
                                 className="bg-gray-100"
                             />
@@ -93,36 +99,51 @@ const Edit = () => {
                                 name="keperluan"
                                 error={errors.keperluan}
                                 value={data.keperluan}
-                                onChange={(e) => setData("keperluan", e.target.value)}
+                                onChange={(e) =>
+                                    setData("keperluan", e.target.value)
+                                }
                                 required
                             />
                         </FieldGroup>
 
-                        <FieldGroup label="Tanggal Pinjam" error={errors.tanggal_pinjam}>
+                        <FieldGroup
+                            label="Tanggal Pinjam"
+                            error={errors.tanggal_pinjam}
+                        >
                             <TextInput
                                 type="date"
                                 name="tanggal_pinjam"
                                 error={errors.tanggal_pinjam}
                                 value={data.tanggal_pinjam}
-                                onChange={(e) => setData("tanggal_pinjam", e.target.value)}
+                                onChange={(e) =>
+                                    setData("tanggal_pinjam", e.target.value)
+                                }
                                 required
                             />
                         </FieldGroup>
 
-                        <FieldGroup label="Tanggal Jatuh Tempo" error={errors.tanggal_jatuh_tempo}>
+                        <FieldGroup
+                            label="Tanggal Jatuh Tempo"
+                            error={errors.tanggal_jatuh_tempo}
+                        >
                             <TextInput
                                 type="date"
                                 name="tanggal_jatuh_tempo"
                                 error={errors.tanggal_jatuh_tempo}
                                 value={data.tanggal_jatuh_tempo}
-                                onChange={(e) => setData("tanggal_jatuh_tempo", e.target.value)}
+                                onChange={(e) =>
+                                    setData(
+                                        "tanggal_jatuh_tempo",
+                                        e.target.value
+                                    )
+                                }
                                 required
                             />
                         </FieldGroup>
 
                         {/* Input Identitas Diri */}
-                        <FieldGroup 
-                            label="Identitas Diri" 
+                        <FieldGroup
+                            label="Identitas Diri"
                             name="identitas"
                             error={errors.identitas}
                         >
@@ -130,23 +151,23 @@ const Edit = () => {
                                 name="identitas"
                                 error={errors.identitas}
                                 existingFile={peminjaman.identitas}
-                                onFileChange={(file) => 
+                                onFileChange={(file) =>
                                     handleFileChange("identitas", file)
                                 }
                             />
                         </FieldGroup>
 
                         {/* Input Surat Permohonan */}
-                        <FieldGroup 
-                        label="Surat Permohonan" 
-                        name="surat_permohonan" 
-                        error={errors.surat_permohonan}
+                        <FieldGroup
+                            label="Surat Permohonan"
+                            name="surat_permohonan"
+                            error={errors.surat_permohonan}
                         >
                             <FileInput
                                 name="surat_permohonan"
                                 error={errors.surat_permohonan}
                                 existingFile={peminjaman.surat_permohonan}
-                                onFileChange={(file) => 
+                                onFileChange={(file) =>
                                     handleFileChange("surat_permohonan", file)
                                 }
                             />
@@ -154,38 +175,56 @@ const Edit = () => {
                     </div>
 
                     <div className="mt-6">
-                        <h3 className="font-semibold mb-2">Items yang Dipilih</h3>
+                        <h3 className="font-semibold mb-2">
+                            Items yang Dipilih
+                        </h3>
                         <div className="overflow-x-auto bg-gray-50 rounded-lg shadow">
                             <table className="min-w-full table-auto">
                                 <thead className="bg-indigo-600 text-white">
                                     <tr>
-                                        <th className="px-4 py-2 text-left">Gambar</th>
-                                        <th className="px-4 py-2 text-left">Nama Koleksi</th>
-                                        <th className="px-4 py-2 text-left">Jumlah Dipinjam</th>
+                                        <th className="px-4 py-2 text-left">
+                                            Gambar
+                                        </th>
+                                        <th className="px-4 py-2 text-left">
+                                            Nama Koleksi
+                                        </th>
+                                        <th className="px-4 py-2 text-left">
+                                            Jumlah Dipinjam
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                {data.items && data.items.length > 0 ? (
-                                    data.items.map((item) => (
-                                        <tr key={item.koleksi_id} className="border-b">
-                                            <td className="px-4 py-2">
-                                                <img
-                                                    src={item.gambar_satu}
-                                                    alt={item.nama_koleksi}
-                                                    className="w-12 h-12 object-cover rounded"
-                                                />
+                                    {data.items && data.items.length > 0 ? (
+                                        data.items.map((item) => (
+                                            <tr
+                                                key={item.koleksi_id}
+                                                className="border-b"
+                                            >
+                                                <td className="px-4 py-2">
+                                                    <img
+                                                        src={item.gambar_satu}
+                                                        alt={item.nama_koleksi}
+                                                        className="w-12 h-12 object-cover rounded"
+                                                    />
+                                                </td>
+                                                <td className="px-4 py-2">
+                                                    {item.nama_koleksi}
+                                                </td>
+                                                <td className="px-4 py-2">
+                                                    {item.jumlah_dipinjam}
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td
+                                                colSpan="3"
+                                                className="px-4 py-2 text-center text-gray-500"
+                                            >
+                                                Tidak ada item yang dipilih
                                             </td>
-                                            <td className="px-4 py-2">{item.nama_koleksi}</td>
-                                            <td className="px-4 py-2">{item.jumlah_dipinjam}</td>
                                         </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan="3" className="px-4 py-2 text-center text-gray-500">
-                                            Tidak ada item yang dipilih
-                                        </td>
-                                    </tr>
-                                )}
+                                    )}
                                 </tbody>
                             </table>
                         </div>
@@ -204,7 +243,9 @@ const Edit = () => {
             {successMessage && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
-                        <p className="text-lg font-semibold text-green-600">{successMessage}</p>
+                        <p className="text-lg font-semibold text-green-600">
+                            {successMessage}
+                        </p>
                         <button
                             onClick={() => setSuccessMessage("")}
                             className="mt-4 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"

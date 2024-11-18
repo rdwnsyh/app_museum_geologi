@@ -96,11 +96,14 @@ class DashboardPeminjamanController extends Controller
      */
     public function update(Request $request, Peminjaman $peminjaman): RedirectResponse
     {
+
+        dd($request->all());
         // Validasi input dari form
         $validatedData = $request->validate([
             'keperluan' => 'required|string|max:255',
             'tanggal_pinjam' => 'required|date',
             'tanggal_jatuh_tempo' => 'required|date|after_or_equal:tanggal_pinjam',
+            'status' => 'in:Pengajuan,Sedang di Pinjam,Terlambat,Ditolak,Selesai',
             'identitas' => 'nullable|file|mimes:png,jpg,jpeg,pdf|max:2048',
             'surat_permohonan' => 'nullable|file|mimes:png,jpg,jpeg,pdf|max:2048',
             'items' => 'required|array',
@@ -113,6 +116,7 @@ class DashboardPeminjamanController extends Controller
         $peminjaman->update([
             'tanggal_pinjam' => $validatedData['tanggal_pinjam'],
             'tanggal_jatuh_tempo' => $validatedData['tanggal_jatuh_tempo'],
+            'status' => $validatedData['status'],
         ]);
 
         // Perbarui file identitas jika ada
