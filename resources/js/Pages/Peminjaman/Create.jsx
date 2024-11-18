@@ -5,7 +5,7 @@ import LoadingButton from "@/Components/Button/LoadingButton";
 import TextInput from "@/Components/Form/TextInput";
 import FieldGroup from "@/Components/Form/FieldGroup";
 import FileInput from "@/Components/Form/FileInput";
-import { usePage, Inertia } from '@inertiajs/react'; // Import usePage and Inertia
+import { usePage, Inertia } from "@inertiajs/react"; // Import usePage and Inertia
 
 const Create = ({ items = [], user }) => {
     // Inisialisasi data form menggunakan useForm dari Inertia

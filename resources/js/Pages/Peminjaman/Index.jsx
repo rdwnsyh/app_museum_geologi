@@ -4,17 +4,17 @@ import MainLayout from "@/Layouts/MainLayout";
 import Table from "@/Components/Table/Table";
 import SearchBar from "@/Components/SearchBar/SearchBar";
 import Pagination from "@/Components/Pagination/Pagination";
-import { ArrowDownToLine, Plus } from "lucide-react";
-import NotificationModal from "@/Components/Modal/notif"; // Import Notification Modal
+import { ArrowDownToLine } from "lucide-react";
+import NotificationModal from "@/Components/Modal/notif";
 
 function Index() {
     // Retrieve dynamic data from Inertia.js page props
     const { peminjaman } = usePage().props;
-    const data = peminjaman?.data || [];
-    const links = peminjaman?.meta?.links || [];
+    const data = peminjaman || []; // Fallback to an empty array if `peminjaman` is undefined
 
-    const [isNotificationOpen, setIsNotificationOpen] = useState(false); // State for notification modal
-    const [notificationMessage, setNotificationMessage] = useState(""); // Store notification message
+    // State for notification modal
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState("");
 
     const handleDelete = (id) => {
         if (window.confirm("Are you sure you want to delete this item?")) {
@@ -23,7 +23,7 @@ function Index() {
                     setNotificationMessage("Peminjaman deleted successfully!");
                     setIsNotificationOpen(true);
                 },
-                onError: (error) => {
+                onError: () => {
                     setNotificationMessage("Failed to delete the item.");
                     setIsNotificationOpen(true);
                 },
@@ -31,22 +31,8 @@ function Index() {
         }
     };
 
-    const handleCreateSubmit = (formData) => {
-        // Send form data to the server using Inertia
-        Inertia.post(route("peminjaman.store"), formData, {
-            onSuccess: () => {
-                setNotificationMessage("Peminjaman successfully created!");
-                setIsNotificationOpen(true);
-            },
-            onError: (error) => {
-                setNotificationMessage("Failed to create Peminjaman.");
-                setIsNotificationOpen(true);
-            },
-        });
-    };
-
     const closeNotificationModal = () => {
-        setIsNotificationOpen(false); // Close the notification modal
+        setIsNotificationOpen(false);
     };
 
     return (
@@ -55,15 +41,7 @@ function Index() {
 
             <div className="flex items-center justify-between mb-2">
                 <SearchBar />
-                <div className="flex items-center justify-end mb-2">
-                    {/* Link to navigate to Create page */}
-                    {/* <Link
-                        className="bg-green-600 text-white py-2 px-4 mx-2 rounded hover:bg-green-900 transition flex items-center"
-                        href={route("peminjaman.create")} // Navigasi langsung ke halaman create
-                    >
-                        <Plus className="w-4 h-4 mr-2" />
-                        <span className="hidden md:inline">Tambah</span>
-                    </Link> */}
+                <div className="flex items-center">
                     <Link
                         className="bg-blue-600 text-white py-2 px-4 mx-2 rounded hover:bg-blue-900 transition flex items-center"
                         href="#"
@@ -86,8 +64,8 @@ function Index() {
                 columns={[
                     {
                         label: "Nama Peminjam",
-                        name: "users_id",
-                        renderCell: (row) => row.user?.name,
+                        name: "users.nama_lengkap",
+                        renderCell: (row) => row.users?.nama_lengkap || "N/A",
                     },
                     { label: "Tanggal Pinjam", name: "tanggal_pinjam" },
                     {
@@ -98,14 +76,15 @@ function Index() {
                         label: "Status",
                         name: "status",
                         renderCell: (row) => (
-                            <div className="flex space-x-2">
-                                <button
-                                    onClick={() => handleCreateSubmit(row.id)}
-                                    className="bg-red-600 text-white py-1 px-3 rounded hover:bg-red-900 transition"
-                                >
-                                    {row.status}
-                                </button>
-                            </div>
+                            <span
+                                className={`py-1 px-3 rounded ${
+                                    row.status === "Pengajuan"
+                                        ? "bg-yellow-500 text-white"
+                                        : "bg-green-500 text-white"
+                                }`}
+                            >
+                                {row.status}
+                            </span>
                         ),
                     },
                     {
@@ -119,15 +98,18 @@ function Index() {
                                 >
                                     Edit
                                 </Link>
+                                <button
+                                    onClick={() => handleDelete(row.id)}
+                                    className="bg-red-600 text-white py-1 px-3 rounded hover:bg-red-900 transition"
+                                >
+                                    Delete
+                                </button>
                             </div>
                         ),
                     },
                 ]}
                 rows={data}
             />
-
-            {/* Pagination component */}
-            {links.length > 0 && <Pagination links={links} />}
 
             {/* Notification Modal */}
             <NotificationModal
