@@ -84,9 +84,8 @@ class DashboardPeminjamanController extends Controller
      */
     public function edit(Peminjaman $peminjaman): Response
     {
-        $peminjaman = Peminjaman::with(['detailPeminjaman.koleksi', 'users'])->get();
+        $peminjaman = Peminjaman::with(['detailPeminjaman.koleksi', 'users'])->find($peminjaman->id);
 
-        // Mengirim data ke frontend menggunakan Inertia
         return Inertia::render('Peminjaman/Edit', [
             'peminjaman' => $peminjaman
         ]);
@@ -99,6 +98,7 @@ class DashboardPeminjamanController extends Controller
     {
         // Validasi input dari form
         $validatedData = $request->validate([
+            'keperluan' => 'required|string|max:255',
             'tanggal_pinjam' => 'required|date',
             'tanggal_jatuh_tempo' => 'required|date|after_or_equal:tanggal_pinjam',
             'identitas' => 'nullable|file|mimes:png,jpg,jpeg,pdf|max:2048',

@@ -12,10 +12,10 @@ const Pinjam = ({ checkoutItems = [], user }) => {
    
     const { data, setData, post, errors, processing } = useForm({
         items: checkoutItems || [], // Gunakan items yang dikirim dari backend
+        keperluan: "",
         tanggal_pinjam: "",
         tanggal_jatuh_tempo: "",
-        users_id: user.id, // Asumsi `user` memiliki properti `id` dan `name`
-        identitas: null,
+        users_id: user.id, 
         surat_permohonan: null,
     });
 
