@@ -96,7 +96,7 @@ function Index() {
                                     href={route("peminjaman.edit", row.id)}
                                     className="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-700 transition"
                                 >
-                                    Edit
+                                    Validasi
                                 </Link>
                                 <button
                                     onClick={() => handleDelete(row.id)}

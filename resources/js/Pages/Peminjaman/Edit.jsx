@@ -4,6 +4,7 @@ import MainLayout from "@/Layouts/MainLayout";
 import FieldGroup from "@/Components/Form/FieldGroup";
 import TextInput from "@/Components/Form/TextInput";
 import FileInput from "@/Components/Form/FileInput";
+import SelectInput from "@/Components/Form/SelectInput";
 
 const Edit = () => {
     const { peminjaman } = usePage().props || {}; // Getting data sent from the controller
@@ -13,6 +14,7 @@ const Edit = () => {
     const { data, setData, errors, post, put, processing } = useForm({
         items: peminjaman?.detailPeminjaman || [], // Use 'detailPeminjaman' here, since it contains the items
         keperluan: peminjaman?.keperluan || "",
+        status: peminjaman?.status || "",
         tanggal_pinjam: peminjaman?.tanggal_pinjam || "",
         tanggal_jatuh_tempo: peminjaman?.tanggal_jatuh_tempo || "",
         users_id: peminjaman?.users?.id || "",
@@ -103,7 +105,35 @@ const Edit = () => {
                                     setData("keperluan", e.target.value)
                                 }
                                 required
+                                readOnly
+                                className="bg-gray-100"
                             />
+                        </FieldGroup>
+
+                        <FieldGroup
+                                    label="Status"
+                                    name="status"
+                                    error={errors.status}
+                                >
+                                    <SelectInput
+                                        type="text"
+                                        name="status"
+                                        error={errors.status}
+                                        value={data.status}
+                                        onChange={(e) =>
+                                            setData("status", e.target.value)
+                                        }
+                                        options={[
+                                            { value: "", label: "" },
+                                            { value: "P", label: "Pengajuan" },
+                                            { value: "SP", label: "Sedang di Pinjam" },
+                                            { value: "T", label: "Terlambat" },
+                                            { value: "DT", label: "Ditolak" },
+                                            { value: "S", label: "Selesai" },
+                                        ]}
+                                        
+                                        
+                                    />
                         </FieldGroup>
 
                         <FieldGroup
@@ -119,6 +149,8 @@ const Edit = () => {
                                     setData("tanggal_pinjam", e.target.value)
                                 }
                                 required
+                                readOnly
+                                className="bg-gray-100"
                             />
                         </FieldGroup>
 
@@ -138,6 +170,8 @@ const Edit = () => {
                                     )
                                 }
                                 required
+                                readOnly
+                                className="bg-gray-100"
                             />
                         </FieldGroup>
 
@@ -154,6 +188,8 @@ const Edit = () => {
                                 onFileChange={(file) =>
                                     handleFileChange("identitas", file)
                                 }
+                                readOnly
+                                className="bg-gray-100"
                             />
                         </FieldGroup>
 
@@ -170,6 +206,8 @@ const Edit = () => {
                                 onFileChange={(file) =>
                                     handleFileChange("surat_permohonan", file)
                                 }
+                                readOnly
+                                className="bg-gray-100"
                             />
                         </FieldGroup>
                     </div>
