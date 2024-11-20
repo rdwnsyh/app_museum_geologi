@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useForm } from "@inertiajs/react"; // Using useForm for POST requests
+import { useForm } from "@inertiajs/react"; // Menggunakan useForm untuk permintaan POST
 import Navbar from "@/Components/Navbar/Navbar";
 
 const Keranjang = ({ cartItems = [] }) => {
@@ -8,18 +8,24 @@ const Keranjang = ({ cartItems = [] }) => {
             ? cartItems.map((item) => ({ ...item, checked: false }))
             : []
     );
-
-    useEffect(() => {
-        setItems(
-            Array.isArray(cartItems)
-                ? cartItems.map((item) => ({ ...item, checked: false }))
-                : []
-        );
-    }, [cartItems]);
-
     const [searchQuery, setSearchQuery] = useState("");
 
-    // Handle Toggle checkbox for each item
+    const { setData, post, processing } = useForm();
+
+    useEffect(() => {
+        // Pastikan data dikirim hanya jika ada perubahan pada cartItems
+        if (items.length > 0) {
+            const cartItemsData = items
+                .filter((item) => item.checked)
+                .map((item) => ({
+                    koleksi_id: item.id,
+                    jumlah_dipinjam: item.jumlah_dipinjam,
+                }));
+            setData("cartItems", cartItemsData);
+        }
+    }, [items]); // Re-run setiap ada perubahan pada items
+
+    // Fungsi untuk toggle checkbox item
     const handleCheck = (id) => {
         setItems((prevItems) =>
             prevItems.map((item) =>
@@ -28,37 +34,37 @@ const Keranjang = ({ cartItems = [] }) => {
         );
     };
 
-    // Handle quantity change for an item
-    const handleQuantityChange = (id, jumlah_dipinjam) => {
+    // Fungsi untuk mengubah jumlah pinjaman
+    const handleQuantityChange = (id, value) => {
+        const jumlah = parseInt(value, 10) || 1;
         setItems((prevItems) =>
             prevItems.map((item) =>
-                item.id === id
-                    ? { ...item, jumlah_dipinjam: jumlah_dipinjam }
-                    : item
+                item.id === id ? { ...item, jumlah_dipinjam: jumlah } : item
             )
         );
     };
 
-    // Filter checked items for borrowing
-    const checkedItems = items.filter((item) => item.checked);
+    // Fungsi untuk toggle semua checkbox
+    const toggleSelectAll = () => {
+        const allChecked = items.every((item) => item.checked);
+        setItems((prevItems) =>
+            prevItems.map((item) => ({ ...item, checked: !allChecked }))
+        );
+    };
 
-    // Using useForm for handling POST request
-    const { post } = useForm();
-
+    // Fungsi untuk proses peminjaman
     const handleBorrow = () => {
+        const checkedItems = items.filter((item) => item.checked);
+
         if (checkedItems.length === 0) {
             alert("Pilih setidaknya satu item untuk dipinjam.");
-            return; // Stop if no items are selected
+            return;
         }
 
-        const borrowData = checkedItems.map((item) => ({
-            koleksi_id: item.id,
-            jumlah_dipinjam: item.jumlah_dipinjam,
-        }));
-
-        // Sending the data to the server using a POST request
+        // Mengirim data ke backend
         post(route("keranjang.pinjam"), {
-            borrowData: borrowData,
+            onSuccess: () => alert("Peminjaman berhasil!"),
+            onError: (errors) => console.error(errors),
         });
     };
 
@@ -75,22 +81,11 @@ const Keranjang = ({ cartItems = [] }) => {
                                     <th className="px-4 py-2 text-left">
                                         <input
                                             type="checkbox"
-                                            onChange={() => {
-                                                const allChecked =
-                                                    checkedItems.length ===
-                                                    items.length;
-                                                setItems((prevItems) =>
-                                                    prevItems.map((item) => ({
-                                                        ...item,
-                                                        checked: !allChecked,
-                                                    }))
-                                                );
-                                            }}
-                                            checked={
-                                                checkedItems.length ===
-                                                items.length
-                                            }
-                                            aria-label="Select all items"
+                                            onChange={toggleSelectAll}
+                                            checked={items.every(
+                                                (item) => item.checked
+                                            )}
+                                            aria-label="Pilih semua item"
                                         />
                                     </th>
                                     <th className="px-4 py-2 text-left">
@@ -103,7 +98,7 @@ const Keranjang = ({ cartItems = [] }) => {
                                         Jumlah
                                     </th>
                                     <th className="px-4 py-2 text-left">
-                                        Actions
+                                        Aksi
                                     </th>
                                 </tr>
                             </thead>
@@ -117,7 +112,7 @@ const Keranjang = ({ cartItems = [] }) => {
                                                 onChange={() =>
                                                     handleCheck(item.id)
                                                 }
-                                                aria-label={`Select ${item.nama_koleksi}`}
+                                                aria-label={`Pilih ${item.nama_koleksi}`}
                                             />
                                         </td>
                                         <td className="px-4 py-2 border-b border-gray-200">
@@ -133,7 +128,9 @@ const Keranjang = ({ cartItems = [] }) => {
                                         <td className="px-4 py-2 border-b border-gray-200">
                                             <input
                                                 type="number"
-                                                value={item.jumlah_dipinjam}
+                                                value={
+                                                    item.jumlah_dipinjam || 1
+                                                }
                                                 onChange={(e) =>
                                                     handleQuantityChange(
                                                         item.id,
@@ -142,19 +139,19 @@ const Keranjang = ({ cartItems = [] }) => {
                                                 }
                                                 min="1"
                                                 max="100"
-                                                className="w-12"
+                                                className="w-12 text-center border rounded-md"
                                             />
                                         </td>
                                         <td className="px-4 py-2 border-b border-gray-200">
                                             <button
-                                                onClick={() => {
-                                                    setItems(
-                                                        items.filter(
+                                                onClick={() =>
+                                                    setItems((prevItems) =>
+                                                        prevItems.filter(
                                                             (i) =>
                                                                 i.id !== item.id
                                                         )
-                                                    );
-                                                }}
+                                                    )
+                                                }
                                                 className="text-red-600 hover:text-red-800"
                                             >
                                                 Hapus
@@ -169,8 +166,9 @@ const Keranjang = ({ cartItems = [] }) => {
                         <button
                             className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600"
                             onClick={handleBorrow}
+                            disabled={processing} // Disable button while processing
                         >
-                            Pinjam
+                            {processing ? "Memproses..." : "Pinjam"}
                         </button>
                     </div>
                 </div>

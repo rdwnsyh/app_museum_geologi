@@ -18,7 +18,8 @@ class PeminjamanController extends Controller
      * Display a listing of the resource.
      */
     // Menampilkan isi keranjang
-    public function showCart()
+    // Function untuk menampilkan halaman keranjang
+public function showCart()
 {
     // Ambil data keranjang dari sesi
     $cart = session()->get('cart', []);
@@ -45,6 +46,50 @@ class PeminjamanController extends Controller
     ]);
 }
 
+// Function untuk memproses peminjaman
+public function pinjam(Request $request)
+{
+    // Ambil data cartItems yang dikirim dari frontend
+    $cartItems = $request->input('cartItems', []);
+
+    // dd($cartItems);
+
+    // Pastikan data tidak kosong
+    if (empty($cartItems)) {
+        return redirect()->route('keranjang')->with('error', 'Tidak ada item yang dipilih untuk dipinjam.');
+    }
+
+    // Proses data yang diterima
+    $checkoutItems = [];
+    foreach ($cartItems as $cartItem) {
+        // Ambil detail koleksi berdasarkan ID yang diterima
+        $itemDetails = KelolaKoleksi::find($cartItem['koleksi_id']);
+        if ($itemDetails) {
+            // Menyusun data untuk checkout
+            $checkoutItems[] = [
+                'id' => $cartItem['koleksi_id'],
+                'koleksi_id' => $itemDetails->id,
+                'nama_koleksi' => $itemDetails->nama_koleksi,
+                'gambar_satu' => $itemDetails->gambar_satu,
+                'jumlah_dipinjam' => $cartItem['jumlah_dipinjam'],
+            ];
+        }
+    }
+
+    // Pastikan ada item yang valid untuk diproses
+    if (empty($checkoutItems)) {
+        return redirect()->route('keranjang')->with('error', 'Tidak ada item yang valid untuk dipinjam.');
+    }
+
+    // Menyimpan checkout items ke session atau database
+    session()->put('checkout_items', $checkoutItems);
+
+    // Kirim data ke halaman Pinjam
+    return Inertia::render('Pinjam', [
+        'checkoutItems' => $checkoutItems,
+        'user' => auth()->user(),
+    ]);
+}
 
     // Menambahkan item ke keranjang
     public function addToCart(Request $request)
@@ -93,51 +138,10 @@ class PeminjamanController extends Controller
         return back()->with('success', 'Item berhasil ditambahkan ke keranjang.');
     }
 
-    // Memproses peminjaman
-    public function pinjam(Request $request)
-{
-    // Ambil data keranjang dari sesi
-    $cart = session()->get('cart', []);
-    $borrowData = $request->input('borrowData', []); // Menyesuaikan dengan data yang dikirim dari React form
-    
-    // Pastikan keranjang tidak kosong
-    if (empty($cart)) {
-        return redirect()->route('keranjang')->with('error', 'Keranjang Anda kosong.');
-    }
-
-    // Filter item yang dipilih untuk checkout
-    $checkoutItems = [];
-    foreach ($cart as $itemId => $item) {
-        if (in_array($itemId, $borrowData)) {
-            $itemDetails = KelolaKoleksi::find($itemId);
-            if ($itemDetails) {
-                $checkoutItems[] = [
-                    'id' => $itemId,
-                    'koleksi_id' => $itemDetails->id,
-                    'nama_koleksi' => $itemDetails->nama_koleksi,
-                    'gambar_satu' => $itemDetails->gambar_satu,
-                    'jumlah_dipinjam' => $item['jumlah_dipinjam'],
-                ];
-            }
-        }
-    }
-    
-    // Simpan item checkout di sesi
-    session()->put('checkout_items', $checkoutItems);
-
-    // Tampilkan halaman Pinjam dengan item yang dipilih
-    return Inertia::render('Pinjam', [
-        'checkoutItems' => $checkoutItems,
-        'user' => auth()->user(),
-    ]);
-}
-
-
-    
-
-
     public function checkout(Request $request)
 {
+
+    dd($request->all());
     // Validasi data yang diperlukan untuk peminjaman
     $validator = Validator::make($request->all(), [
         'users_id' => 'required|exists:users,id', // Pastikan pengguna terdaftar di tabel users

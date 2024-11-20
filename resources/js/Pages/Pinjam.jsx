@@ -6,16 +6,13 @@ import FieldGroup from "@/Components/Form/FieldGroup";
 import FileInput from "@/Components/Form/FileInput";
 
 const Pinjam = ({ checkoutItems = [], user }) => {
-
-    const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
-    const [successMessage, setSuccessMessage] = useState("");
-   
+    // Inisialisasi data form menggunakan useForm dari Inertia
     const { data, setData, post, errors, processing } = useForm({
-        items: checkoutItems || [], // Gunakan items yang dikirim dari backend
-        keperluan: "",
+        items: checkoutItems, // Gunakan items yang dikirim dari backend
         tanggal_pinjam: "",
         tanggal_jatuh_tempo: "",
-        users_id: user.id, 
+        users_id: user.id, // Asumsi `user` memiliki properti `id` dan `name`
+        identitas: null,
         surat_permohonan: null,
     });
 
@@ -45,28 +42,12 @@ const Pinjam = ({ checkoutItems = [], user }) => {
         post(route("keranjang.checkout"), {
             data: formData,
             onSuccess: () => {
-                setSuccessMessage("Peminjaman berhasil dibuat!");
-
-                // Reset the success message after 3 seconds
-                setTimeout(() => {
-                    setSuccessMessage("");
-                }, 3000);
+                alert("Peminjaman berhasil dibuat!");
             },
             onError: (errors) => {
-                console.error("Error adding to cart:", errors);
+                console.error(errors);
             },
         });
-    };
-
-    // Close modal
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
-
-    const handleModalClick = (event) => {
-        if (event.target === event.currentTarget) {
-            closeModal();
-        }
     };
 
     return (
@@ -90,22 +71,6 @@ const Pinjam = ({ checkoutItems = [], user }) => {
                         </FieldGroup>
 
                         {/* Input Tanggal Pinjam */}
-                        <FieldGroup
-                            label="Keperluan"
-                            error={errors.keperluan}
-                        >
-                            <TextInput
-                                type="text"
-                                name="keperluan"
-                                error={errors.keperluan}
-                                value={data.keperluan}
-                                onChange={(e) =>
-                                    setData("keperluan", e.target.value)
-                                }
-                                required
-                            />
-                        </FieldGroup>
-
                         <FieldGroup
                             label="Tanggal Pinjam"
                             error={errors.tanggal_pinjam}
@@ -192,27 +157,37 @@ const Pinjam = ({ checkoutItems = [], user }) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                {data.items && data.items.length > 0 ? (
-                                    data.items.map((item) => (
-                                        <tr key={item.koleksi_id} className="border-b">
-                                            <td className="px-4 py-2">
-                                                <img
-                                                    src={item.gambar_satu}
-                                                    alt={item.nama_koleksi}
-                                                    className="w-12 h-12 object-cover rounded"
-                                                />
+                                    {data.items && data.items.length > 0 ? (
+                                        data.items.map((item) => (
+                                            <tr
+                                                key={item.koleksi_id}
+                                                className="border-b"
+                                            >
+                                                <td className="px-4 py-2">
+                                                    <img
+                                                        src={item.gambar_satu}
+                                                        alt={item.nama_koleksi}
+                                                        className="w-12 h-12 object-cover rounded"
+                                                    />
+                                                </td>
+                                                <td className="px-4 py-2">
+                                                    {item.nama_koleksi}
+                                                </td>
+                                                <td className="px-4 py-2">
+                                                    {item.jumlah_dipinjam}
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td
+                                                colSpan="3"
+                                                className="px-4 py-2 text-center text-gray-500"
+                                            >
+                                                Tidak ada item yang dipilih
                                             </td>
-                                            <td className="px-4 py-2">{item.nama_koleksi}</td>
-                                            <td className="px-4 py-2">{item.jumlah_dipinjam}</td>
                                         </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan="3" className="px-4 py-2 text-center text-gray-500">
-                                            Tidak ada item yang dipilih
-                                        </td>
-                                    </tr>
-                                )}
+                                    )}
                                 </tbody>
                             </table>
                         </div>
@@ -227,23 +202,6 @@ const Pinjam = ({ checkoutItems = [], user }) => {
                     </button>
                 </form>
             </div>
-
-            {successMessage && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                        <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
-                            <p className="text-lg font-semibold text-green-600">
-                                {successMessage}
-                            </p>
-                            <button
-                                onClick={() => setSuccessMessage("")}
-                                className="mt-4 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"
-                            >
-                                Oke
-                            </button>
-                        </div>
-                    </div>
-                )}
-
         </div>
     );
 };
