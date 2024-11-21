@@ -14,7 +14,7 @@ const Edit = () => {
     const { data, setData, errors, post, put, processing } = useForm({
         items: peminjaman?.detailPeminjaman || [], // Use 'detailPeminjaman' here, since it contains the items
         keperluan: peminjaman?.keperluan || "",
-        status: peminjaman?.status || "",
+        status: peminjaman?.status || "",  // Ensure 'status' is initialized properly
         tanggal_pinjam: peminjaman?.tanggal_pinjam || "",
         tanggal_jatuh_tempo: peminjaman?.tanggal_jatuh_tempo || "",
         users_id: peminjaman?.users?.id || "",
@@ -22,7 +22,6 @@ const Edit = () => {
         surat_permohonan: peminjaman?.surat_permohonan || null,
     });
 
-    const [step, setStep] = useState(1);
     const [successMessage, setSuccessMessage] = useState("");
 
     // Handle file input change
@@ -31,6 +30,7 @@ const Edit = () => {
         setData(name, file); // Update form state with selected file
     }
 
+    // Handle form submit
     function handleSubmit(e) {
         e.preventDefault();
         const formData = new FormData();
@@ -50,30 +50,21 @@ const Edit = () => {
         console.log([...formData.entries()]); // Check form data before sending
 
         // Submit the form using `put` from Inertia
-        if (step === 4) {
-            put(route("peminjaman.update", peminjaman.id), formData, {
-                onSuccess: () => {
-                    setSuccessMessage("Peminjaman berhasil diperbarui");
-                },
-                onError: (errors) => {
-                    console.error(errors);
-                },
-            });
-        } else {
-            setStep(step + 1);
-        }
+        put(route("peminjaman.update", peminjaman.id), formData, {
+            onSuccess: () => {
+                setSuccessMessage("Peminjaman berhasil diperbarui");
+            },
+            onError: (errors) => {
+                console.error(errors);
+            },
+        });
     }
 
     return (
         <div>
-            <Head
-                title={`edit ${peminjaman?.users?.nama_lengkap || "unknown"}`}
-            />
+            <Head title={`edit ${peminjaman?.users?.nama_lengkap || "unknown"}`} />
             <h1 className="mb-8 text-3xl font-bold">
-                <Link
-                    href={route("peminjaman")}
-                    className="text-indigo-600 hover:text-indigo-700"
-                >
+                <Link href={route("peminjaman")} className="text-indigo-600 hover:text-indigo-700">
                     Edit Peminjaman
                 </Link>
                 <span className="mx-2 font-medium text-indigo-600">/</span>
@@ -86,10 +77,7 @@ const Edit = () => {
                         <FieldGroup label="Nama Peminjam">
                             <TextInput
                                 name="nama_lengkap"
-                                value={
-                                    peminjaman?.users?.nama_lengkap ||
-                                    "Nama tidak tersedia"
-                                } // Using peminjaman?.user
+                                value={peminjaman?.users?.nama_lengkap || "Nama tidak tersedia"}
                                 readOnly
                                 className="bg-gray-100"
                             />
@@ -101,74 +89,53 @@ const Edit = () => {
                                 name="keperluan"
                                 error={errors.keperluan}
                                 value={data.keperluan}
-                                onChange={(e) =>
-                                    setData("keperluan", e.target.value)
-                                }
+                                onChange={(e) => setData("keperluan", e.target.value)}
                                 required
                                 readOnly
                                 className="bg-gray-100"
                             />
                         </FieldGroup>
 
-                        <FieldGroup
-                                    label="Status"
-                                    name="status"
-                                    error={errors.status}
-                                >
-                                    <SelectInput
-                                        type="text"
-                                        name="status"
-                                        error={errors.status}
-                                        value={data.status}
-                                        onChange={(e) =>
-                                            setData("status", e.target.value)
-                                        }
-                                        options={[
-                                            { value: "", label: "" },
-                                            { value: "P", label: "Pengajuan" },
-                                            { value: "SP", label: "Sedang di Pinjam" },
-                                            { value: "T", label: "Terlambat" },
-                                            { value: "DT", label: "Ditolak" },
-                                            { value: "S", label: "Selesai" },
-                                        ]}
-                                        
-                                        
-                                    />
+                        {/* Field untuk Status */}
+                        <FieldGroup label="Status" name="status" error={errors.status}>
+                            <SelectInput
+                                type="text"
+                                name="status"
+                                error={errors.status}
+                                value={data.status} // Status akan diikat ke state data.status
+                                onChange={(e) => setData("status", e.target.value)} // Perubahan akan di-handle oleh setData
+                                options={[
+                                    { value: "", label: "" },
+                                    { value: "P", label: "Pengajuan" },
+                                    { value: "SP", label: "Sedang di Pinjam" },
+                                    { value: "T", label: "Terlambat" },
+                                    { value: "DT", label: "Ditolak" },
+                                    { value: "S", label: "Selesai" },
+                                ]}
+                                required
+                            />
                         </FieldGroup>
 
-                        <FieldGroup
-                            label="Tanggal Pinjam"
-                            error={errors.tanggal_pinjam}
-                        >
+                        <FieldGroup label="Tanggal Pinjam" error={errors.tanggal_pinjam}>
                             <TextInput
                                 type="date"
                                 name="tanggal_pinjam"
                                 error={errors.tanggal_pinjam}
                                 value={data.tanggal_pinjam}
-                                onChange={(e) =>
-                                    setData("tanggal_pinjam", e.target.value)
-                                }
+                                onChange={(e) => setData("tanggal_pinjam", e.target.value)}
                                 required
                                 readOnly
                                 className="bg-gray-100"
                             />
                         </FieldGroup>
 
-                        <FieldGroup
-                            label="Tanggal Jatuh Tempo"
-                            error={errors.tanggal_jatuh_tempo}
-                        >
+                        <FieldGroup label="Tanggal Jatuh Tempo" error={errors.tanggal_jatuh_tempo}>
                             <TextInput
                                 type="date"
                                 name="tanggal_jatuh_tempo"
                                 error={errors.tanggal_jatuh_tempo}
                                 value={data.tanggal_jatuh_tempo}
-                                onChange={(e) =>
-                                    setData(
-                                        "tanggal_jatuh_tempo",
-                                        e.target.value
-                                    )
-                                }
+                                onChange={(e) => setData("tanggal_jatuh_tempo", e.target.value)}
                                 required
                                 readOnly
                                 className="bg-gray-100"
@@ -176,36 +143,24 @@ const Edit = () => {
                         </FieldGroup>
 
                         {/* Input Identitas Diri */}
-                        <FieldGroup
-                            label="Identitas Diri"
-                            name="identitas"
-                            error={errors.identitas}
-                        >
+                        <FieldGroup label="Identitas Diri" name="identitas" error={errors.identitas}>
                             <FileInput
                                 name="identitas"
                                 error={errors.identitas}
                                 existingFile={peminjaman.identitas}
-                                onFileChange={(file) =>
-                                    handleFileChange("identitas", file)
-                                }
+                                onFileChange={(file) => handleFileChange("identitas", file)}
                                 readOnly
                                 className="bg-gray-100"
                             />
                         </FieldGroup>
 
                         {/* Input Surat Permohonan */}
-                        <FieldGroup
-                            label="Surat Permohonan"
-                            name="surat_permohonan"
-                            error={errors.surat_permohonan}
-                        >
+                        <FieldGroup label="Surat Permohonan" name="surat_permohonan" error={errors.surat_permohonan}>
                             <FileInput
                                 name="surat_permohonan"
                                 error={errors.surat_permohonan}
                                 existingFile={peminjaman.surat_permohonan}
-                                onFileChange={(file) =>
-                                    handleFileChange("surat_permohonan", file)
-                                }
+                                onFileChange={(file) => handleFileChange("surat_permohonan", file)}
                                 readOnly
                                 className="bg-gray-100"
                             />
@@ -213,31 +168,20 @@ const Edit = () => {
                     </div>
 
                     <div className="mt-6">
-                        <h3 className="font-semibold mb-2">
-                            Items yang Dipilih
-                        </h3>
+                        <h3 className="font-semibold mb-2">Items yang Dipilih</h3>
                         <div className="overflow-x-auto bg-gray-50 rounded-lg shadow">
                             <table className="min-w-full table-auto">
                                 <thead className="bg-indigo-600 text-white">
                                     <tr>
-                                        <th className="px-4 py-2 text-left">
-                                            Gambar
-                                        </th>
-                                        <th className="px-4 py-2 text-left">
-                                            Nama Koleksi
-                                        </th>
-                                        <th className="px-4 py-2 text-left">
-                                            Jumlah Dipinjam
-                                        </th>
+                                        <th className="px-4 py-2 text-left">Gambar</th>
+                                        <th className="px-4 py-2 text-left">Nama Koleksi</th>
+                                        <th className="px-4 py-2 text-left">Jumlah Dipinjam</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {data.items && data.items.length > 0 ? (
-                                        data.items.map((item) => (
-                                            <tr
-                                                key={item.koleksi_id}
-                                                className="border-b"
-                                            >
+                                    {data.checkoutItems && data.checkoutItems.length > 0 ? (
+                                        data.checkoutItems.map((item) => (
+                                            <tr key={item.koleksi_id} className="border-b">
                                                 <td className="px-4 py-2">
                                                     <img
                                                         src={item.gambar_satu}
@@ -245,20 +189,13 @@ const Edit = () => {
                                                         className="w-12 h-12 object-cover rounded"
                                                     />
                                                 </td>
-                                                <td className="px-4 py-2">
-                                                    {item.nama_koleksi}
-                                                </td>
-                                                <td className="px-4 py-2">
-                                                    {item.jumlah_dipinjam}
-                                                </td>
+                                                <td className="px-4 py-2">{item.nama_koleksi}</td>
+                                                <td className="px-4 py-2">{item.jumlah_dipinjam}</td>
                                             </tr>
                                         ))
                                     ) : (
                                         <tr>
-                                            <td
-                                                colSpan="3"
-                                                className="px-4 py-2 text-center text-gray-500"
-                                            >
+                                            <td colSpan="3" className="px-4 py-2 text-center text-gray-500">
                                                 Tidak ada item yang dipilih
                                             </td>
                                         </tr>
@@ -281,9 +218,7 @@ const Edit = () => {
             {successMessage && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
-                        <p className="text-lg font-semibold text-green-600">
-                            {successMessage}
-                        </p>
+                        <p className="text-lg font-semibold text-green-600">{successMessage}</p>
                         <button
                             onClick={() => setSuccessMessage("")}
                             className="mt-4 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"

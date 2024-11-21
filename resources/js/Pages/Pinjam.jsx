@@ -8,10 +8,11 @@ import FileInput from "@/Components/Form/FileInput";
 const Pinjam = ({ checkoutItems = [], user }) => {
     // Inisialisasi data form menggunakan useForm dari Inertia
     const { data, setData, post, errors, processing } = useForm({
-        items: checkoutItems, // Gunakan items yang dikirim dari backend
+        checkoutItems, // Gunakan items yang dikirim dari backend
         tanggal_pinjam: "",
         tanggal_jatuh_tempo: "",
-        users_id: user.id, // Asumsi `user` memiliki properti `id` dan `name`
+        keperluan: "",
+        users_id: user.id, // Asumsi user memiliki properti id dan name
         identitas: null,
         surat_permohonan: null,
     });
@@ -26,17 +27,21 @@ const Pinjam = ({ checkoutItems = [], user }) => {
         e.preventDefault();
 
         // Menyiapkan array detail_peminjaman
-        const detailPeminjaman = data.items.map((item) => ({
+        const detailPeminjaman = data.checkoutItems.map((item) => ({
             koleksi_id: item.koleksi_id,
             jumlah_dipinjam: item.jumlah_dipinjam,
-            kondisi: item.kondisi, // Jika diperlukan
+            kondisi: item.kondisi ?? 'Baik', // Kondisi default 'Baik'
         }));
 
-        // Menambahkan data `detail_peminjaman` ke data form
-        const formData = {
-            ...data,
-            detail_peminjaman: detailPeminjaman,
-        };
+        // Menambahkan data detail_peminjaman ke data form
+        const formData = new FormData();
+        formData.append('keperluan', data.keperluan);
+        formData.append('tanggal_pinjam', data.tanggal_pinjam);
+        formData.append('tanggal_jatuh_tempo', data.tanggal_jatuh_tempo);
+        formData.append('users_id', data.users_id);
+        formData.append('identitas', data.identitas);
+        formData.append('surat_permohonan', data.surat_permohonan);
+        formData.append('checkoutItems', JSON.stringify(detailPeminjaman)); // Mengirim detail peminjaman sebagai string JSON
 
         // Mengirim data form ke server
         post(route("keranjang.checkout"), {
@@ -134,6 +139,22 @@ const Pinjam = ({ checkoutItems = [], user }) => {
                                 }
                             />
                         </FieldGroup>
+
+                        {/* Input Keperluan */}
+                        <FieldGroup
+                            label="Keperluan"
+                            error={errors.keperluan}
+                        >
+                            <TextInput
+                                name="keperluan"
+                                error={errors.keperluan}
+                                value={data.keperluan}
+                                onChange={(e) =>
+                                    setData("keperluan", e.target.value)
+                                }
+                                required
+                            />
+                        </FieldGroup>
                     </div>
 
                     {/* Tabel item yang dipilih */}
@@ -157,8 +178,8 @@ const Pinjam = ({ checkoutItems = [], user }) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {data.items && data.items.length > 0 ? (
-                                        data.items.map((item) => (
+                                    {data.checkoutItems && data.checkoutItems.length > 0 ? (
+                                        data.checkoutItems.map((item) => (
                                             <tr
                                                 key={item.koleksi_id}
                                                 className="border-b"
