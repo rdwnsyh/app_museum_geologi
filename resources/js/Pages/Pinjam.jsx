@@ -75,6 +75,22 @@ const Pinjam = ({ checkoutItems = [], user }) => {
                             />
                         </FieldGroup>
 
+                         {/* Input Keperluan */}
+                         <FieldGroup
+                            label="Keperluan"
+                            error={errors.keperluan}
+                        >
+                            <TextInput
+                                name="keperluan"
+                                error={errors.keperluan}
+                                value={data.keperluan}
+                                onChange={(e) =>
+                                    setData("keperluan", e.target.value)
+                                }
+                                required
+                            />
+                        </FieldGroup>
+
                         {/* Input Tanggal Pinjam */}
                         <FieldGroup
                             label="Tanggal Pinjam"
@@ -140,21 +156,7 @@ const Pinjam = ({ checkoutItems = [], user }) => {
                             />
                         </FieldGroup>
 
-                        {/* Input Keperluan */}
-                        <FieldGroup
-                            label="Keperluan"
-                            error={errors.keperluan}
-                        >
-                            <TextInput
-                                name="keperluan"
-                                error={errors.keperluan}
-                                value={data.keperluan}
-                                onChange={(e) =>
-                                    setData("keperluan", e.target.value)
-                                }
-                                required
-                            />
-                        </FieldGroup>
+                    
                     </div>
 
                     {/* Tabel item yang dipilih */}
