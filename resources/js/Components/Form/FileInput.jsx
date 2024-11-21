@@ -8,15 +8,18 @@ export default function FileInput({ name, error, onFileChange, existingFile }) {
         setFile(existingFile);
     }, [existingFile]);
 
+    // Menangani klik browse
     function handleBrowse() {
         fileInput.current.click();
     }
 
+    // Menangani penghapusan file
     function handleRemove() {
         setFile(null);
-        onFileChange(null);
+        onFileChange(null); // Mengirimkan null jika file dihapus
     }
 
+    // Menangani perubahan file
     function handleChange(e) {
         const selectedFile = e.currentTarget.files[0] || null;
         setFile(selectedFile);
@@ -41,7 +44,6 @@ export default function FileInput({ name, error, onFileChange, existingFile }) {
             {!file && (
                 <div className="p-2">
                     <BrowseButton text="Pilih File" onClick={handleBrowse} />
-                    Input file
                 </div>
             )}
             {file && (

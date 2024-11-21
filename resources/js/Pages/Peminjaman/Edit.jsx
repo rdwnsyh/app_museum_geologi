@@ -47,8 +47,6 @@ const Edit = () => {
             }
         });
 
-        console.log([...formData.entries()]); // Check form data before sending
-
         // Submit the form using `put` from Inertia
         put(route("peminjaman.update", peminjaman.id), formData, {
             onSuccess: () => {
@@ -95,17 +93,24 @@ const Edit = () => {
                                 className="bg-gray-100"
                             />
                         </FieldGroup>
-
-                        {/* Field untuk Status */}
-                        <FieldGroup label="Status" name="status" error={errors.status}>
+                       
+                        <FieldGroup 
+                        label="Status" 
+                        name="status" 
+                        error={errors.status}
+                        >
                             <SelectInput
                                 type="text"
                                 name="status"
                                 error={errors.status}
-                                value={data.status} // Status akan diikat ke state data.status
-                                onChange={(e) => setData("status", e.target.value)} // Perubahan akan di-handle oleh setData
+                                value={data.status} 
+                                onChange={(e) => 
+                                    setData("status", 
+                                        e.target.value
+                                    )
+                                } 
                                 options={[
-                                    { value: "", label: "" },
+                                    { value: "", label: "Pilih Status" }, 
                                     { value: "P", label: "Pengajuan" },
                                     { value: "SP", label: "Sedang di Pinjam" },
                                     { value: "T", label: "Terlambat" },
@@ -113,6 +118,8 @@ const Edit = () => {
                                     { value: "S", label: "Selesai" },
                                 ]}
                                 required
+                               
+                                
                             />
                         </FieldGroup>
 
