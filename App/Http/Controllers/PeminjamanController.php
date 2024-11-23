@@ -193,7 +193,7 @@ public function checkout(Request $request)
         }
 
         // Hapus session checkout_items
-        session()->forget('checkout_items');
+        session()->forget('cart');
 
         // Komit transaksi
         DB::commit();

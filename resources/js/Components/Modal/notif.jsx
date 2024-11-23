@@ -1,23 +1,29 @@
-import React from 'react';
+import React from "react";
 
-const NotificationModal = ({ isOpen, onClose, message }) => {
-  if (!isOpen) return null;
+function NotificationModal({ isOpen, onClose, message }) {
+    if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded shadow-lg max-w-sm w-full">
-        <h3 className="text-lg font-semibold text-green-600">{message}</h3>
-        <div className="flex justify-end mt-4">
-          <button
-            onClick={onClose}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Close
-          </button>
+    return (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-600 bg-opacity-50">
+            <div className="bg-white p-6 rounded shadow-lg w-96">
+                <div className="flex justify-between items-center">
+                    <h2 className="text-lg font-semibold">Notification</h2>
+                    <button onClick={onClose} className="text-gray-500">
+                        &times;
+                    </button>
+                </div>
+                <p className="mt-4">{message}</p>
+                <div className="mt-4 flex justify-end">
+                    <button
+                        onClick={onClose}
+                        className="bg-blue-600 text-white py-2 px-4 rounded"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
-};
+    );
+}
 
 export default NotificationModal;
