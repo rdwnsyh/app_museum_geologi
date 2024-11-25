@@ -14,9 +14,8 @@ import TextArea from "@/Components/Form/Textarea";
 
 const Edit = () => {
     const { kelolakoleksi } = usePage().props || {}; // Mengambil data yang dikirim dari controller
-    console.log(kelolakoleksi);
 
-    const { data, setData, errors, post, put, processing, setError } = useForm({
+    const { data, setData, errors, put, processing, setError } = useForm({
         //halaman 1
         // id: koleksibatuan?.id || "",
         kelompok_koleksi: kelolakoleksi?.kelompok_koleksi || "",

@@ -41,4 +41,9 @@ class Peminjaman extends Model
         {
             return $this->hasOne(Pengembalian::class, 'peminjaman_id');
         }
+
+        public function inOutCollection()
+    {
+        return $this->hasMany(InOutCollection::class, 'no_referensi', 'id');
+    }
 }
