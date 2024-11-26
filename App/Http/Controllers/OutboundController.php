@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Models\Outbound;
 use App\Models\Peminjaman;
 use Illuminate\Http\Request;
 use App\Models\InOutCollection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
@@ -19,15 +17,18 @@ class OutboundController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $outbound = InOutCollection::with('users:id,nama_lengkap')
-            ->paginate(10); // Menggunakan pagination
+    public function index(): Response
+{
+    // Ambil data dari tabel inout_collection dengan relasi 'users'
+    $outbound = InOutCollection::with('users:id,nama_lengkap') // Muat relasi dengan kolom tertentu
+        ->paginate(10); // Paginate dengan 10 item per halaman
 
-        return inertia('Outbound/Index', [
-            'outbound' => $outbound,
-        ]);
-    }
+    // Kirim data ke view menggunakan Inertia
+    return Inertia::render('Outbound/Index', [
+        'outbound' => $outbound, // Kirim data
+    ]);
+}
+
 
 
     /**
@@ -46,6 +47,7 @@ class OutboundController extends Controller
     ]);
 }
 
+
     /**
      * Store a newly created resource in storage.
      */
@@ -62,7 +64,7 @@ class OutboundController extends Controller
             'tanggal_masuk' => 'required|date',
             'tanggal_keluar' => 'required|date|after_or_equal:tanggal_masuk',
             'status' => 'required|in:Inbound,Outbound',
-            'lampiran' => 'required|file|mimes:pdf,doc,docx|max:2048', // Maksimal 2MB
+            'lampiran' => 'nullable|file|mimes:pdf,doc,docx|max:2048', // Maksimal 2MB
         ], [
             'no_referensi.required' => 'No referensi wajib diisi.',
             'users_id.required' => 'ID pengguna wajib diisi.',
@@ -99,23 +101,24 @@ class OutboundController extends Controller
      * Show the form for editing the specified resource.
      */
 
-    public function edit(InOutCollection $outbound)
+    public function edit(InOutCollection $outbound): Response
     {
         return Inertia::render('Outbound/Edit', [
-            'outbound' => $outbound->load('users'), // Mengambil data outbound beserta relasi user
+            'outbound' => $outbound->load('users') // Pastikan relasi user dimuat
         ]);
     }
+
+
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, InOutCollection $outbound)
 {
-    // Debug data yang diterima
-    // dd($request->all());
+    // Aturan validasi
+    dd($request->all(), $request->allFiles());
 
-    // Validasi data input
-    $validatedData = $request->validate([
+    $rules = [
         'users_id' => 'required|exists:users,id',
         'no_referensi' => 'required|string|max:255',
         'keterangan' => 'required|in:Peminjaman,Pengembalian,Barang Baru,Pameran,Perbaikan,dll',
@@ -123,29 +126,52 @@ class OutboundController extends Controller
         'tanggal_masuk' => 'required|date',
         'tanggal_keluar' => 'required|date|after_or_equal:tanggal_masuk',
         'status' => 'required|in:Inbound,Outbound',
-        'lampiran' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
-    ]);
+        'lampiran' => 'nullable|file|mimes:pdf,doc,docx|max:2048'
+    ];
 
-    // Proses file baru jika ada
+    // Tambahkan validasi file jika ada
     if ($request->hasFile('lampiran')) {
-        if ($outbound->lampiran) {
-            Storage::delete($outbound->lampiran); // Hapus file lama jika ada
-        }
-        $validatedData['lampiran'] = $request->file('lampiran')->store('lampiran', 'public');
+        $rules['lampiran'] = 'nullable|file|mimes:pdf,doc,docx|max:2048';
     }
 
-    // Update data di database
+    // Validasi data
+    $validatedData = $request->validate($rules);
+
+    // Tangani file upload jika ada
+    if ($request->hasFile('lampiran')) {
+        if ($outbound->lampiran) {
+            Storage::delete($outbound->lampiran); // Hapus file lama
+        }
+        $validatedData['lampiran'] = $request->file('lampiran')->store('lampiran', 'public'); // Simpan file baru
+    } else {
+        // Jika tidak ada file baru, jangan ubah lampiran yang sudah ada
+        unset($validatedData['lampiran']);
+    }
+
+    // Update data ke database
     $outbound->update($validatedData);
 
     return redirect()->route('outbound.index')->with('success', 'Data berhasil diperbarui.');
 }
 
 
+
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(InOutCollection $outbound)
-    {
-        //
+{
+    // Jika ada file lampiran, hapus dari penyimpanan
+    if ($outbound->lampiran) {
+        Storage::delete($outbound->lampiran);
     }
+
+    // Hapus data dari database
+    $outbound->delete();
+
+    // Redirect atau kembalikan response JSON
+    return redirect()->route('outbound')->with('success', 'Data berhasil dihapus.');
+}
+
 }

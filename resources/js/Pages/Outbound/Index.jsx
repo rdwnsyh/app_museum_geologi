@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, usePage } from "@inertiajs/react";
+import { Link, usePage, router } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
 import Table from "@/Components/Table/Table";
 import SearchBar from "@/Components/SearchBar/SearchBar";
@@ -10,10 +10,10 @@ function Index() {
     const data = outbound?.data || []; // Ambil data dari props
 
     const handleDelete = (id) => {
-        if (confirm("Apakah Anda yakin ingin menghapus outbound ini?")) {
-            // Logika delete dengan Inertia.js
-            Inertia.delete(route("outbound.destroy", id), {
+        if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+            router.delete(route("outbound.destroy", id), {
                 onSuccess: () => alert("Data berhasil dihapus."),
+                onError: (errors) => console.error("Errors:", errors),
             });
         }
     };
@@ -60,14 +60,14 @@ function Index() {
                         renderCell: (row) => (
                             <div className="flex space-x-2">
                                 <Link
-                                    href={route("outbound.edit", row.id)}
+                                    href={route("outbound.edit", row.id)} // Link ke halaman edit
                                     className="bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-900 transition flex items-center"
                                 >
                                     <Edit className="w-4 h-4 mr-1" />
                                     Edit
                                 </Link>
                                 <button
-                                    onClick={() => handleDelete(row.id)}
+                                    onClick={() => handleDelete(row.id)} // Hapus data
                                     className="bg-red-600 text-white py-1 px-3 rounded hover:bg-red-900 transition flex items-center"
                                 >
                                     <Trash className="w-4 h-4 mr-1" />
@@ -77,7 +77,7 @@ function Index() {
                         ),
                     },
                 ]}
-                rows={data}
+                rows={data} // Gunakan data paginated
             />
         </div>
     );
@@ -88,6 +88,6 @@ function Index() {
  *
  * [Learn more](https://inertiajs.com/pages#persistent-layouts)
  */
-Index.layout = (page) => <MainLayout title="Kelola Koleksi">{page}</MainLayout>;
+Index.layout = (page) => <MainLayout title="Outbound">{page}</MainLayout>;
 
 export default Index;

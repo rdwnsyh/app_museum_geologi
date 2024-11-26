@@ -49,4 +49,10 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
+
+    public function inoutCollections()
+    {
+        return $this->hasMany(InOutCollection::class, 'users_id');
+    }
+
 }

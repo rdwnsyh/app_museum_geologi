@@ -5,6 +5,7 @@ import LoadingButton from "@/Components/Button/LoadingButton";
 import TextInput from "@/Components/Form/TextInput";
 import SelectInput from "@/Components/Form/SelectInput";
 import FieldGroup from "@/Components/Form/FieldGroup";
+import FileInput from "@/Components/Form/FileInput";
 
 const Edit = ({ outbound }) => {
     const { data, setData, errors, put, processing } = useForm({
@@ -18,29 +19,26 @@ const Edit = ({ outbound }) => {
         lampiran: outbound?.lampiran || null, // Untuk upload file baru
     });
 
-    function handleSubmit(e) {
+    const handleSubmit = (e) => {
         e.preventDefault();
 
         const formData = new FormData();
-
         Object.keys(data).forEach((key) => {
-            if (data[key] instanceof File) {
-                formData.append(key, data[key]);
-            } else {
-                formData.append(key, data[key] || "");
-            }
+            if (key === "lampiran" && data[key] === null) return; // Abaikan file jika null
+            formData.append(key, data[key]);
         });
 
+        // Debug isi FormData
         for (let pair of formData.entries()) {
-            console.log(pair[0] + ": " + pair[1]);
+            console.log(`${pair[0]}:`, pair[1]);
         }
 
         put(route("outbound.update", outbound.id), {
             data: formData,
-            preserveScroll: true,
-            forceFormData: true,
+            onSuccess: () => alert("Data berhasil diperbarui."),
+            onError: (errors) => console.error("Errors:", errors),
         });
-    }
+    };
 
     return (
         <div>
@@ -201,19 +199,11 @@ const Edit = ({ outbound }) => {
                         </FieldGroup>
 
                         {/* Input untuk Lampiran */}
-                        <input
-                            type="file"
+                        <FileInput
                             name="lampiran"
-                            className={`w-full p-2 border rounded ${
-                                errors.lampiran
-                                    ? "border-red-500"
-                                    : "border-gray-300"
-                            }`}
-                            onChange={(e) => {
-                                if (e.target.files && e.target.files[0]) {
-                                    setData("lampiran", e.target.files[0]);
-                                }
-                            }}
+                            existingFile={data.lampiran} // File eksisting dari backend
+                            onFileChange={(file) => setData("lampiran", file)} // Update state parent
+                            error={errors.lampiran} // Tampilkan pesan error
                         />
                     </div>
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">

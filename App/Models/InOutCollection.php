@@ -21,13 +21,18 @@ class InOutCollection extends Model
         'tanggal_keluar',
         'status',
         'lampiran',
-    ];
+    ];    
 
     public function users()
     {
         return $this->belongsTo(User::class, 'users_id');
     }
 
+    public function setLampiranAttribute($value)
+{
+    // Pastikan tidak ada konflik saat menyimpan data
+    $this->attributes['lampiran'] = $value;
+}
 
     /**
      * Relasi ke model User.

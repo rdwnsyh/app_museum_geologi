@@ -171,10 +171,6 @@ Route::put('outbound/{outbound}', [OutboundController::class, 'update'])
 Route::delete('outbound/{outbound}', [OutboundController::class, 'destroy'])
     ->name('outbound.destroy')
     ->middleware('auth');
-// proses hapus outbound
-Route::put('outbound/{outbound}/restore', [OutboundController::class, 'restore'])
-    ->name('outbound.restore')
-    ->middleware('auth');
 
 
 // Route Inbound
