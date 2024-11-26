@@ -16,7 +16,7 @@ const Edit = ({ outbound }) => {
         tanggal_masuk: outbound.tanggal_masuk || "",
         tanggal_keluar: outbound.tanggal_keluar || "",
         status: outbound.status || "",
-        lampiran: outbound?.lampiran || null, // Untuk upload file baru
+        lampiran: null, // Untuk upload file baru
     });
 
     const handleSubmit = (e) => {
@@ -27,11 +27,6 @@ const Edit = ({ outbound }) => {
             if (key === "lampiran" && data[key] === null) return; // Abaikan file jika null
             formData.append(key, data[key]);
         });
-
-        // Debug isi FormData
-        for (let pair of formData.entries()) {
-            console.log(`${pair[0]}:`, pair[1]);
-        }
 
         put(route("outbound.update", outbound.id), {
             data: formData,

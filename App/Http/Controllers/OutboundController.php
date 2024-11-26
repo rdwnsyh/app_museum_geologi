@@ -116,11 +116,10 @@ class OutboundController extends Controller
     public function update(Request $request, InOutCollection $outbound)
 {
     // Aturan validasi
-    dd($request->all(), $request->allFiles());
 
     $rules = [
         'users_id' => 'required|exists:users,id',
-        'no_referensi' => 'required|string|max:255',
+        'no_referensi' => 'required|integer|max:255',
         'keterangan' => 'required|in:Peminjaman,Pengembalian,Barang Baru,Pameran,Perbaikan,dll',
         'pesan' => 'nullable|string|max:255',
         'tanggal_masuk' => 'required|date',
@@ -151,7 +150,7 @@ class OutboundController extends Controller
     // Update data ke database
     $outbound->update($validatedData);
 
-    return redirect()->route('outbound.index')->with('success', 'Data berhasil diperbarui.');
+    return redirect()->route('outbound')->with('success', 'Data berhasil diperbarui.');
 }
 
 
