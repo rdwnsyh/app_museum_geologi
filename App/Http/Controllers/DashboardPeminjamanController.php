@@ -71,53 +71,19 @@ class DashboardPeminjamanController extends Controller
         // dd($request->all());
         // Validasi input dari form
         $validatedData = $request->validate([
-            // 'keperluan' => 'required|string|max:255',
             'pesan' => 'required|string|max:255',
-            'status' => 'required|in:Pengajuan,Sedang di Pinjam,Terlambat,Ditolak,Diterima',
-            // 'tanggal_pinjam' => 'required|date',
-            // 'tanggal_jatuh_tempo' => 'required|date|after_or_equal:tanggal_pinjam',
-            // 'identitas' => 'nullable|file|mimes:png,jpg,jpeg,pdf|max:2048',
-            // 'surat_permohonan' => 'nullable|file|mimes:png,jpg,jpeg,pdf|max:2048',
-            // 'items' => 'required|array',
-            // 'items.*.koleksi_id' => 'required|exists:kelola_koleksi,id',
-            // 'items.*.jumlah_dipinjam' => 'required|integer|min:1',
-            // 'items.*.kondisi' => 'nullable|string',
+            'status' => 'required|in:Pengajuan,Terlambat,Ditolak,Diterima',
         ], [
             'status.required' => 'Status harus diisi.',
-            'status.in' => 'Status harus salah satu dari: Pengajuan, Sedang di Pinjam, Terlambat, Ditolak, atau Diterima.',
+            'status.in' => 'Status harus salah satu dari: Pengajuan, Terlambat, Ditolak, Diterima.',
         ]);
 
         // Update data peminjaman
         $peminjaman->update([
-            // 'tanggal_pinjam' => $validatedData['tanggal_pinjam'],
-            // 'tanggal_jatuh_tempo' => $validatedData['tanggal_jatuh_tempo'],
             'status' => $validatedData['status'],
             'pesan' => $validatedData['pesan'],
         ]);
 
-        // // Perbarui file identitas jika ada
-        // if ($request->hasFile('identitas')) {
-        //     $identitasPath = $request->file('identitas')->store('identitas', 'public');
-        //     $peminjaman->update(['identitas' => $identitasPath]);
-        // }
-
-        // // Perbarui file surat permohonan jika ada
-        // if ($request->hasFile('surat_permohonan')) {
-        //     $suratPermohonanPath = $request->file('surat_permohonan')->store('surat_permohonan', 'public');
-        //     $peminjaman->update(['surat_permohonan' => $suratPermohonanPath]);
-        // }
-
-        // Hapus detail peminjaman yang lama
-        // $peminjaman->detailPeminjaman()->delete();
-
-        // Tambahkan kembali detail peminjaman yang baru
-        // foreach ($validatedData['items'] as $item) {
-        //     $peminjaman->detailPeminjaman()->create([
-        //         'koleksi_id' => $item['koleksi_id'],
-        //         'jumlah_dipinjam' => $item['jumlah_dipinjam'],
-        //         'kondisi' => $item['kondisi'] ?? null,
-        //     ]);
-        // }
 
         // Redirect ke halaman sebelumnya dengan pesan sukses
         return redirect()->route('peminjaman')->with('success', 'Data peminjaman berhasil diperbarui.');

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useForm } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
 import LoadingButton from "@/Components/Button/LoadingButton";
@@ -6,38 +6,66 @@ import TextInput from "@/Components/Form/TextInput";
 import SelectInput from "@/Components/Form/SelectInput";
 import FieldGroup from "@/Components/Form/FieldGroup";
 import FileInput from "@/Components/Form/FileInput";
+import Select from "react-select";
 
-const Create = ({ outbound }) => {
+const Create = ({ outbound, koleksiOptions }) => {
     const { data, setData, errors, post, processing } = useForm({
         users_id: outbound.id, // Isi otomatis dengan ID pengguna login
         no_referensi: "",
         keterangan: "",
         pesan: "",
-        tanggal_masuk: "",
-        tanggal_keluar: "",
+        tanggal: "",
         status: "",
         lampiran: null,
+        koleksi: [], // Array untuk menyimpan koleksi
     });
 
-    function handleSubmit(e) {
+    // Fungsi untuk menambah koleksi
+    const addKoleksiRow = () => {
+        setData("koleksi", [
+            ...data.koleksi,
+            { nama_koleksi: "", jumlah_dipinjam: 1 },
+        ]);
+    };
+
+    // Fungsi untuk menghapus koleksi berdasarkan index
+    const removeKoleksiRow = (index) => {
+        const newKoleksi = [...data.koleksi];
+        newKoleksi.splice(index, 1);
+        setData("koleksi", newKoleksi);
+    };
+
+    // Fungsi untuk mengubah data koleksi pada baris tertentu
+    const handleKoleksiChange = (index, field, value) => {
+        const newKoleksi = [...data.koleksi];
+        newKoleksi[index][field] = value;
+        setData("koleksi", newKoleksi);
+    };
+
+    const handleFileChange = (name, file) => {
+        setData(name, file);
+    };
+
+    const handleSubmit = (e) => {
         e.preventDefault();
 
         const formData = new FormData();
 
+        // Serialize data for non-file fields
         Object.keys(data).forEach((key) => {
             if (data[key] instanceof File) {
-                formData.append(key, data[key]);
+                formData.append(key, data[key]); // Append file field
             } else {
-                formData.append(key, data[key] || "");
+                formData.append(key, JSON.stringify(data[key])); // Serialize array and primitive fields
             }
         });
 
         post(route("outbound.store"), {
             data: formData,
             preserveScroll: true,
-            forceFormData: true,
+            forceFormData: true, // Ensure formData is sent instead of JSON
         });
-    }
+    };
 
     return (
         <div>
@@ -99,14 +127,6 @@ const Create = ({ outbound }) => {
                                         value: "Peminjaman",
                                         label: "Peminjaman",
                                     },
-                                    {
-                                        value: "Pengembalian",
-                                        label: "Pengembalian",
-                                    },
-                                    {
-                                        value: "Barang Baru",
-                                        label: "Barang Baru",
-                                    },
                                     { value: "Pameran", label: "Pameran" },
                                     { value: "Perbaikan", label: "Perbaikan" },
                                     { value: "dll", label: "Lain-lain" },
@@ -142,34 +162,17 @@ const Create = ({ outbound }) => {
 
                         {/* Input untuk Tanggal Masuk */}
                         <FieldGroup
-                            label="Tanggal Masuk"
-                            name="tanggal_masuk"
-                            error={errors.tanggal_masuk}
+                            label="Tanggal"
+                            name="tanggal"
+                            error={errors.tanggal}
                         >
                             <TextInput
-                                name="tanggal_masuk"
+                                name="tanggal"
                                 type="date"
-                                error={errors.tanggal_masuk}
-                                value={data.tanggal_masuk}
+                                error={errors.tanggal}
+                                value={data.tanggal}
                                 onChange={(e) =>
-                                    setData("tanggal_masuk", e.target.value)
-                                }
-                            />
-                        </FieldGroup>
-
-                        {/* Input untuk Tanggal Keluar */}
-                        <FieldGroup
-                            label="Tanggal Keluar"
-                            name="tanggal_keluar"
-                            error={errors.tanggal_keluar}
-                        >
-                            <TextInput
-                                name="tanggal_keluar"
-                                type="date"
-                                error={errors.tanggal_keluar}
-                                value={data.tanggal_keluar}
-                                onChange={(e) =>
-                                    setData("tanggal_keluar", e.target.value)
+                                    setData("tanggal", e.target.value)
                                 }
                             />
                         </FieldGroup>
@@ -189,35 +192,133 @@ const Create = ({ outbound }) => {
                                 }
                                 options={[
                                     { value: "", label: "Pilih Status" },
-                                    { value: "Inbound", label: "Inbound" },
                                     { value: "Outbound", label: "Outbound" },
                                 ]}
                             />
                         </FieldGroup>
 
                         {/* Input untuk Lampiran */}
-                        <input
-                            type="file"
+                        <FieldGroup
+                            label="Lampiran"
                             name="lampiran"
-                            className={`w-full p-2 border rounded ${
-                                errors.lampiran
-                                    ? "border-red-500"
-                                    : "border-gray-300"
-                            }`}
-                            onChange={(e) => {
-                                if (e.target.files && e.target.files[0]) {
-                                    setData("lampiran", e.target.files[0]);
-                                }
-                            }}
-                        />
-                    </div>
-                    <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">
-                        <LoadingButton
-                            loading={processing}
-                            type="submit"
-                            className="btn-indigo"
+                            error={errors.lampiran}
                         >
-                            Submit
+                            <FileInput
+                                name="lampiran"
+                                error={errors.lampiran}
+                                onFileChange={(file) =>
+                                    handleFileChange("lampiran", file)
+                                }
+                            />
+                        </FieldGroup>
+                    </div>
+
+                    {/* Tabel Koleksi */}
+                    <div className="p-8">
+                        <h3 className="mb-4 text-xl font-semibold">Koleksi</h3>
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full table-auto">
+                                <thead>
+                                    <tr>
+                                        <th className="px-4 py-2">
+                                            Nama Koleksi
+                                        </th>
+                                        <th className="px-4 py-2">
+                                            Jumlah Dipinjam
+                                        </th>
+                                        <th className="px-4 py-2">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {data.koleksi.map((koleksi, index) => (
+                                        <tr key={index}>
+                                            {/* Nama Koleksi */}
+                                            <td className="px-4 py-2">
+                                                <Select
+                                                    name={`koleksi[${index}].nama_koleksi`}
+                                                    value={{
+                                                        value: koleksi.nama_koleksi,
+                                                        label: koleksi.nama_koleksi,
+                                                    }}
+                                                    onChange={(e) =>
+                                                        handleKoleksiChange(
+                                                            index,
+                                                            "nama_koleksi",
+                                                            e.value
+                                                        )
+                                                    }
+                                                    options={
+                                                        koleksiOptions &&
+                                                        koleksiOptions.length >
+                                                            0
+                                                            ? koleksiOptions.map(
+                                                                  (
+                                                                      koleksiOption
+                                                                  ) => ({
+                                                                      value: koleksiOption.nama_koleksi,
+                                                                      label: koleksiOption.nama_koleksi,
+                                                                  })
+                                                              )
+                                                            : []
+                                                    }
+                                                    isSearchable
+                                                />
+                                            </td>
+                                            {/* Jumlah Dipinjam */}
+                                            <td className="px-4 py-2">
+                                                <TextInput
+                                                    name={`koleksi[${index}].jumlah_dipinjam`}
+                                                    type="number"
+                                                    value={
+                                                        koleksi.jumlah_dipinjam
+                                                    }
+                                                    onChange={(e) =>
+                                                        handleKoleksiChange(
+                                                            index,
+                                                            "jumlah_dipinjam",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    min="1"
+                                                    max="100"
+                                                />
+                                            </td>
+                                            {/* Aksi */}
+                                            <td className="px-4 py-2">
+                                                <button
+                                                    type="button"
+                                                    className="px-4 py-2 bg-red-500 text-white rounded"
+                                                    onClick={() =>
+                                                        removeKoleksiRow(index)
+                                                    }
+                                                >
+                                                    Hapus
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+
+                            {/* Tombol untuk menambah koleksi */}
+                            <button
+                                type="button"
+                                onClick={addKoleksiRow}
+                                className="mt-4 px-4 py-2 bg-green-500 text-white rounded"
+                            >
+                                Tambah Koleksi
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Tombol Simpan */}
+                    <div className="p-8 flex justify-end">
+                        <LoadingButton
+                            type="submit"
+                            processing={processing}
+                            className="px-4 py-2 bg-indigo-600 text-white rounded"
+                        >
+                            Simpan
                         </LoadingButton>
                     </div>
                 </form>
@@ -226,11 +327,6 @@ const Create = ({ outbound }) => {
     );
 };
 
-/**
- * Persistent Layout (Inertia.js)
- */
-Create.layout = (page) => (
-    <MainLayout title="Create Outbound" children={page} />
-);
+Create.layout = (page) => <MainLayout>{page}</MainLayout>;
 
 export default Create;

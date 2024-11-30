@@ -103,9 +103,6 @@ function Index() {
                                 case "Ditolak":
                                     bgColor = "bg-red-600";
                                     break;
-                                case "Sedang di Pinjam":
-                                    bgColor = "bg-blue-500";
-                                    break;
                                 case "Terlambat":
                                     bgColor = "bg-orange-500";
                                     break;
@@ -203,9 +200,6 @@ function Index() {
                                     <option value="Pengajuan">Pengajuan</option>
                                     <option value="Diterima">Diterima</option>
                                     <option value="Ditolak">Ditolak</option>
-                                    <option value="Sedang di Pinjam">
-                                        Sedang di Pinjam
-                                    </option>
                                     <option value="Terlambat">Terlambat</option>
                                 </select>
                             </label>

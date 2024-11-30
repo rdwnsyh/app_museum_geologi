@@ -17,8 +17,7 @@ return new class extends Migration
             $table->integer('no_referensi'); 
             $table->enum('keterangan', ['Peminjaman', 'Pengembalian', 'Barang Baru', 'Pameran', 'Perbaikan', 'dll']); // Jenis aktivitas terkait koleksi
             $table->string('pesan')->nullable(); // Pesan tambahan atau catatan terkait aktivitas (opsional)
-            $table->date('tanggal_masuk'); // Tanggal barang masuk atau aktivitas dimulai
-            $table->date('tanggal_keluar'); // Tanggal barang keluar atau aktivitas berakhir
+            $table->date('tanggal'); // Tanggal barang masuk atau aktivitas dimulai
             $table->enum('status', ['Inbound', 'Outbound']); // Status barang dalam proses: masuk (Inbound) atau keluar (Outbound)
             $table->string('lampiran'); // Nomor atau file referensi untuk surat permohonan terkait aktivitas
             $table->timestamps(); // Timestamps otomatis untuk mencatat waktu pembuatan dan pembaruan data

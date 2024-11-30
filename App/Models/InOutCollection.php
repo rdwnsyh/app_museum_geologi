@@ -17,8 +17,7 @@ class InOutCollection extends Model
         'no_referensi',
         'keterangan',
         'pesan',
-        'tanggal_masuk',
-        'tanggal_keluar',
+        'tanggal',
         'status',
         'lampiran',
     ];    
@@ -32,6 +31,10 @@ class InOutCollection extends Model
 {
     // Pastikan tidak ada konflik saat menyimpan data
     $this->attributes['lampiran'] = $value;
+}
+public function koleksi()
+{
+    return $this->hasMany(KelolaKoleksi::class);
 }
 
     /**

@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Peminjaman;
 use Illuminate\Http\Request;
+use App\Models\KelolaKoleksi;
 use App\Models\InOutCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
@@ -37,13 +38,14 @@ class OutboundController extends Controller
     public function create()
 {
     // Ambil data pengguna yang sedang login
-    $outbound = Auth::user();
+    $outbound = auth()->user(); // Atau sesuaikan jika ada relasi lain
+    
+    // Jika ada data lain yang diperlukan untuk form, seperti koleksi atau status
+    $koleksiOptions = KelolaKoleksi::all(); // Contoh jika perlu data koleksiOptions
 
-    return inertia('Outbound/Create', [
-        'outbound' => [
-            'id' => $outbound->id,
-            'nama_lengkap' => $outbound->nama_lengkap,
-        ],
+    return Inertia::render('Outbound/Create', [
+        'outbound' => $outbound, // Mengirim data pengguna ke React component
+        'koleksiOptions' => $koleksiOptions, // Jika ada data tambahan yang perlu dikirim
     ]);
 }
 
@@ -61,8 +63,7 @@ class OutboundController extends Controller
             'no_referensi' => 'required|string|max:255', // Pastikan no_referensi valid dari tabel peminjaman
             'keterangan' => 'required|in:Peminjaman,Pengembalian,Barang Baru,Pameran,Perbaikan,dll',
             'pesan' => 'nullable|string|max:255',
-            'tanggal_masuk' => 'required|date',
-            'tanggal_keluar' => 'required|date|after_or_equal:tanggal_masuk',
+            'tanggal' => 'required|date',
             'status' => 'required|in:Inbound,Outbound',
             'lampiran' => 'nullable|file|mimes:pdf,doc,docx|max:2048', // Maksimal 2MB
         ], [
@@ -116,14 +117,12 @@ class OutboundController extends Controller
     public function update(Request $request, InOutCollection $outbound)
 {
     // Aturan validasi
-
     $rules = [
         'users_id' => 'required|exists:users,id',
         'no_referensi' => 'required|integer|max:255',
         'keterangan' => 'required|in:Peminjaman,Pengembalian,Barang Baru,Pameran,Perbaikan,dll',
         'pesan' => 'nullable|string|max:255',
-        'tanggal_masuk' => 'required|date',
-        'tanggal_keluar' => 'required|date|after_or_equal:tanggal_masuk',
+        'tanggal' => 'required|date',
         'status' => 'required|in:Inbound,Outbound',
         'lampiran' => 'nullable|file|mimes:pdf,doc,docx|max:2048'
     ];

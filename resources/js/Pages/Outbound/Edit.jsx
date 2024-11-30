@@ -13,8 +13,7 @@ const Edit = ({ outbound }) => {
         no_referensi: outbound.no_referensi || "",
         keterangan: outbound.keterangan || "",
         pesan: outbound.pesan || "",
-        tanggal_masuk: outbound.tanggal_masuk || "",
-        tanggal_keluar: outbound.tanggal_keluar || "",
+        tanggal: outbound.tanggal || "",
         status: outbound.status || "",
         lampiran: null, // Untuk upload file baru
     });
@@ -97,14 +96,6 @@ const Edit = ({ outbound }) => {
                                         value: "Peminjaman",
                                         label: "Peminjaman",
                                     },
-                                    {
-                                        value: "Pengembalian",
-                                        label: "Pengembalian",
-                                    },
-                                    {
-                                        value: "Barang Baru",
-                                        label: "Barang Baru",
-                                    },
                                     { value: "Pameran", label: "Pameran" },
                                     { value: "Perbaikan", label: "Perbaikan" },
                                     { value: "dll", label: "Lain-lain" },
@@ -140,37 +131,22 @@ const Edit = ({ outbound }) => {
 
                         {/* Input untuk Tanggal Masuk */}
                         <FieldGroup
-                            label="Tanggal Masuk"
-                            name="tanggal_masuk"
-                            error={errors.tanggal_masuk}
+                            label="Tanggal"
+                            name="tanggal"
+                            error={errors.tanggal}
                         >
                             <TextInput
-                                name="tanggal_masuk"
+                                name="tanggal"
                                 type="date"
-                                value={data.tanggal_masuk}
-                                error={errors.tanggal_masuk}
+                                value={data.tanggal}
+                                error={errors.tanggal}
                                 onChange={(e) =>
-                                    setData("tanggal_masuk", e.target.value)
+                                    setData("tanggal", e.target.value)
                                 }
                             />
                         </FieldGroup>
 
                         {/* Input untuk Tanggal Keluar */}
-                        <FieldGroup
-                            label="Tanggal Keluar"
-                            name="tanggal_keluar"
-                            error={errors.tanggal_keluar}
-                        >
-                            <TextInput
-                                name="tanggal_keluar"
-                                type="date"
-                                value={data.tanggal_keluar}
-                                error={errors.tanggal_keluar}
-                                onChange={(e) =>
-                                    setData("tanggal_keluar", e.target.value)
-                                }
-                            />
-                        </FieldGroup>
 
                         {/* Input untuk Status */}
                         <FieldGroup
@@ -187,7 +163,6 @@ const Edit = ({ outbound }) => {
                                 }
                                 options={[
                                     { value: "", label: "Pilih Status" },
-                                    { value: "Inbound", label: "Inbound" },
                                     { value: "Outbound", label: "Outbound" },
                                 ]}
                             />
