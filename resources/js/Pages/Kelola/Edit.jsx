@@ -216,7 +216,7 @@ const Edit = () => {
                                 >
                                     <TextInput
                                         //id="no_regis"
-                                        type="number"
+                                        type="text"
                                         name="no_regis"
                                         error={errors.no_regis}
                                         value={data.no_regis}
@@ -361,7 +361,7 @@ const Edit = () => {
                                 >
                                     <TextInput
                                         //id="kode_koleksi"
-                                        type="number"
+                                        type="text"
                                         name="kode_koleksi"
                                         error={errors.kode_koleksi}
                                         value={data.kode_koleksi}

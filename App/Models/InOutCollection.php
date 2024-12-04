@@ -11,7 +11,6 @@ class InOutCollection extends Model
 
     protected $table = 'inout_collection';
 
-    // Kolom yang dapat diisi secara massal
     protected $fillable = [
         'users_id',
         'no_referensi',
@@ -20,29 +19,21 @@ class InOutCollection extends Model
         'tanggal',
         'status',
         'lampiran',
-    ];    
+        'detail_peminjaman_id', // Relasi ke detail peminjaman
+    ];
 
     public function users()
     {
         return $this->belongsTo(User::class, 'users_id');
     }
 
-    public function setLampiranAttribute($value)
-{
-    // Pastikan tidak ada konflik saat menyimpan data
-    $this->attributes['lampiran'] = $value;
-}
-public function koleksi()
-{
-    return $this->hasMany(KelolaKoleksi::class);
-}
+    public function koleksi()
+    {
+        return $this->belongsTo(kelolaKoleksi::class, 'koleksi_id');
+    }
 
-    /**
-     * Relasi ke model User.
-     * Menghubungkan inout_collection dengan tabel users.
-     */
-
-    /**
-     * Mutator untuk keterangan agar selalu huruf kapital.
-     */
+    public function detailPeminjaman()
+    {
+        return $this->belongsTo(DetailPeminjaman::class, 'detail_peminjaman_id');
+    }
 }

@@ -42,8 +42,8 @@ class Peminjaman extends Model
             return $this->hasOne(Pengembalian::class, 'peminjaman_id');
         }
 
-        public function inOutCollection()
-    {
-        return $this->hasMany(InOutCollection::class, 'no_referensi', 'id');
-    }
+        public function inOutCollections()
+        {
+            return $this->hasManyThrough(InOutCollection::class, DetailPeminjaman::class, 'peminjaman_id', 'detail_peminjaman_id');
+        }
 }

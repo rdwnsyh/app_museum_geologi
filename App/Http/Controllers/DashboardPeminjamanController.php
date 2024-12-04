@@ -68,7 +68,6 @@ class DashboardPeminjamanController extends Controller
     public function update(Request $request, Peminjaman $peminjaman): RedirectResponse
     {
 
-        // dd($request->all());
         // Validasi input dari form
         $validatedData = $request->validate([
             'pesan' => 'required|string|max:255',

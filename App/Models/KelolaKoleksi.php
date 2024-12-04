@@ -116,8 +116,9 @@ class KelolaKoleksi extends Model
         return $this->hasMany(DetailPeminjaman::class, 'koleksi_id');
     }
 
-    public function outbound()
+     // Relasi ke inout_collection
+    public function inOutCollections()
     {
-        return $this->belongsTo(InOutCollection::class);
+        return $this->hasMany(InOutCollection::class, 'koleksi_id');
     }
 }

@@ -12,20 +12,23 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('inout_collection', function (Blueprint $table) {
-            $table->bigIncrements('id'); // Primary key untuk tabel inout_collection
-            $table->unsignedBigInteger('users_id'); // Foreign key yang menghubungkan dengan tabel users (pengguna)
-            $table->integer('no_referensi'); 
-            $table->enum('keterangan', ['Peminjaman', 'Pengembalian', 'Barang Baru', 'Pameran', 'Perbaikan', 'dll']); // Jenis aktivitas terkait koleksi
-            $table->string('pesan')->nullable(); // Pesan tambahan atau catatan terkait aktivitas (opsional)
-            $table->date('tanggal'); // Tanggal barang masuk atau aktivitas dimulai
-            $table->enum('status', ['Inbound', 'Outbound']); // Status barang dalam proses: masuk (Inbound) atau keluar (Outbound)
-            $table->string('lampiran'); // Nomor atau file referensi untuk surat permohonan terkait aktivitas
-            $table->timestamps(); // Timestamps otomatis untuk mencatat waktu pembuatan dan pembaruan data
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('users_id'); // Foreign key ke tabel users
+            $table->unsignedBigInteger('detail_peminjaman_id')->nullable(); // Menghubungkan ke detail peminjaman
+            $table->unsignedBigInteger('no_referensi')->nullable(); // Referensi untuk peminjaman atau transaksi terkait
+            $table->enum('keterangan', ['Peminjaman', 'Pengembalian', 'Barang Baru', 'Pameran', 'Perbaikan', 'dll']);
+            $table->string('pesan')->nullable();
+            $table->date('tanggal'); // Tanggal barang keluar atau aktivitas dimulai
+            $table->enum('status', ['Inbound', 'Outbound']); // Status Inbound atau Outbound
+            $table->string('lampiran')->nullable();
+            $table->timestamps();
         
-            // Foreign key constraint
-            $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade'); // Hubungan ke tabel users, menghapus data jika pengguna terkait dihapus
-        });
+            // Foreign key untuk menghubungkan ke tabel users
+            $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
         
+            // Relasi ke detail_peminjaman (untuk Outbound)
+            $table->foreign('detail_peminjaman_id')->references('id')->on('detail_peminjaman')->onDelete('cascade');
+        }); 
     }
 
     /**

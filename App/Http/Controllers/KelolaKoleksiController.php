@@ -38,6 +38,8 @@ class KelolaKoleksiController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+
+        // dd($request->all());
         // Validasi data input
         $validatedData = $request->validate([
             // Halaman 1
@@ -174,6 +176,8 @@ class KelolaKoleksiController extends Controller
      */
     public function update(Request $request, KelolaKoleksi $kelolakoleksi): RedirectResponse
     {
+
+        dd($request->all());
         // Validasi data
     $validatedData = $request->validate([
         'kategori_bmn' => 'nullable|string|max:255',
@@ -224,12 +228,16 @@ class KelolaKoleksiController extends Controller
         'nilai_peroleh' => 'required|string|max:255',
         'nilai_buku' => 'required|string|max:255',
 
-        // Halaman 4: Validasi gambar, audio, dan video
-        'gambar_satu' => 'image|mimes:jpeg,png,jpg,svg|max:2048',
-        'gambar_dua' => 'image|mimes:jpeg,png,jpg,svg|max:2048',
-        'gambar_tiga' => 'image|mimes:jpeg,png,jpg,svg|max:2048',
-        'audio' => 'mimes:mp3,wav,ogg|max:5120',
-        'vidio' => 'mimes:mp4,avi,mov|max:10240',
+       'gambar_satu' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048', // Maksimal ukuran 2MB
+        'gambar_dua'  => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+        'gambar_tiga' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+
+             // Validasi audio
+        'audio' => 'nullable|mimes:mp3,wav,ogg|max:5120', // Maksimal 5MB
+
+            // Validasi video
+        'vidio' => 'nullable|mimes:mp4,avi,mov|max:10240', // Maksimal 10MB
+        'status' => 'nullable|in:ada,tidak ada',
     ]);
 
     if ($request->hasFile('gambar_satu')) {

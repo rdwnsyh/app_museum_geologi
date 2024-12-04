@@ -30,4 +30,10 @@ class DetailPeminjaman extends Model
     {
         return $this->belongsTo(KelolaKoleksi::class, 'koleksi_id');
     }
+
+     // Relasi balik ke inout_collection
+    public function inOutCollections()
+    {
+        return $this->hasMany(InOutCollection::class, 'detail_peminjaman_id');
+    }
 }
