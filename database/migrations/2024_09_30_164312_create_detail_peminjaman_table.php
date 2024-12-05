@@ -20,8 +20,8 @@ return new class extends Migration
             $table->timestamps();
             
             // Foreign key constraints
-            $table->foreign('peminjaman_id')->references('id')->on('peminjaman')->onDelete('cascade');
-            $table->foreign('koleksi_id')->references('id')->on('kelola_koleksi')->onDelete('cascade');
+            // $table->foreign('peminjaman_id')->references('id')->on('peminjaman')->onDelete('cascade');
+            // $table->foreign('koleksi_id')->references('id')->on('kelola_koleksi')->onDelete('cascade');
         });
     }
 

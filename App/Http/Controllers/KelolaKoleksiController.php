@@ -39,12 +39,11 @@ class KelolaKoleksiController extends Controller
     public function store(Request $request): RedirectResponse
     {
 
-        // dd($request->all());
         // Validasi data input
         $validatedData = $request->validate([
             // Halaman 1
             'kategori_bmn' => 'string|max:255' ?? '6.06.01.05.005',
-            'nup_bmn' => 'required|string|max:255',
+            'nup_bmn' => 'nullable|string|max:255',
             'no_regis' => 'required|string|max:255',
             'no_inventaris' => 'required|string|max:255',
             'tipe_bmn' => 'string|max:255' ?? 'Batuan',
@@ -53,43 +52,43 @@ class KelolaKoleksiController extends Controller
             'kelompok_koleksi' => 'string|max:255' ?? 'Batuan',
             'jenis_koleksi' => 'required|string|max:255',
             'kode_koleksi' => 'required|string|max:255',
-            'ruang_penyimpanan' => 'required|string|max:255',
-            'lokasi_penyimpanan' => 'required|string|max:255',
-            'lantai' => 'required|string|max:255',
-            'no_lajur' => 'required|integer',
-            'no_lemari' => 'required|integer',
-            'no_laci' => 'required|integer',
-            'no_slot' => 'required|integer',
+            'ruang_penyimpanan' => 'nullable|string|max:255',
+            'lokasi_penyimpanan' => 'nullable|string|max:255',
+            'lantai' => 'nullable|string|max:255',
+            'no_lajur' => 'nullable|string',
+            'no_lemari' => 'nullable|string',
+            'no_laci' => 'nullable|string',
+            'no_slot' => 'nullable|string',
 
             // Halaman 2
             'kondisi' => 'required|string|max:255',
             'nama_koleksi' => 'required|string|max:255',
-            'deskripsi_koleksi' => 'required|string',
-            'keterangan_koleksi' => 'required|string',
-            'umur_geologi' => 'required|string|max:255',
-            'nama_formasi' => 'required|string|max:255',
+            'deskripsi_koleksi' => 'nullable|string',
+            'keterangan_koleksi' => 'nullable|string',
+            'umur_geologi' => 'nullable|string|max:255',
+            'nama_formasi' => 'nullable|string|max:255',
             'ditemukan' => 'required|string|max:255',
             'pulau' => 'required|string|max:255',
-            'provinsi' => 'required|string|max:255',
-            'kota' => 'required|string|max:255',
-            'alamat' => 'required|string|max:255',
-            'latitude' => 'required|string|max:255',
-            'longitude' => 'required|string|max:255',
-            'elevasi' => 'required|string|max:255',
-            'peta' => 'required|string|max:255',
+            'provinsi' => 'nullable|string|max:255',
+            'kota' => 'nullable|string|max:255',
+            'alamat' => 'nullable|string|max:255',
+            'latitude' => 'nullable|string|max:255',
+            'longitude' => 'nullable|string|max:255',
+            'elevasi' => 'nullable|string|max:255',
+            'peta' => 'nullable|string|max:255',
             'skala' => 'required|string|max:255',
             'lembar_peta' => 'required|string|max:255',
 
             // Halaman 3
             'cara_peroleh' => 'required|string|max:255',
-            'thn_peroleh' => 'required|integer|min:1900',
-            'determinator' => 'required|string|max:255',
-            'kolektor' => 'required|string|max:255',
-            'kepemilikan_awal' => 'required|string|max:255',
+            'thn_peroleh' => 'nullable|string',
+            'determinator' => 'nullable|string|max:255',
+            'kolektor' => 'nullable|string|max:255',
+            'kepemilikan_awal' => 'nullable|string|max:255',
             'publikasi' => 'nullable|string',
-            'url' => 'nullable|string|url',
-            'nilai_peroleh' => 'required|string|max:255',
-            'nilai_buku' => 'required|string|max:255',
+            'url' => 'nullable|string',
+            'nilai_peroleh' => 'nullable|string|max:255',
+            'nilai_buku' => 'nullable|string|max:255',
 
             // Halaman 4
             // Validasi gambar
@@ -176,69 +175,80 @@ class KelolaKoleksiController extends Controller
      */
     public function update(Request $request, KelolaKoleksi $kelolakoleksi): RedirectResponse
     {
-
-        dd($request->all());
         // Validasi data
     $validatedData = $request->validate([
-        'kategori_bmn' => 'nullable|string|max:255',
-        'nup_bmn' => 'required|string|max:255',
-        'no_regis' => 'required|string|max:255',
-        'no_inventaris' => 'required|string|max:255',
-        'tipe_bmn' => 'nullable|string|max:255',
-        'no_awal' => 'required|string|max:255',
-        'satuan' => 'required|string|max:255',
-        'kelompok_koleksi' => 'nullable|string|max:255',
-        'jenis_koleksi' => 'required|string|max:255',
-        'kode_koleksi' => 'required|string|max:255',
-        'ruang_penyimpanan' => 'required|string|max:255',
-        'lokasi_penyimpanan' => 'required|string|max:255',
-        'lantai' => 'required|string|max:255',
-        'no_lajur' => 'required|integer',
-        'no_lemari' => 'required|integer',
-        'no_laci' => 'required|integer',
-        'no_slot' => 'required|integer',
+        'kategori_bmn' => 'string|max:255' ?? '6.06.01.05.005',
+            'nup_bmn' => 'nullable|string|max:255',
+            'no_regis' => 'required|string|max:255',
+            'no_inventaris' => 'required|string|max:255',
+            'tipe_bmn' => 'string|max:255' ?? 'Batuan',
+            'no_awal' => 'required|string|max:255',
+            'satuan' => 'required|string|max:255',
+            'kelompok_koleksi' => 'string|max:255' ?? 'Batuan',
+            'jenis_koleksi' => 'required|string|max:255',
+            'kode_koleksi' => 'required|string|max:255',
+            'ruang_penyimpanan' => 'nullable|string|max:255',
+            'lokasi_penyimpanan' => 'nullable|string|max:255',
+            'lantai' => 'nullable|string|max:255',
+            'no_lajur' => 'nullable|string',
+            'no_lemari' => 'nullable|string',
+            'no_laci' => 'nullable|string',
+            'no_slot' => 'nullable|string',
 
-        // Halaman 2
-        'kondisi' => 'required|string|max:255',
-        'nama_koleksi' => 'required|string|max:255',
-        'deskripsi_koleksi' => 'required|string',
-        'keterangan_koleksi' => 'required|string',
-        'umur_geologi' => 'required|string|max:255',
-        'nama_formasi' => 'required|string|max:255',
-        'ditemukan' => 'required|string|max:255',
-        'pulau' => 'required|string|max:255',
-        'provinsi' => 'required|string|max:255',
-        'kota' => 'required|string|max:255',
-        'alamat' => 'required|string|max:255',
-        'latitude' => 'required|string|max:255',
-        'longitude' => 'required|string|max:255',
-        'elevasi' => 'required|string|max:255',
-        'peta' => 'required|string|max:255',
-        'skala' => 'required|string|max:255',
-        'lembar_peta' => 'required|string|max:255',
+            // Halaman 2
+            'kondisi' => 'required|string|max:255',
+            'nama_koleksi' => 'required|string|max:255',
+            'deskripsi_koleksi' => 'nullable|string',
+            'keterangan_koleksi' => 'nullable|string',
+            'umur_geologi' => 'nullable|string|max:255',
+            'nama_formasi' => 'nullable|string|max:255',
+            'ditemukan' => 'required|string|max:255',
+            'pulau' => 'required|string|max:255',
+            'provinsi' => 'nullable|string|max:255',
+            'kota' => 'nullable|string|max:255',
+            'alamat' => 'nullable|string|max:255',
+            'latitude' => 'nullable|string|max:255',
+            'longitude' => 'nullable|string|max:255',
+            'elevasi' => 'nullable|string|max:255',
+            'peta' => 'nullable|string|max:255',
+            'skala' => 'required|string|max:255',
+            'lembar_peta' => 'required|string|max:255',
 
-        // Halaman 3
-        'cara_peroleh' => 'required|string|max:255',
-        'thn_peroleh' => 'required|integer|min:1000',
-        'determinator' => 'required|string|max:255',
-        'kolektor' => 'required|string|max:255',
-        'kepemilikan_awal' => 'required|string|max:255',
-        'publikasi' => 'nullable|string',
-        'url' => 'nullable|string|url',
-        'nilai_peroleh' => 'required|string|max:255',
-        'nilai_buku' => 'required|string|max:255',
+            // Halaman 3
+            'cara_peroleh' => 'required|string|max:255',
+            'thn_peroleh' => 'nullable|string',
+            'determinator' => 'nullable|string|max:255',
+            'kolektor' => 'nullable|string|max:255',
+            'kepemilikan_awal' => 'nullable|string|max:255',
+            'publikasi' => 'nullable|string',
+            'url' => 'nullable|string',
+            'nilai_peroleh' => 'nullable|string|max:255',
+            'nilai_buku' => 'nullable|string|max:255',
 
-       'gambar_satu' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048', // Maksimal ukuran 2MB
-        'gambar_dua'  => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
-        'gambar_tiga' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+            // Halaman 4
+            // Validasi gambar
+            'gambar_satu' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048', // Maksimal ukuran 2MB
+            'gambar_dua'  => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'gambar_tiga' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
 
              // Validasi audio
-        'audio' => 'nullable|mimes:mp3,wav,ogg|max:5120', // Maksimal 5MB
+            'audio' => 'nullable|mimes:mp3,wav,ogg|max:5120', // Maksimal 5MB
 
             // Validasi video
-        'vidio' => 'nullable|mimes:mp4,avi,mov|max:10240', // Maksimal 10MB
-        'status' => 'nullable|in:ada,tidak ada',
-    ]);
+            'vidio' => 'nullable|mimes:mp4,avi,mov|max:10240', // Maksimal 10MB
+            'status' => 'nullable|in:ada,tidak ada',
+        ], [
+            'kategori_bmn.required' => 'Kategori BMN harus diisi.',
+            'nup_bmn.required' => 'NUP BMN harus diisi.',
+             // Custom message untuk validasi gambar
+            'gambar_satu.image' => 'File harus berupa gambar.',
+            'gambar_satu.mimes' => 'Format gambar harus: jpeg, png, jpg, svg.',
+            'gambar_satu.max' => 'Ukuran gambar maksimal 2MB.',
+            'audio.mimes' => 'Format file audio harus berupa mp3, wav, atau ogg.',
+            'audio.max' => 'Ukuran maksimal file audio adalah 5MB.',
+            'vidio.mimes' => 'Format file i harus berupa mp4, avi, atau mov.',
+            'vidio.max' => 'Ukuran maksimal file video adalah 10MB.',
+        ]);
 
     if ($request->hasFile('gambar_satu')) {
         // Delete the existing file if present

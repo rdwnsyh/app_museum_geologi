@@ -54,11 +54,7 @@ const Create = ({ koleksi, peminjaman, user }) => {
     // Menangani perubahan file lampiran
     const handleFileChange = (name, file) => {
         // Jika tidak ada file, set nilai lampiran sebagai null
-        if (!file) {
-            setData(name, null);
-        } else {
-            setData(name, file);
-        }
+        setData(name, file || null);
     };
 
     // Handle form submit
@@ -79,10 +75,8 @@ const Create = ({ koleksi, peminjaman, user }) => {
                     });
                 });
             } else if (data[key] instanceof File) {
-                // Jika ada file lampiran, kita hanya akan menambahkannya jika ada file yang dipilih
                 formData.append(key, data[key]);
             } else if (data[key] !== null) {
-                // Jika data bukan null, tambahkan ke FormData
                 formData.append(key, data[key]);
             }
         });
@@ -91,12 +85,6 @@ const Create = ({ koleksi, peminjaman, user }) => {
         post(route("outbound.store"), {
             data: formData,
             forceFormData: true,
-            onError: (errors) => {
-                console.error("Validation Errors from Backend:", errors);
-            },
-            onSuccess: (response) => {
-                console.log("Success Response from Backend:", response);
-            },
         });
     };
 
@@ -253,7 +241,6 @@ const Create = ({ koleksi, peminjaman, user }) => {
                         {data.koleksi.map((koleksiItem, index) => (
                             <div key={index} className="mb-4">
                                 <FieldGroup
-                                    label={`Koleksi ${index + 1}`}
                                     name={`koleksi[${index}]`}
                                     error={errors.koleksi?.[index]}
                                 >

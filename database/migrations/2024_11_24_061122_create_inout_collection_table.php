@@ -23,11 +23,11 @@ return new class extends Migration
             $table->string('lampiran')->nullable();
             $table->timestamps();
         
-            // Foreign key untuk menghubungkan ke tabel users
-            $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
+            // // Foreign key untuk menghubungkan ke tabel users
+            // $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
         
-            // Relasi ke detail_peminjaman (untuk Outbound)
-            $table->foreign('detail_peminjaman_id')->references('id')->on('detail_peminjaman')->onDelete('cascade');
+            // // Relasi ke detail_peminjaman (untuk Outbound)
+            // $table->foreign('detail_peminjaman_id')->references('id')->on('detail_peminjaman')->onDelete('cascade');
         }); 
     }
 
