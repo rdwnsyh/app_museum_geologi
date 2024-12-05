@@ -257,17 +257,19 @@ class OutboundController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(InOutCollection $outbound)
-{
-    // Jika ada file lampiran, hapus dari penyimpanan
-    if ($outbound->lampiran) {
-        Storage::delete($outbound->lampiran);
+    {
+        // Jika ada file lampiran, hapus dari penyimpanan
+        if ($outbound->lampiran) {
+            // Menggunakan Storage untuk menghapus file dengan benar
+            Storage::disk('public')->delete($outbound->lampiran);
+        }
+    
+        // Hapus data dari database
+        $outbound->delete();
+    
+        // Redirect atau kembalikan response JSON
+        return redirect()->route('outbound')->with('success', 'Data berhasil dihapus.');
     }
-
-    // Hapus data dari database
-    $outbound->delete();
-
-    // Redirect atau kembalikan response JSON
-    return redirect()->route('outbound')->with('success', 'Data berhasil dihapus.');
-}
+    
 
 }
