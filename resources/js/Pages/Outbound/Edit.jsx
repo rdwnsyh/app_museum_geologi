@@ -14,7 +14,7 @@ const Edit = () => {
 
     const { data, setData, errors, put, processing } = useForm({
         users_id: outbound?.users_id || [], // Memastikan data sudah terisi
-        no_referensi: outbound?.no_referensi || "",
+        no_referensi: outbound?.no_referensi || null,
         keterangan: outbound?.keterangan || "",
         pesan: outbound?.pesan || "",
         tanggal: outbound?.tanggal || "",
@@ -26,43 +26,27 @@ const Edit = () => {
     const [successMessage, setSuccessMessage] = useState("");
 
     // Handle file input change
-    function handleFileChange(name, file) {
-        console.log(name, file); // Check if the file is selected and passed correctly
-        setData(name, file); // Update the form data with the selected file
-    }
-
-    const addKoleksiRow = () => {
-        setData("koleksi", [...data.koleksi, { koleksi_id: "", jumlah_dipinjam: "" }]);
-    };
-    
-    const removeKoleksiRow = (index) => {
-        const updatedKoleksi = data.koleksi.filter((_, i) => i !== index);
-        setData("koleksi", updatedKoleksi);
-    };
-    
-    const handleKoleksiChange = (index, field, value) => {
-        const updatedKoleksi = [...data.koleksi];
-        updatedKoleksi[index][field] = value;
-        setData("koleksi", updatedKoleksi);
+    const handleFileChange = (name, file) => {
+        setData(name, file);
     };
 
     function handleSubmit(e) {
         e.preventDefault();
         const formData = new FormData();
     
-        // Add form data to FormData object
+        // Loop through data and append it to the FormData object
         Object.entries(data).forEach(([key, value]) => {
             if (value instanceof File) {
-                console.log(`Appending file: ${key}`, value); // Check if file is present
-                formData.append(key, value); // Append file data
+                console.log(`Appending file: ${key}, ${value}`); // Debug log
+                formData.append(key, value); // Append file
             } else if (Array.isArray(value)) {
-                formData.append(key, JSON.stringify(value));
+                formData.append(key, JSON.stringify(value)); // Serialize array to string
             } else if (value !== null) {
-                formData.append(key, value);
+                formData.append(key, value); // Append normal values
             }
         });
     
-        // Submit the form using `put` from Inertia
+        // Send the form data via Inertia's put method
         put(route("outbound.update", outbound.id), formData, {
             onSuccess: () => {
                 setSuccessMessage("Outbound berhasil diperbarui");
@@ -71,7 +55,7 @@ const Edit = () => {
                 console.error(errors);
             },
         });
-    }
+    }    
 
     return (
         <div>
@@ -83,7 +67,7 @@ const Edit = () => {
                     href={route("outbound")}
                     className="text-indigo-600 hover:text-indigo-700"
                 >
-                    Edit
+                    Edit Outbound
                 </Link>
                 <span className="mx-2 font-medium text-indigo-600">/</span>
                 {outbound?.users?.nama_lengkap || "unknown"}
@@ -225,13 +209,10 @@ const Edit = () => {
                             error={errors.lampiran}
                         >
                             <FileInput
-                                name="lampiran"
+                                name="lampiran"  // Ensure this matches the backend field
                                 error={errors.lampiran}
                                 existingFile={outbound.lampiran}
                                 onFileChange={(file) => handleFileChange("lampiran", file)}
-                                required
-                                readOnly
-                                className="bg-gray-100"
                             />
                         </FieldGroup>
                     </div>

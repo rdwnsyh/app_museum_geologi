@@ -9,8 +9,9 @@ import NotificationModal from "@/Components/Modal/notif";
 import Modal from "@/Components/Modal/Modal";
 
 function Index() {
-    const { peminjaman, koleksi } = usePage().props; // Assuming koleksi data is passed
+    const { peminjaman, koleksi } = usePage().props;
     const data = peminjaman || [];
+    console.log(koleksi);
 
     // State for notification modal
     const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -40,15 +41,15 @@ function Index() {
         setIsNotificationOpen(false);
     };
 
-    const openModal = (rowData) => {
-        setModalData(rowData);
-        setIsModalOpen(true);
+    const openModal = (data) => {
+        setModalData(data);
+        setIsModalOpen(true); // Set isModalOpen to true to show the modal
     };
 
+    // Function to close the modal
     const closeModal = () => {
-        setIsModalOpen(false);
-        setModalData(null);
-        setMessage(""); // Reset the message field when closing the modal
+        setIsModalOpen(false); // Set isModalOpen to false to hide the modal
+        setMessage(""); // Optionally clear the message input if needed
     };
 
     return (
@@ -235,14 +236,13 @@ function Index() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {koleksi?.map((item, index) => (
+                                {koleksi && koleksi.length > 0 ? (
+                                    koleksi.map((item, index) => (
                                         <tr key={index}>
                                             <td className="border px-2 py-1">
                                                 {item.gambar_koleksi ? (
                                                     <img
-                                                        src={
-                                                            item.gambar_koleksi
-                                                        }
+                                                        src={item.gambar_koleksi}
                                                         alt={item.nama_koleksi}
                                                         className="w-16 h-16 object-cover"
                                                     />
@@ -250,55 +250,57 @@ function Index() {
                                                     <span>Tanpa Gambar</span>
                                                 )}
                                             </td>
-                                            <td className="border px-2 py-1">
-                                                {item.nama_koleksi}
-                                            </td>
-                                            <td className="border px-2 py-1">
-                                                {item.jumlah_dipinjam}
-                                            </td>
+                                            <td className="border px-2 py-1">{item.nama_koleksi}</td>
+                                            <td className="border px-2 py-1">{item.jumlah_dipinjam}</td>
                                         </tr>
-                                    ))}
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="3" className="text-center py-2">
+                                            No data available
+                                        </td>
+                                    </tr>
+                                )}
+
                                 </tbody>
                             </table>
                         </div>
 
-                        {/* Tombol Update */}
-                        {/* Tombol Update */}
                         <button
-                            type="button"
-                            onClick={() => {
-                                const updatedData = {
-                                    ...modalData,
-                                    pesan: pesan.trim() === "" ? null : pesan, // Set pesan to null if empty
-                                };
+                        type="button"
+                        onClick={() => {
+                            const updatedData = {
+                                ...modalData,
+                                pesan: pesan.trim() === "" ? null : pesan, // Set pesan to null if empty
+                            };
 
-                                // Mengirim data yang sudah diperbarui
-                                router.put(
-                                    route("peminjaman.update", modalData.id),
-                                    updatedData,
-                                    {
-                                        onSuccess: () => {
-                                            setNotificationMessage(
-                                                "Data berhasil diperbarui!"
-                                            );
-                                            setIsNotificationOpen(true);
-                                        },
-                                        onError: () => {
-                                            setNotificationMessage(
-                                                "Gagal memperbarui data."
-                                            );
-                                            setIsNotificationOpen(true);
-                                        },
-                                        finally: () => {
-                                            closeModal();
-                                        },
-                                    }
-                                );
-                            }}
-                            className="w-full bg-green-600 text-white p-2 rounded mt-4 hover:bg-green-700"
-                        >
-                            Perbarui
-                        </button>
+                            // Mengirim data yang sudah diperbarui
+                            router.put(
+                                route("peminjaman.update", modalData.id),
+                                updatedData,
+                                {
+                                    onSuccess: () => {
+                                        setNotificationMessage("Data berhasil diperbarui!");
+                                        setIsNotificationOpen(true);
+
+                                        // Call closeModal after a successful update
+                                        closeModal();
+                                    },
+                                    onError: () => {
+                                        setNotificationMessage("Gagal memperbarui data.");
+                                        setIsNotificationOpen(true);
+                                    },
+                                    finally: () => {
+                                        // Optionally you can close the modal after a success or failure
+                                        // closeModal();
+                                    },
+                                }
+                            );
+                        }}
+                        className="w-full bg-green-600 text-white p-2 rounded mt-4 hover:bg-green-700"
+                    >
+                        Perbarui
+                    </button>
                     </div>
                 </Modal>
             )}
