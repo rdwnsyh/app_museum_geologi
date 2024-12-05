@@ -5,52 +5,51 @@ export default function FileInput({ name, error, onFileChange, existingFile }) {
     const [file, setFile] = useState(existingFile);
 
     useEffect(() => {
-        // Set file jika ada file eksisting
-        setFile(existingFile);
+        if (existingFile) {
+            setFile(existingFile);
+        }
     }, [existingFile]);
 
-    // Menangani klik tombol browse
     function handleBrowse() {
         fileInput.current.click();
     }
 
-    // Menangani perubahan file
     function handleChange(e) {
         const selectedFile = e.currentTarget.files[0] || null;
-        setFile(selectedFile); // Update file di state
-        onFileChange(selectedFile); // Kirim file ke parent
+        if (selectedFile) {
+            setFile(selectedFile); // Update file in state
+            onFileChange(selectedFile); // Send file to parent
+        } else {
+            setFile(null);
+            onFileChange(null); // Send null to parent if no file is selected
+        }
     }
 
-    // Menangani penghapusan file
     function handleRemove() {
-        setFile(null); // Reset file di state
-        onFileChange(null); // Kirim null ke parent
+        setFile(null); // Reset file in state
+        onFileChange(null); // Send null to parent
     }
 
     return (
         <div className="file-input">
-            {/* Input file yang tersembunyi */}
             <input
                 id={name}
                 ref={fileInput}
                 type="file"
                 className="hidden"
                 onChange={handleChange}
+                accept="application/pdf, image/*" // You can add allowed file types here
             />
-
-            {/* Jika tidak ada file, tampilkan tombol browse */}
-            {!file && (
+            
+            {!file ? (
                 <div className="p-2">
                     <BrowseButton text="Pilih File" onClick={handleBrowse} />
                 </div>
-            )}
-
-            {/* Jika ada file, tampilkan nama file dan tombol hapus */}
-            {file && (
+            ) : (
                 <div className="flex items-center justify-between p-2">
                     <div className="flex-1 pr-1">
                         {typeof file === "string" ? (
-                            <span>{file}</span> // Untuk file eksisting
+                            <span>{file}</span>
                         ) : (
                             <>
                                 {file.name}
@@ -66,13 +65,12 @@ export default function FileInput({ name, error, onFileChange, existingFile }) {
                 </div>
             )}
 
-            {/* Tampilkan pesan error jika ada */}
             {error && <div className="mt-2 text-sm text-red-500">{error}</div>}
         </div>
     );
 }
 
-// Tombol untuk Browse atau Remove
+// Browse or Remove button
 function BrowseButton({ text, onClick, ...props }) {
     return (
         <button

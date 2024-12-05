@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { usePage, Head } from '@inertiajs/react';
 import { Link, useForm } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
 import LoadingButton from "@/Components/Button/LoadingButton";
@@ -7,43 +8,85 @@ import SelectInput from "@/Components/Form/SelectInput";
 import FieldGroup from "@/Components/Form/FieldGroup";
 import FileInput from "@/Components/Form/FileInput";
 
-const Edit = ({ outbound }) => {
+const Edit = () => {
+    const { outbound } = usePage().props || {}; // Getting data sent from the controller
+    console.log(outbound);
+
     const { data, setData, errors, put, processing } = useForm({
-        users_id: outbound.users_id,
-        no_referensi: outbound.no_referensi || "",
-        keterangan: outbound.keterangan || "",
-        pesan: outbound.pesan || "",
-        tanggal: outbound.tanggal || "",
-        status: outbound.status || "",
-        lampiran: null, // Untuk upload file baru
+        users_id: outbound?.users_id || [], // Memastikan data sudah terisi
+        no_referensi: outbound?.no_referensi || "",
+        keterangan: outbound?.keterangan || "",
+        pesan: outbound?.pesan || "",
+        tanggal: outbound?.tanggal || "",
+        status: outbound?.status || "",
+        lampiran: outbound?.lampiran || null,
+        koleksi: outbound?.koleksi || [],
     });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const [successMessage, setSuccessMessage] = useState("");
 
-        const formData = new FormData();
-        Object.keys(data).forEach((key) => {
-            if (key === "lampiran" && data[key] === null) return; // Abaikan file jika null
-            formData.append(key, data[key]);
-        });
+    // Handle file input change
+    function handleFileChange(name, file) {
+        console.log(name, file); // Check if the file is selected and passed correctly
+        setData(name, file); // Update the form data with the selected file
+    }
 
-        put(route("outbound.update", outbound.id), {
-            data: formData,
-            onSuccess: () => alert("Data berhasil diperbarui."),
-            onError: (errors) => console.error("Errors:", errors),
-        });
+    const addKoleksiRow = () => {
+        setData("koleksi", [...data.koleksi, { koleksi_id: "", jumlah_dipinjam: "" }]);
     };
+    
+    const removeKoleksiRow = (index) => {
+        const updatedKoleksi = data.koleksi.filter((_, i) => i !== index);
+        setData("koleksi", updatedKoleksi);
+    };
+    
+    const handleKoleksiChange = (index, field, value) => {
+        const updatedKoleksi = [...data.koleksi];
+        updatedKoleksi[index][field] = value;
+        setData("koleksi", updatedKoleksi);
+    };
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        const formData = new FormData();
+    
+        // Add form data to FormData object
+        Object.entries(data).forEach(([key, value]) => {
+            if (value instanceof File) {
+                console.log(`Appending file: ${key}`, value); // Check if file is present
+                formData.append(key, value); // Append file data
+            } else if (Array.isArray(value)) {
+                formData.append(key, JSON.stringify(value));
+            } else if (value !== null) {
+                formData.append(key, value);
+            }
+        });
+    
+        // Submit the form using `put` from Inertia
+        put(route("outbound.update", outbound.id), formData, {
+            onSuccess: () => {
+                setSuccessMessage("Outbound berhasil diperbarui");
+            },
+            onError: (errors) => {
+                console.error(errors);
+            },
+        });
+    }
 
     return (
         <div>
+            <Head
+                title={`edit ${outbound?.users?.nama_lengkap || "unknown"}`}
+            />
             <h1 className="mb-8 text-3xl font-bold">
                 <Link
                     href={route("outbound")}
                     className="text-indigo-600 hover:text-indigo-700"
                 >
-                    Outbound
+                    Edit
                 </Link>
-                <span className="font-medium text-indigo-600"> /</span> Edit
+                <span className="mx-2 font-medium text-indigo-600">/</span>
+                {outbound?.users?.nama_lengkap || "unknown"}
             </h1>
 
             <div className="max-w-3xl overflow-hidden bg-white rounded shadow">
@@ -56,7 +99,7 @@ const Edit = ({ outbound }) => {
                             error={errors.users_id}
                         >
                             <div className="p-2 bg-gray-100 border border-gray-300 rounded">
-                                {outbound.users?.nama_lengkap ||
+                                {outbound?.users?.nama_lengkap ||
                                     "Nama tidak tersedia"}
                             </div>
                         </FieldGroup>
@@ -74,6 +117,7 @@ const Edit = ({ outbound }) => {
                                 onChange={(e) =>
                                     setData("no_referensi", e.target.value)
                                 }
+                                required
                             />
                         </FieldGroup>
 
@@ -84,6 +128,7 @@ const Edit = ({ outbound }) => {
                             error={errors.keterangan}
                         >
                             <SelectInput
+                                type="keterangan"
                                 name="keterangan"
                                 value={data.keterangan}
                                 error={errors.keterangan}
@@ -100,6 +145,7 @@ const Edit = ({ outbound }) => {
                                     { value: "Perbaikan", label: "Perbaikan" },
                                     { value: "dll", label: "Lain-lain" },
                                 ]}
+                                required
                             />
                         </FieldGroup>
 
@@ -121,12 +167,14 @@ const Edit = ({ outbound }) => {
                                 onChange={(e) =>
                                     setData("pesan", e.target.value)
                                 }
+                                required
                             />
                             {errors.pesan && (
                                 <div className="text-red-500 text-sm mt-1">
                                     {errors.pesan}
                                 </div>
                             )}
+                            
                         </FieldGroup>
 
                         {/* Input untuk Tanggal Masuk */}
@@ -143,6 +191,7 @@ const Edit = ({ outbound }) => {
                                 onChange={(e) =>
                                     setData("tanggal", e.target.value)
                                 }
+                                required
                             />
                         </FieldGroup>
 
@@ -165,22 +214,66 @@ const Edit = ({ outbound }) => {
                                     { value: "", label: "Pilih Status" },
                                     { value: "Outbound", label: "Outbound" },
                                 ]}
+                                required
                             />
                         </FieldGroup>
 
                         {/* Input untuk Lampiran */}
-                        <FileInput
+                        <FieldGroup
+                            label="Lampiran"
                             name="lampiran"
-                            existingFile={data.lampiran} // File eksisting dari backend
-                            onFileChange={(file) => setData("lampiran", file)} // Update state parent
-                            error={errors.lampiran} // Tampilkan pesan error
-                        />
+                            error={errors.lampiran}
+                        >
+                            <FileInput
+                                name="lampiran"
+                                error={errors.lampiran}
+                                existingFile={outbound.lampiran}
+                                onFileChange={(file) => handleFileChange("lampiran", file)}
+                                required
+                                readOnly
+                                className="bg-gray-100"
+                            />
+                        </FieldGroup>
                     </div>
+
+                    <div className="p-8">
+                        <h3 className="mb-4 text-xl font-semibold">Koleksi</h3>
+
+                        {/* Display the Koleksi data in a table */}
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full bg-white border border-gray-300 rounded">
+                                <thead>
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600 border-b">Koleksi</th>
+                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600 border-b">Jumlah Dipinjam</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {data.koleksi.map((koleksiItem, index) => (
+                                        <tr key={index} className="border-b">
+                                            <td className="px-6 py-4 text-sm text-gray-800">
+                                                {/* Displaying the name of the koleksi */}
+                                                {koleksiItem.koleksi_id
+                                                    ? koleksi.find((k) => k.id === koleksiItem.koleksi_id)?.nama_koleksi
+                                                    : "Tidak ada koleksi"}
+                                            </td>
+                                            <td className="px-6 py-4 text-sm text-gray-800">
+                                                {/* Displaying jumlah dipinjam */}
+                                                {koleksiItem.jumlah_dipinjam || "0"}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    
                     <div className="flex items-center justify-end px-8 py-4 bg-gray-100 border-t border-gray-200">
                         <LoadingButton
                             loading={processing}
                             type="submit"
-                            className="btn-indigo"
+                            className="mt-4 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"
                         >
                             Update
                         </LoadingButton>
