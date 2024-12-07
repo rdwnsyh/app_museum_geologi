@@ -4,7 +4,7 @@ import MainLayout from "@/Layouts/MainLayout";
 import Table from "@/Components/Table/Table";
 import SearchBar from "@/Components/SearchBar/SearchBar";
 import Pagination from "@/Components/Pagination/Pagination";
-import { ArrowDownToLine } from "lucide-react";
+import { ArrowDownToLine, Plus } from "lucide-react";
 import NotificationModal from "@/Components/Modal/notif";
 import Modal from "@/Components/Modal/Modal";
 
@@ -59,6 +59,13 @@ function Index() {
             <div className="flex items-center justify-between mb-2">
                 <SearchBar />
                 <div className="flex items-center">
+                <Link
+                        className="bg-green-600 text-white py-2 px-2 mx-2 rounded hover:bg-green-900 transition flex items-center"
+                        href={route("peminjaman.create")}
+                    >
+                        <Plus className="w-4 h-4 mr-2" />
+                        <span className="hidden md:inline">Tambah</span>
+                    </Link>
                     <Link
                         className="bg-blue-600 text-white py-2 px-4 mx-2 rounded hover:bg-blue-900 transition flex items-center"
                         href="#"

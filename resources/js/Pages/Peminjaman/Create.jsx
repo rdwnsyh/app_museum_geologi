@@ -72,7 +72,32 @@ const Create = ({ items = [], user }) => {
                             />
                         </FieldGroup>
 
-                        {/* Input Tanggal Pinjam */}
+                        <FieldGroup
+                            label="Keperluan"
+                            name="keperluan"
+                            error={errors.keperluan}
+                        >
+                            <SelectInput
+                                name="keperluan"
+                                error={errors.keperluan}
+                                value={data.keperluan}
+                                onChange={(e) =>
+                                    setData("keperluan", e.target.value)
+                                }
+                                options={[
+                                    { value: "", label: "Pilih Keterangan" },
+                                    {
+                                        value: "Peminjaman",
+                                        label: "Peminjaman",
+                                    },
+                                    { value: "Penelitian", label: "Penelitian" },
+                                    { value: "Pameran", label: "Pameran" },
+                                    { value: "Perbaikan", label: "Perbaikan" },
+                                    { value: "dll", label: "Lain-lain" },
+                                ]}
+                            />
+                        </FieldGroup>
+
                         <FieldGroup
                             label="Tanggal Pinjam"
                             error={errors.tanggal_pinjam}

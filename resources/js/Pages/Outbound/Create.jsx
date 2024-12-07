@@ -136,23 +136,14 @@ const Create = ({ koleksi, peminjaman, user }) => {
                             name="keterangan"
                             error={errors.keterangan}
                         >
-                            <SelectInput
+                             <TextInput
                                 name="keterangan"
+                                type="text"
                                 error={errors.keterangan}
                                 value={data.keterangan}
                                 onChange={(e) =>
                                     setData("keterangan", e.target.value)
                                 }
-                                options={[
-                                    { value: "", label: "Pilih Keterangan" },
-                                    {
-                                        value: "Peminjaman",
-                                        label: "Peminjaman",
-                                    },
-                                    { value: "Pameran", label: "Pameran" },
-                                    { value: "Perbaikan", label: "Perbaikan" },
-                                    { value: "dll", label: "Lain-lain" },
-                                ]}
                             />
                         </FieldGroup>
 
@@ -199,8 +190,7 @@ const Create = ({ koleksi, peminjaman, user }) => {
                             />
                         </FieldGroup>
 
-                        {/* Input untuk Status */}
-                        <FieldGroup
+                        {/* <FieldGroup
                             label="Status"
                             name="status"
                             error={errors.status}
@@ -217,7 +207,7 @@ const Create = ({ koleksi, peminjaman, user }) => {
                                     { value: "Outbound", label: "Outbound" },
                                 ]}
                             />
-                        </FieldGroup>
+                        </FieldGroup> */}
 
                         {/* Input untuk Lampiran */}
                         <FieldGroup
