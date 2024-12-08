@@ -11,7 +11,7 @@ import Modal from "@/Components/Modal/Modal";
 function Index() {
     const { peminjaman, koleksi } = usePage().props;
     const data = peminjaman || [];
-    console.log(koleksi);
+    
 
     // State for notification modal
     const [isNotificationOpen, setIsNotificationOpen] = useState(false);

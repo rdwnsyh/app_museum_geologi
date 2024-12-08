@@ -59,7 +59,7 @@ class DashboardPeminjamanController extends Controller
         'pesan' => 'nullable|string', // Pesan bisa kosong
         'tanggal_pinjam' => 'required|date', // Tanggal pinjam harus diisi dan valid
         'tanggal_jatuh_tempo' => 'required|date|after_or_equal:tanggal_pinjam', // Jatuh tempo harus setelah atau sama dengan tanggal pinjam
-        'identitas' => 'required|string', // Identitas peminjam harus diisi
+        'identitas' => 'nullable|file|mimes:pdf,jpeg,png,jpg,doc,docx|max:2048', // Identitas peminjam harus diisi
         'surat_permohonan' => 'nullable|file|mimes:pdf,jpeg,png,jpg,doc,docx|max:2048', // Surat permohonan opsional
         'koleksi' => 'required|array', // Koleksi yang dipinjam harus berupa array
         'koleksi.*.koleksi_id' => 'required|exists:kelola_koleksi,id', // Koleksi id harus valid

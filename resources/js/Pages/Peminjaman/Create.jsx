@@ -10,14 +10,14 @@ import Select from "react-select";
 
 const Create = ({ koleksi, peminjaman, user }) => {
     const { data, setData, errors, post, processing } = useForm({
-        users_id: user?.id || "", // Isi otomatis dengan ID pengguna login
-        no_referensi: "", // Untuk memilih referensi dari peminjaman
-        keterangan: "",
+        users_id: user?.id || "",
+        keperluan: "",
         pesan: "",
-        tanggal: "",
-        status: "",
-        lampiran: null,
-        koleksi: [], // Array untuk menyimpan koleksi
+        tanggal_pinjam: "",
+        tanggal_jatuh_tempo: "",
+        identitas: null,
+        surat_permohonan: null,
+        koleksi: [], // Array for koleksi details
     });
 
     // Fungsi untuk menambah koleksi
@@ -53,19 +53,19 @@ const Create = ({ koleksi, peminjaman, user }) => {
 
     // Menangani perubahan file lampiran
     const handleFileChange = (name, file) => {
-        // Jika tidak ada file, set nilai lampiran sebagai null
-        setData(name, file || null);
+        setData(name, file || null);  // Ensure null is set when no file is selected
     };
 
-    // Handle form submit
+
     const handleSubmit = (e) => {
         e.preventDefault();
-
+    
         const formData = new FormData();
-
-        // Menambahkan data pengguna dan kolom lainnya ke formData
+    
+        // Append normal data fields
         Object.keys(data).forEach((key) => {
             if (Array.isArray(data[key])) {
+                // For arrays, we iterate over each item and append it individually
                 data[key].forEach((item, index) => {
                     Object.keys(item).forEach((subKey) => {
                         formData.append(
@@ -80,22 +80,23 @@ const Create = ({ koleksi, peminjaman, user }) => {
                 formData.append(key, data[key]);
             }
         });
-
-        // Kirim form dengan method post
-        post(route("outbound.store"), {
+    
+        // Send the formData using the post method
+        post(route("peminjaman.store"), {
             data: formData,
             forceFormData: true,
         });
     };
+    
 
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">
                 <Link
-                    href={route("outbound")}
+                    href={route("peminjaman")}
                     className="text-indigo-600 hover:text-indigo-700"
                 >
-                    Outbound
+                    Peminjaman
                 </Link>
                 <span className="font-medium text-indigo-600"> /</span> Create
             </h1>
@@ -113,7 +114,7 @@ const Create = ({ koleksi, peminjaman, user }) => {
                             </div>
                         </FieldGroup>
 
-                        {/* Referensi Peminjaman */}
+                        {/* Referensi Peminjaman
                         <FieldGroup
                             label="No Referensi"
                             name="no_referensi"
@@ -128,22 +129,29 @@ const Create = ({ koleksi, peminjaman, user }) => {
                                 error={errors.no_referensi}
                                 placeholder="Masukkan No Referensi (Opsional)"
                             />
-                        </FieldGroup>
+                        </FieldGroup> */}
 
                         {/* Input untuk Keterangan */}
                         <FieldGroup
-                            label="Keterangan"
-                            name="keterangan"
-                            error={errors.keterangan}
+                            label="Keperluan"
+                            name="keperluan"
+                            error={errors.keperluan}
                         >
-                            <TextInput
-                                name="keterangan"
-                                type="text"
-                                error={errors.keterangan}
-                                value={data.keterangan}
+                            <SelectInput
+                                name="keperluan"
+                                error={errors.keperluan}
+                                value={data.keperluan}
                                 onChange={(e) =>
-                                    setData("keterangan", e.target.value)
+                                    setData("keperluan", e.target.value)
                                 }
+                                options={[
+                                    { value: "", label: "Pilih Keperluan" },
+                                    { value: "Penelitian", label: "Penelitian" },
+                                    { value: "Pameran", label: "Pameran" },
+                                    { value: "Perbaikan", label: "Perbaikan" },
+                                    { value: "Lain-Lain", label: " Lain-Lain" },
+                                    
+                                ]}
                             />
                         </FieldGroup>
 
@@ -173,54 +181,58 @@ const Create = ({ koleksi, peminjaman, user }) => {
                             )}
                         </FieldGroup>
 
-                        {/* Input untuk Tanggal Masuk */}
-                        <FieldGroup
-                            label="Tanggal"
-                            name="tanggal"
-                            error={errors.tanggal}
-                        >
+                        <FieldGroup 
+                            label="Tanggal Pinjam" 
+                            name="tanggal_pinjam"
+                            error={errors.tanggal_pinjam}>
                             <TextInput
-                                name="tanggal"
+                                name="tanggal_pinjam"
                                 type="date"
-                                error={errors.tanggal}
-                                value={data.tanggal}
-                                onChange={(e) =>
-                                    setData("tanggal", e.target.value)
-                                }
+                                error={errors.tanggal_pinjam}
+                                value={data.tanggal_pinjam}
+                                onChange={(e) => setData("tanggal_pinjam", 
+                                    e.target.value)}
                             />
                         </FieldGroup>
 
-                        {/* <FieldGroup
-                            label="Status"
-                            name="status"
-                            error={errors.status}
-                        >
-                            <SelectInput
-                                name="status"
-                                error={errors.status}
-                                value={data.status}
-                                onChange={(e) =>
-                                    setData("status", e.target.value)
-                                }
-                                options={[
-                                    { value: "", label: "Pilih Status" },
-                                    { value: "Outbound", label: "Outbound" },
-                                ]}
+                       
+                        <FieldGroup 
+                            label="Tanggal Jatuh Tempo"
+                            name="tanggal_jatuh_tempo" 
+                            error={errors.tanggal_jatuh_tempo}>
+                            <TextInput
+                                name="tanggal_jatuh_tempo"
+                                type="date"
+                                error={errors.tanggal_jatuh_tempo}
+                                value={data.tanggal_jatuh_tempo}
+                                onChange={(e) => setData("tanggal_jatuh_tempo", 
+                                    e.target.value)}
                             />
-                        </FieldGroup> */}
+                        </FieldGroup>
 
-                        {/* Input untuk Lampiran */}
-                        <FieldGroup
-                            label="Lampiran"
-                            name="lampiran"
-                            error={errors.lampiran}
-                        >
+                
+                        <FieldGroup 
+                            label="Identitas" 
+                            name="identitas"
+                            error={errors.identitas}>
                             <FileInput
-                                name="lampiran"
-                                error={errors.lampiran}
-                                onFileChange={(file) =>
-                                    handleFileChange("lampiran", file)
-                                }
+                                name="identitas"
+                                error={errors.identitas}
+                                onFileChange={(file) => handleFileChange(
+                                    "identitas", file)}
+                            />
+                        </FieldGroup>
+
+                      
+                        <FieldGroup 
+                            label="Surat Permohonan" 
+                            name= "surat_permohonan"
+                            error={errors.surat_permohonan}>
+                            <FileInput
+                                name="surat_permohonan"
+                                error={errors.surat_permohonan}
+                                onFileChange={(file) => handleFileChange(
+                                    "surat_permohonan", file)}
                             />
                         </FieldGroup>
                     </div>
@@ -230,77 +242,34 @@ const Create = ({ koleksi, peminjaman, user }) => {
                         <h3 className="mb-4 text-xl font-semibold">Koleksi</h3>
                         {data.koleksi.map((koleksiItem, index) => (
                             <div key={index} className="mb-4">
-                                <FieldGroup
-                                    name={`koleksi[${index}]`}
-                                    error={errors.koleksi?.[index]}
-                                >
+                                <FieldGroup name={`koleksi[${index}]`} error={errors.koleksi?.[index]}>
                                     <div className="grid gap-4 grid-cols-3">
                                         <Select
-                                            value={
-                                                koleksiItem.koleksi_id
-                                                    ? {
-                                                          value: koleksiItem.koleksi_id,
-                                                          label: koleksi.find(
-                                                              (k) =>
-                                                                  k.id ===
-                                                                  koleksiItem.koleksi_id
-                                                          )?.nama_koleksi,
-                                                      }
-                                                    : null
-                                            }
-                                            onChange={(selectedOption) =>
-                                                handleKoleksiChange(
-                                                    index,
-                                                    "koleksi_id",
-                                                    selectedOption?.value
-                                                )
-                                            }
-                                            options={koleksi.map((k) => ({
-                                                value: k.id,
-                                                label: k.nama_koleksi,
-                                            }))}
+                                            value={koleksiItem.koleksi_id ? { value: koleksiItem.koleksi_id, label: koleksi.find(k => k.id === koleksiItem.koleksi_id)?.nama_koleksi } : null}
+                                            onChange={(selectedOption) => handleKoleksiChange(index, "koleksi_id", selectedOption?.value)}
+                                            options={koleksi.map(k => ({ value: k.id, label: k.nama_koleksi }))}
                                         />
                                         <TextInput
                                             value={koleksiItem.jumlah_dipinjam}
-                                            onChange={(e) =>
-                                                handleKoleksiChange(
-                                                    index,
-                                                    "jumlah_dipinjam",
-                                                    e.target.value
-                                                )
-                                            }
+                                            onChange={(e) => handleKoleksiChange(index, "jumlah_dipinjam", e.target.value)}
                                             type="number"
                                             min="1"
                                         />
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                removeKoleksiRow(index)
-                                            }
-                                            className="p-2 bg-red-500 text-white rounded"
-                                        >
+                                        <button type="button" onClick={() => removeKoleksiRow(index)} className="p-2 bg-red-500 text-white rounded">
                                             Hapus
                                         </button>
                                     </div>
                                 </FieldGroup>
                             </div>
                         ))}
-                        <button
-                            type="button"
-                            onClick={addKoleksiRow}
-                            className="py-2 px-4 bg-green-500 text-white rounded"
-                        >
+                        <button type="button" onClick={addKoleksiRow} className="py-2 px-4 bg-green-500 text-white rounded">
                             Tambah Koleksi
                         </button>
                     </div>
 
                     {/* Tombol Kirim */}
                     <div className="flex justify-end mt-8">
-                        <LoadingButton
-                            loading={processing}
-                            type="submit"
-                            className="px-4 py-2 text-white bg-blue-500 rounded"
-                        >
+                        <LoadingButton loading={processing} type="submit" className="px-4 py-2 text-white bg-blue-500 rounded">
                             Kirim
                         </LoadingButton>
                     </div>

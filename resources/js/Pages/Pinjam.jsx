@@ -4,6 +4,7 @@ import Navbar from "@/Components/Navbar/Navbar";
 import TextInput from "@/Components/Form/TextInput";
 import FieldGroup from "@/Components/Form/FieldGroup";
 import FileInput from "@/Components/Form/FileInput";
+import SelectInput from "@/Components/Form/SelectInput";
 
 const Pinjam = ({ checkoutItems = [], user }) => {
     // Inisialisasi data form menggunakan useForm dari Inertia
@@ -80,15 +81,22 @@ const Pinjam = ({ checkoutItems = [], user }) => {
                             label="Keperluan"
                             error={errors.keperluan}
                         >
-                            <TextInput
-                                name="keperluan"
-                                error={errors.keperluan}
-                                value={data.keperluan}
-                                onChange={(e) =>
-                                    setData("keperluan", e.target.value)
-                                }
-                                required
-                            />
+                            <SelectInput
+                                        type="keperluan"
+                                        name="keperluan"
+                                        error={errors.keperluan}
+                                        value={data.keperluan}
+                                        onChange={(e) =>
+                                            setData("keperluan", e.target.value)
+                                        }
+                                        options={[
+                                            { value: "", label: "Pilih keperluan" },
+                                            { value: "Penelitian", label: "Penelitian" },
+                                            { value: "Pameran", label: "Pameran" },
+                                            { value: "Perbaikan", label: "Perbaikan" },
+                                            { value: "Lain-Lain", label: "Lain-Lain" },
+                                        ]}
+                                    />
                         </FieldGroup>
 
                         {/* Input Tanggal Pinjam */}
