@@ -12,7 +12,7 @@ function Index() {
     const { peminjaman, koleksi } = usePage().props;
     const data = peminjaman || [];
     
-
+    
     // State for notification modal
     const [isNotificationOpen, setIsNotificationOpen] = useState(false);
     const [notificationMessage, setNotificationMessage] = useState("");
@@ -36,6 +36,7 @@ function Index() {
             });
         }
     };
+    
 
     const closeNotificationModal = () => {
         setIsNotificationOpen(false);
@@ -43,14 +44,18 @@ function Index() {
 
     const openModal = (data) => {
         setModalData(data);
-        setIsModalOpen(true); // Set isModalOpen to true to show the modal
+        setIsModalOpen(true);
+    };
+    
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setMessage(""); // Clear pesan if needed
     };
 
-    // Function to close the modal
-    const closeModal = () => {
-        setIsModalOpen(false); // Set isModalOpen to false to hide the modal
-        setMessage(""); // Optionally clear the message input if needed
-    };
+    const notificationColor = notificationMessage.includes("successfully")
+        ? "bg-green-500"
+        : "bg-red-600";
+
 
     return (
         <div>
@@ -105,14 +110,14 @@ function Index() {
                                 case "Pengajuan":
                                     bgColor = "bg-yellow-500";
                                     break;
-                                case "Diterima":
+                                case "Disetujui":
                                     bgColor = "bg-green-500";
+                                    break;
+                                case "Direvisi":
+                                    bgColor = "bg-orange-500";
                                     break;
                                 case "Ditolak":
                                     bgColor = "bg-red-600";
-                                    break;
-                                case "Terlambat":
-                                    bgColor = "bg-orange-500";
                                     break;
                                 default:
                                     bgColor = "bg-gray-400"; // Default for undefined statuses
@@ -153,10 +158,11 @@ function Index() {
             />
 
             {/* Notification Modal */}
-            <NotificationModal
+             <NotificationModal
                 isOpen={isNotificationOpen}
                 onClose={closeNotificationModal}
                 message={notificationMessage}
+                color={notificationColor}
             />
 
             {/* Triggered Modal */}
@@ -173,7 +179,6 @@ function Index() {
                             <strong>Nama Peminjam:</strong>{" "}
                             {modalData.users?.nama_lengkap || "N/A"}
                         </div>
-
                         {/* Tanggal Pinjam */}
                         <div>
                             <strong>Tanggal Pinjam:</strong>{" "}
@@ -206,9 +211,9 @@ function Index() {
                                     className="border rounded w-full p-2 mt-2"
                                 >
                                     <option value="Pengajuan">Pengajuan</option>
-                                    <option value="Diterima">Diterima</option>
+                                    <option value="Disetujui">Disetujui</option>
+                                    <option value="Direvisi">Direvisi</option>
                                     <option value="Ditolak">Ditolak</option>
-                                    <option value="Terlambat">Terlambat</option>
                                 </select>
                             </label>
                         </div>
@@ -218,8 +223,8 @@ function Index() {
                             <label className="block">
                                 <span>Pesan:</span>
                                 <textarea
-                                    value={pesan} // Pastikan nilai pesan terikat di sini
-                                    onChange={(e) => setMessage(e.target.value)} // Mengubah state pesan
+                                    value={pesan}
+                                    onChange={(e) => setMessage(e.target.value)}
                                     className="border rounded w-full p-2 mt-2"
                                     rows="4"
                                 />
@@ -243,74 +248,68 @@ function Index() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                {koleksi && koleksi.length > 0 ? (
-                                    koleksi.map((item, index) => (
-                                        <tr key={index}>
-                                            <td className="border px-2 py-1">
-                                                {item.gambar_koleksi ? (
-                                                    <img
-                                                        src={item.gambar_koleksi}
-                                                        alt={item.nama_koleksi}
-                                                        className="w-16 h-16 object-cover"
-                                                    />
-                                                ) : (
-                                                    <span>Tanpa Gambar</span>
-                                                )}
+                                    {Array.isArray(modalData.koleksi) &&
+                                    modalData.koleksi.length > 0 ? (
+                                        modalData.koleksi.map((item, index) => (
+                                            <tr key={item.id}>
+                                                <td className="border px-2 py-1">
+                                                    {item.gambar_koleksi ? (
+                                                        <img
+                                                            src={item.gambar_koleksi}
+                                                            alt={item.nama_koleksi}
+                                                            className="w-16 h-16 object-cover"
+                                                        />
+                                                    ) : (
+                                                        <span>Tanpa Gambar</span>
+                                                    )}
+                                                </td>
+                                                <td className="border px-2 py-1">
+                                                    {item.nama_koleksi}
+                                                </td>
+                                                <td className="border px-2 py-1">
+                                                    {item.jumlah_dipinjam}
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="3" className="text-center py-2">
+                                                No data available
                                             </td>
-                                            <td className="border px-2 py-1">{item.nama_koleksi}</td>
-                                            <td className="border px-2 py-1">{item.jumlah_dipinjam}</td>
                                         </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan="3" className="text-center py-2">
-                                            No data available
-                                        </td>
-                                    </tr>
-                                )}
-
+                                    )}
                                 </tbody>
                             </table>
                         </div>
 
                         <button
-                        type="button"
-                        onClick={() => {
-                            const updatedData = {
-                                ...modalData,
-                                pesan: pesan.trim() === "" ? null : pesan, // Set pesan to null if empty
-                            };
+                            type="button"
+                            onClick={() => {
+                                const updatedData = {
+                                    ...modalData,
+                                    pesan: pesan.trim() === "" ? null : pesan,
+                                };
 
-                            // Mengirim data yang sudah diperbarui
-                            router.put(
-                                route("peminjaman.update", modalData.id),
-                                updatedData,
-                                {
+                                router.put(route("peminjaman.update", modalData.id), updatedData, {
                                     onSuccess: () => {
                                         setNotificationMessage("Data berhasil diperbarui!");
                                         setIsNotificationOpen(true);
-
-                                        // Call closeModal after a successful update
                                         closeModal();
                                     },
                                     onError: () => {
                                         setNotificationMessage("Gagal memperbarui data.");
                                         setIsNotificationOpen(true);
                                     },
-                                    finally: () => {
-                                        // Optionally you can close the modal after a success or failure
-                                        // closeModal();
-                                    },
-                                }
-                            );
-                        }}
-                        className="w-full bg-green-600 text-white p-2 rounded mt-4 hover:bg-green-700"
-                    >
-                        Perbarui
-                    </button>
+                                });
+                            }}
+                            className="w-full bg-green-600 text-white p-2 rounded mt-4 hover:bg-green-700"
+                        >
+                            Perbarui
+                        </button>
                     </div>
                 </Modal>
             )}
+       
         </div>
     );
 }
