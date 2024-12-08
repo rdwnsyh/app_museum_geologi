@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pengembalian', function (Blueprint $table) {
-            $table->bigIncrements('id'); // Primary key
-            $table->unsignedBigInteger('peminjaman_id'); // Foreign key ke tabel Peminjaman
+            $table->id();
+            $table->foreignId('peminjaman_id'); // Foreign key ke tabel Peminjaman
             $table->date('tanggal_kembali'); // Tanggal pengembalian barang
             $table->string('status_pengembalian'); // Status pengembalian
             $table->string('keterangan')->nullable(); // Keterangan (misalnya denda)

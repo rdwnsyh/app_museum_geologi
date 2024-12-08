@@ -67,7 +67,7 @@ class OutboundController extends Controller
     // Validasi data yang diterima dari request
     $validated = $request->validate([
         'users_id' => 'required|exists:users,id', // Pastikan users_id ada di tabel users
-        'no_referensi' => 'nullable|exists:peminjaman,id', // Referensi peminjaman bisa null dan valid jika ada
+        'no_referensi' => 'nullable|string', // Referensi peminjaman bisa null dan valid jika ada
         'keterangan' => 'required|string',
         'pesan' => 'nullable|string',
         'tanggal' => 'required|date',
@@ -79,11 +79,10 @@ class OutboundController extends Controller
     ], [
         'users_id.required' => 'User ID harus diisi.',
         'users_id.exists' => 'User tidak ditemukan.',
-        'no_referensi.exists' => 'Referensi peminjaman tidak ditemukan.',
+        'no_referensi' => 'Referensi harus diisi.',
         'keterangan.required' => 'Keterangan harus diisi.',
         'tanggal.required' => 'Tanggal harus diisi.',
         'tanggal.date' => 'Tanggal tidak valid.',
-        'status.required' => 'Status harus dipilih.',
         'status.in' => 'Status harus Outbound.',
         'koleksi.required' => 'Koleksi yang dipinjam harus dipilih.',
         'koleksi.array' => 'Koleksi harus berupa array.',
@@ -140,11 +139,6 @@ class OutboundController extends Controller
 }
 
 
-
-
-    
-
-
     /**
      * Display the specified resource.
      */
@@ -159,8 +153,10 @@ class OutboundController extends Controller
 
     public function edit(InOutCollection $outbound): Response
     {
-        return Inertia::render('Outbound/Edit', [
-            'outbound' => $outbound->load('users') // Pastikan relasi user dimuat
+        $outbound->load(['detailPeminjaman.koleksi', 'users']);
+
+        return inertia('Outbound/Edit', [
+            'outbound' => $outbound // Kirim data outbound beserta detailPeminjaman ke frontend
         ]);
     }
 

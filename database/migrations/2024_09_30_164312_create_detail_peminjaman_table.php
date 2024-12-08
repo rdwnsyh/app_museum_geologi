@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('detail_peminjaman', function (Blueprint $table) {
-            $table->bigIncrements('id'); // Primary key
-            $table->unsignedBigInteger('peminjaman_id'); // Foreign key ke tabel Peminjaman
-            $table->unsignedBigInteger('koleksi_id'); // Foreign key ke tabel Barang
+            $table->id();
+            $table->foreignId('peminjaman_id'); // Foreign key ke tabel Peminjaman
+            $table->foreignId('koleksi_id'); // Foreign key ke tabel Barang
             $table->integer('jumlah_dipinjam'); // Jumlah barang yang dipinjam
             $table->string('kondisi'); // Kondisi barang
             $table->timestamps();

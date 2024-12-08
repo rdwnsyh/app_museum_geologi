@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('inout_collection', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('users_id'); // Foreign key ke tabel users
-            $table->unsignedBigInteger('detail_peminjaman_id')->nullable(); // Menghubungkan ke detail peminjaman
-            $table->unsignedBigInteger('no_referensi')->nullable(); // Referensi untuk peminjaman atau transaksi terkait
-            $table->enum('keterangan', ['Peminjaman', 'Pengembalian', 'Barang Baru', 'Pameran', 'Perbaikan', 'dll']);
+            $table->id();
+            $table->foreignId('users_id'); // Foreign key ke tabel users
+            $table->foreignId('detail_peminjaman_id')->nullable(); // Menghubungkan ke detail peminjaman
+            $table->string('no_referensi')->nullable(); // Referensi untuk peminjaman atau transaksi terkait
+            $table->string('keterangan');
             $table->string('pesan')->nullable();
             $table->date('tanggal'); // Tanggal barang keluar atau aktivitas dimulai
             $table->enum('status', ['Inbound', 'Outbound']); // Status Inbound atau Outbound

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('kelola_koleksi', function (Blueprint $table) {
             // halaman 1 47 field
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('kategori_bmn')->nullable();
             $table->string('nup_bmn')->nullable();
             $table->string('no_regis')->nullable();
@@ -27,10 +27,10 @@ return new class extends Migration
             $table->string('ruang_penyimpanan')->nullable();
             $table->string('lokasi_penyimpanan')->nullable();
             $table->string('lantai')->nullable();
-            $table->integer('no_lajur')->nullable();
-            $table->integer('no_lemari')->nullable();
-            $table->integer('no_laci')->nullable();
-            $table->integer('no_slot')->nullable();
+            $table->string('no_lajur')->nullable();
+            $table->string('no_lemari')->nullable();
+            $table->string('no_laci')->nullable();
+            $table->string('no_slot')->nullable();
         
             // halaman 2
             $table->string('kondisi')->nullable();
