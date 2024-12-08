@@ -142,7 +142,6 @@ public function pinjam(Request $request)
 public function checkout(Request $request)
 {
     // Ambil data checkout_items dari session
-    // dd($request->all());
     $checkoutItems = session()->get('checkout_items', []);
 
     // Validasi data input dari frontend
@@ -152,9 +151,31 @@ public function checkout(Request $request)
         'tanggal_jatuh_tempo' => 'required|date|after_or_equal:tanggal_pinjam',
         'identitas' => 'required|file|mimes:pdf,doc,docx,jpeg,png,jpg|max:2048',
         'surat_permohonan' => 'required|file|mimes:pdf,doc,docx,jpeg,png,jpg|max:2048',
-        'checkoutItems' => 'required|array',
+        'checkoutItems' => 'required|array|min:1',
         'checkoutItems.*.koleksi_id' => 'required|exists:kelola_koleksi,id',
         'checkoutItems.*.jumlah_dipinjam' => 'required|integer|min:1',
+    ], [
+        'keperluan.required' => 'Keperluan harus diisi.',
+        'keperluan.in' => 'Keperluan tidak valid.',
+        'tanggal_pinjam.required' => 'Tanggal pinjam harus diisi.',
+        'tanggal_pinjam.date' => 'Tanggal pinjam tidak valid.',
+        'tanggal_pinjam.after_or_equal' => 'Tanggal pinjam harus hari ini atau setelahnya.',
+        'tanggal_jatuh_tempo.required' => 'Tanggal jatuh tempo harus diisi.',
+        'tanggal_jatuh_tempo.date' => 'Tanggal jatuh tempo tidak valid.',
+        'tanggal_jatuh_tempo.after_or_equal' => 'Tanggal jatuh tempo harus setelah atau sama dengan tanggal pinjam.',
+        'identitas.required' => 'File identitas wajib diunggah.',
+        'identitas.file' => 'File identitas tidak valid.',
+        'identitas.mimes' => 'File identitas harus berupa PDF, DOC, DOCX, JPEG, PNG, atau JPG.',
+        'surat_permohonan.required' => 'File surat permohonan wajib diunggah.',
+        'surat_permohonan.file' => 'File surat permohonan tidak valid.',
+        'surat_permohonan.mimes' => 'File surat permohonan harus berupa PDF, DOC, DOCX, JPEG, PNG, atau JPG.',
+        'checkoutItems.required' => 'Minimal satu koleksi harus dipilih.',
+        'checkoutItems.array' => 'Checkout items harus berupa array.',
+        'checkoutItems.*.koleksi_id.required' => 'Koleksi ID wajib diisi.',
+        'checkoutItems.*.koleksi_id.exists' => 'Koleksi tidak ditemukan.',
+        'checkoutItems.*.jumlah_dipinjam.required' => 'Jumlah dipinjam harus diisi.',
+        'checkoutItems.*.jumlah_dipinjam.integer' => 'Jumlah dipinjam harus berupa angka.',
+        'checkoutItems.*.jumlah_dipinjam.min' => 'Jumlah dipinjam minimal 1.',
     ]);
 
     // Jika validasi gagal
@@ -178,8 +199,8 @@ public function checkout(Request $request)
             'tanggal_pinjam' => $request->tanggal_pinjam,
             'tanggal_jatuh_tempo' => $request->tanggal_jatuh_tempo,
             'status' => 'Pengajuan',
-            'identitas' => $request->file('identitas')->store('identitas'),
-            'surat_permohonan' => $request->file('surat_permohonan')->store('surat_permohonan'),
+            'identitas' => $request->file('identitas')->store('identitas', 'public'),
+            'surat_permohonan' => $request->file('surat_permohonan')->store('surat_permohonan', 'public'),
         ]);
 
         // Proses detail peminjaman
@@ -205,6 +226,7 @@ public function checkout(Request $request)
         return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
     }
 }
+
 
 
     /**

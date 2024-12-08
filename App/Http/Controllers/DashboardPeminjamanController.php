@@ -21,7 +21,6 @@ class DashboardPeminjamanController extends Controller
     {
         // Mengambil data dari tabel `peminjaman` beserta data terkait dari tabel `detail_peminjaman`
         $peminjaman = Peminjaman::with(['detailPeminjaman.koleksi', 'users'])->get();
-
         // Mengirim data ke frontend menggunakan Inertia
         return Inertia::render('Peminjaman/Index', [
             'peminjaman' => $peminjaman
@@ -59,8 +58,8 @@ class DashboardPeminjamanController extends Controller
         'pesan' => 'nullable|string', // Pesan bisa kosong
         'tanggal_pinjam' => 'required|date', // Tanggal pinjam harus diisi dan valid
         'tanggal_jatuh_tempo' => 'required|date|after_or_equal:tanggal_pinjam', // Jatuh tempo harus setelah atau sama dengan tanggal pinjam
-        'identitas' => 'nullable|file|mimes:pdf,jpeg,png,jpg,doc,docx|max:2048', // Identitas peminjam harus diisi
-        'surat_permohonan' => 'nullable|file|mimes:pdf,jpeg,png,jpg,doc,docx|max:2048', // Surat permohonan opsional
+        'identitas' => 'required|file|mimes:pdf,jpeg,png,jpg,doc,docx|max:2048', // Identitas peminjam wajib diisi
+        'surat_permohonan' => 'required|file|mimes:pdf,jpeg,png,jpg,doc,docx|max:2048', // Surat permohonan wajib diisi
         'koleksi' => 'required|array', // Koleksi yang dipinjam harus berupa array
         'koleksi.*.koleksi_id' => 'required|exists:kelola_koleksi,id', // Koleksi id harus valid
         'koleksi.*.jumlah_dipinjam' => 'required|integer|min:1', // Jumlah koleksi minimal 1
@@ -73,6 +72,12 @@ class DashboardPeminjamanController extends Controller
         'tanggal_jatuh_tempo.required' => 'Tanggal jatuh tempo harus diisi.',
         'tanggal_jatuh_tempo.date' => 'Tanggal jatuh tempo tidak valid.',
         'tanggal_jatuh_tempo.after_or_equal' => 'Tanggal jatuh tempo harus setelah atau sama dengan tanggal pinjam.',
+        'identitas.required' => 'File identitas wajib diunggah.',
+        'identitas.file' => 'File identitas tidak valid.',
+        'identitas.mimes' => 'File identitas harus berupa PDF, DOC, DOCX, JPEG, PNG, atau JPG.',
+        'surat_permohonan.required' => 'File surat permohonan wajib diunggah.',
+        'surat_permohonan.file' => 'File surat permohonan tidak valid.',
+        'surat_permohonan.mimes' => 'File surat permohonan harus berupa PDF, DOC, DOCX, JPEG, PNG, atau JPG.',
         'koleksi.required' => 'Koleksi harus dipilih.',
         'koleksi.array' => 'Koleksi harus berupa array.',
         'koleksi.*.koleksi_id.required' => 'ID koleksi harus dipilih.',
@@ -85,6 +90,12 @@ class DashboardPeminjamanController extends Controller
     DB::beginTransaction(); // Mulai transaksi untuk menjaga konsistensi data
 
     try {
+        // Tangani upload file untuk identitas
+        $identitasPath = $request->file('identitas')->store('identitas', 'public');
+
+        // Tangani upload file untuk surat_permohonan
+        $suratPermohonanPath = $request->file('surat_permohonan')->store('surat_permohonan', 'public');
+
         // Simpan data peminjaman
         $peminjaman = Peminjaman::create([
             'users_id' => $validated['users_id'],
@@ -93,19 +104,9 @@ class DashboardPeminjamanController extends Controller
             'tanggal_pinjam' => $validated['tanggal_pinjam'],
             'tanggal_jatuh_tempo' => $validated['tanggal_jatuh_tempo'],
             'status' => 'Pengajuan',
+            'identitas' => $identitasPath, // Simpan path file identitas
+            'surat_permohonan' => $suratPermohonanPath, // Simpan path file surat permohonan
         ]);
-
-        // Tangani upload surat permohonan jika ada
-        if ($request->hasFile('surat_permohonan') && $request->file('surat_permohonan')->isValid()) {
-            $suratPath = $request->file('surat_permohonan')->store('surat_permohonan', 'public');
-            $peminjaman->surat_permohonan = $suratPath;
-            $peminjaman->save();
-        }
-        if ($request->hasFile('identitas') && $request->file('identitas')->isValid()) {
-            $suratPath = $request->file('identitas')->store('identitas', 'public');
-            $peminjaman->identitas = $suratPath;
-            $peminjaman->save();
-        }
 
         // Menyimpan koleksi yang dipinjam pada tabel detail_peminjaman
         foreach ($validated['koleksi'] as $koleksiItem) {
@@ -130,6 +131,7 @@ class DashboardPeminjamanController extends Controller
         return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
     }
 }
+
 
 
     /**

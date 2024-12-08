@@ -7,7 +7,6 @@ import FileInput from "@/Components/Form/FileInput";
 import SelectInput from "@/Components/Form/SelectInput";
 
 const Pinjam = ({ checkoutItems = [], user }) => {
-    // Inisialisasi data form menggunakan useForm dari Inertia
     const { data, setData, post, errors, processing } = useForm({
         checkoutItems, // Gunakan items yang dikirim dari backend
         tanggal_pinjam: "",
@@ -27,26 +26,37 @@ const Pinjam = ({ checkoutItems = [], user }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        // Validasi wajib untuk identitas dan surat permohonan
+        if (!data.identitas) {
+            alert("Identitas wajib diunggah!");
+            return;
+        }
+        if (!data.surat_permohonan) {
+            alert("Surat permohonan wajib diunggah!");
+            return;
+        }
+
         // Menyiapkan array detail_peminjaman
         const detailPeminjaman = data.checkoutItems.map((item) => ({
             koleksi_id: item.koleksi_id,
             jumlah_dipinjam: item.jumlah_dipinjam,
-            kondisi: item.kondisi ?? 'Baik', // Kondisi default 'Baik'
+            kondisi: item.kondisi ?? "Baik", // Kondisi default 'Baik'
         }));
 
         // Menambahkan data detail_peminjaman ke data form
         const formData = new FormData();
-        formData.append('keperluan', data.keperluan);
-        formData.append('tanggal_pinjam', data.tanggal_pinjam);
-        formData.append('tanggal_jatuh_tempo', data.tanggal_jatuh_tempo);
-        formData.append('users_id', data.users_id);
-        formData.append('identitas', data.identitas);
-        formData.append('surat_permohonan', data.surat_permohonan);
-        formData.append('checkoutItems', JSON.stringify(detailPeminjaman)); // Mengirim detail peminjaman sebagai string JSON
+        formData.append("keperluan", data.keperluan);
+        formData.append("tanggal_pinjam", data.tanggal_pinjam);
+        formData.append("tanggal_jatuh_tempo", data.tanggal_jatuh_tempo);
+        formData.append("users_id", data.users_id);
+        formData.append("identitas", data.identitas);
+        formData.append("surat_permohonan", data.surat_permohonan);
+        formData.append("checkoutItems", JSON.stringify(detailPeminjaman)); // Mengirim detail peminjaman sebagai string JSON
 
         // Mengirim data form ke server
         post(route("keranjang.checkout"), {
             data: formData,
+            forceFormData: true,
             onSuccess: () => {
                 alert("Peminjaman berhasil dibuat!");
             },
@@ -76,27 +86,26 @@ const Pinjam = ({ checkoutItems = [], user }) => {
                             />
                         </FieldGroup>
 
-                         {/* Input Keperluan */}
-                         <FieldGroup
-                            label="Keperluan"
-                            error={errors.keperluan}
-                        >
+                        {/* Input Keperluan */}
+                        <FieldGroup label="Keperluan" error={errors.keperluan}>
                             <SelectInput
-                                        type="keperluan"
-                                        name="keperluan"
-                                        error={errors.keperluan}
-                                        value={data.keperluan}
-                                        onChange={(e) =>
-                                            setData("keperluan", e.target.value)
-                                        }
-                                        options={[
-                                            { value: "", label: "Pilih keperluan" },
-                                            { value: "Penelitian", label: "Penelitian" },
-                                            { value: "Pameran", label: "Pameran" },
-                                            { value: "Perbaikan", label: "Perbaikan" },
-                                            { value: "Lain-Lain", label: "Lain-Lain" },
-                                        ]}
-                                    />
+                                name="keperluan"
+                                error={errors.keperluan}
+                                value={data.keperluan}
+                                onChange={(e) =>
+                                    setData("keperluan", e.target.value)
+                                }
+                                options={[
+                                    { value: "", label: "Pilih keperluan" },
+                                    {
+                                        value: "Penelitian",
+                                        label: "Penelitian",
+                                    },
+                                    { value: "Pameran", label: "Pameran" },
+                                    { value: "Perbaikan", label: "Perbaikan" },
+                                    { value: "Lain-Lain", label: "Lain-Lain" },
+                                ]}
+                            />
                         </FieldGroup>
 
                         {/* Input Tanggal Pinjam */}
@@ -163,8 +172,6 @@ const Pinjam = ({ checkoutItems = [], user }) => {
                                 }
                             />
                         </FieldGroup>
-
-                    
                     </div>
 
                     {/* Tabel item yang dipilih */}
@@ -188,7 +195,8 @@ const Pinjam = ({ checkoutItems = [], user }) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {data.checkoutItems && data.checkoutItems.length > 0 ? (
+                                    {data.checkoutItems &&
+                                    data.checkoutItems.length > 0 ? (
                                         data.checkoutItems.map((item) => (
                                             <tr
                                                 key={item.koleksi_id}
