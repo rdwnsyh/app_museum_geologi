@@ -172,6 +172,9 @@ Route::delete('outbound/{outbound}', [OutboundController::class, 'destroy'])
     ->name('outbound.destroy')
     ->middleware('auth');
 
+Route::get('/kelolakoleksi/export/excel', [KelolaKoleksiController::class, 'exportExcel'])->name('kelolakoleksi.export.excel');
+Route::get('/kelolakoleksi/export/pdf', [KelolaKoleksiController::class, 'exportPdf'])->name('kelolakoleksi.export.pdf');
+
 
 // Route Inbound
 Route::get('inbound', [InboundController::class, 'index'])

@@ -20,7 +20,7 @@ class DashboardPeminjamanController extends Controller
     public function index()
     {
         // Mengambil data dari tabel `peminjaman` beserta data terkait dari tabel `detail_peminjaman`
-        $peminjaman = Peminjaman::with(['detailPeminjaman.koleksi', 'users'])->get();
+        $peminjaman = Peminjaman::with(['detailPeminjaman.koleksi', 'users'])->paginate();
         // Mengirim data ke frontend menggunakan Inertia
         return Inertia::render('Peminjaman/Index', [
             'peminjaman' => $peminjaman

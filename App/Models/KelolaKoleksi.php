@@ -71,30 +71,7 @@ class KelolaKoleksi extends Model
         // 'status',
     ];
 
-    public function getGambarSatuUrlAttribute()
-    {
-        return $this->gambar_satu ? asset('storage/' . $this->gambar_satu) : null;
-    }
 
-    public function getGambarDuaUrlAttribute()
-    {
-        return $this->gambar_dua ? asset('storage/' . $this->gambar_dua) : null;
-    }
-
-    public function getGambarTigaUrlAttribute()
-    {
-        return $this->gambar_tiga ? asset('storage/' . $this->gambar_tiga) : null;
-    }
-
-    public function getVidioUrlAttribute()
-    {
-        return $this->vidio ? asset('storage/' . $this->vidio) : null;
-    }
-
-    public function getAudioUrlAttribute()
-    {
-        return $this->audio ? asset('storage/' . $this->audio) : null;
-    }
 
     public function scopeFilter($query, array $filters)
     {

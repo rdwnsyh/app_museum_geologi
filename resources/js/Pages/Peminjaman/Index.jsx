@@ -9,18 +9,24 @@ import NotificationModal from "@/Components/Modal/notif";
 import Modal from "@/Components/Modal/Modal";
 
 function Index() {
-    const { peminjaman, koleksi } = usePage().props;
-    const data = peminjaman || [];
-    
-    
-    // State for notification modal
+    const { peminjaman } = usePage().props;
+    const data = peminjaman?.data || []; // Pastikan data selalu array
+    const paginationLinks = peminjaman?.meta?.links || [];
+
+    const handleSearch = (query) => {
+        router.get(
+            route("peminjaman"),
+            { search: query },
+            { preserveState: true, replace: true }
+        );
+    };
+
     const [isNotificationOpen, setIsNotificationOpen] = useState(false);
     const [notificationMessage, setNotificationMessage] = useState("");
 
-    // State for modal
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalData, setModalData] = useState(null);
-    const [pesan, setMessage] = useState(""); // State for the message input
+    const [pesan, setMessage] = useState("");
 
     const handleDelete = (id) => {
         if (window.confirm("Are you sure you want to delete this item?")) {
@@ -36,7 +42,6 @@ function Index() {
             });
         }
     };
-    
 
     const closeNotificationModal = () => {
         setIsNotificationOpen(false);
@@ -46,25 +51,27 @@ function Index() {
         setModalData(data);
         setIsModalOpen(true);
     };
-    
+
     const closeModal = () => {
         setIsModalOpen(false);
-        setMessage(""); // Clear pesan if needed
+        setMessage("");
     };
 
     const notificationColor = notificationMessage.includes("successfully")
         ? "bg-green-500"
         : "bg-red-600";
 
-
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">Peminjaman</h1>
 
-            <div className="flex items-center justify-between mb-2">
-                <SearchBar />
+            <div className="flex items-center justify-between mb-4">
+                <SearchBar
+                    onSearch={handleSearch}
+                    // initialQuery={filters?.search || ""}
+                />
                 <div className="flex items-center">
-                <Link
+                    <Link
                         className="bg-green-600 text-white py-2 px-2 mx-2 rounded hover:bg-green-900 transition flex items-center"
                         href={route("peminjaman.create")}
                     >
@@ -105,7 +112,6 @@ function Index() {
                         name: "status",
                         renderCell: (row) => {
                             let bgColor = "";
-                            let textColor = "text-white"; // Default text color
                             switch (row.status) {
                                 case "Pengajuan":
                                     bgColor = "bg-yellow-500";
@@ -120,19 +126,18 @@ function Index() {
                                     bgColor = "bg-red-600";
                                     break;
                                 default:
-                                    bgColor = "bg-gray-400"; // Default for undefined statuses
+                                    bgColor = "bg-gray-400";
                             }
 
                             return (
                                 <span
-                                    className={`py-1 px-3 rounded ${bgColor} ${textColor}`}
+                                    className={`py-1 px-3 rounded ${bgColor} text-white`}
                                 >
                                     {row.status}
                                 </span>
                             );
                         },
                     },
-
                     {
                         label: "Aksi",
                         name: "aksi",
@@ -148,7 +153,7 @@ function Index() {
                                     onClick={() => handleDelete(row.id)}
                                     className="bg-red-600 text-white py-1 px-3 rounded hover:bg-red-900 transition"
                                 >
-                                    Delete
+                                    Hapus
                                 </button>
                             </div>
                         ),
@@ -157,8 +162,10 @@ function Index() {
                 rows={data}
             />
 
+            <Pagination links={paginationLinks} />
+
             {/* Notification Modal */}
-             <NotificationModal
+            <NotificationModal
                 isOpen={isNotificationOpen}
                 onClose={closeNotificationModal}
                 message={notificationMessage}
@@ -255,12 +262,18 @@ function Index() {
                                                 <td className="border px-2 py-1">
                                                     {item.gambar_koleksi ? (
                                                         <img
-                                                            src={item.gambar_koleksi}
-                                                            alt={item.nama_koleksi}
+                                                            src={
+                                                                item.gambar_koleksi
+                                                            }
+                                                            alt={
+                                                                item.nama_koleksi
+                                                            }
                                                             className="w-16 h-16 object-cover"
                                                         />
                                                     ) : (
-                                                        <span>Tanpa Gambar</span>
+                                                        <span>
+                                                            Tanpa Gambar
+                                                        </span>
                                                     )}
                                                 </td>
                                                 <td className="border px-2 py-1">
@@ -273,7 +286,10 @@ function Index() {
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan="3" className="text-center py-2">
+                                            <td
+                                                colSpan="3"
+                                                className="text-center py-2"
+                                            >
                                                 No data available
                                             </td>
                                         </tr>
@@ -290,17 +306,25 @@ function Index() {
                                     pesan: pesan.trim() === "" ? null : pesan,
                                 };
 
-                                router.put(route("peminjaman.update", modalData.id), updatedData, {
-                                    onSuccess: () => {
-                                        setNotificationMessage("Data berhasil diperbarui!");
-                                        setIsNotificationOpen(true);
-                                        closeModal();
-                                    },
-                                    onError: () => {
-                                        setNotificationMessage("Gagal memperbarui data.");
-                                        setIsNotificationOpen(true);
-                                    },
-                                });
+                                router.put(
+                                    route("peminjaman.update", modalData.id),
+                                    updatedData,
+                                    {
+                                        onSuccess: () => {
+                                            setNotificationMessage(
+                                                "Data berhasil diperbarui!"
+                                            );
+                                            setIsNotificationOpen(true);
+                                            closeModal();
+                                        },
+                                        onError: () => {
+                                            setNotificationMessage(
+                                                "Gagal memperbarui data."
+                                            );
+                                            setIsNotificationOpen(true);
+                                        },
+                                    }
+                                );
                             }}
                             className="w-full bg-green-600 text-white p-2 rounded mt-4 hover:bg-green-700"
                         >
@@ -309,7 +333,6 @@ function Index() {
                     </div>
                 </Modal>
             )}
-       
         </div>
     );
 }

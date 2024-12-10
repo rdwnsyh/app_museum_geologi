@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use Inertia\Response;
 use Illuminate\Http\Request;
 use App\Models\KelolaKoleksi;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
+use App\Exports\KelolaKoleksiExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\RedirectResponse;
-use Inertia\Response;
 use Illuminate\Support\Facades\Storage;
 
 class KelolaKoleksiController extends Controller
@@ -14,16 +18,18 @@ class KelolaKoleksiController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
-    {
-         // Ambil data dari tabel batuan dengan pagination
-         $kelolakoleksi = KelolaKoleksi::paginate(); // Menampilkan 10 item per halaman
+    public function index(Request $request)
+{
+    // Ambil data dengan atau tanpa filter pencarian
+    $kelolakoleksi = KelolaKoleksi::filter($request->only('search'))->paginate(10);
 
-         // Kirim data ke view menggunakan Inertia
-         return Inertia::render('Kelola/Index', [
-             'kelolakoleksi' => $kelolakoleksi
-         ]);
-    }
+    // Kirim data ke view
+    return Inertia::render('Kelola/Index', [
+        'kelolakoleksi' => $kelolakoleksi,
+        'filters' => $request->only('search'), // Kirim parameter filter untuk dipakai di frontend
+    ]);
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -335,5 +341,20 @@ class KelolaKoleksiController extends Controller
         
             // Redirect dengan pesan sukses
             return redirect()->route('kelolakoleksi')->with('success', 'Data koleksi batuan berhasil dihapus.');
+    }
+
+    public function exportExcel()
+    {
+        $data = KelolaKoleksi::all();
+
+        return Excel::download(new KelolaKoleksiExport($data), 'kelola_koleksi.xlsx');
+    }
+
+    public function exportPdf()
+    {
+        $data = KelolaKoleksi::all();
+
+        $pdf = Pdf::loadView('exports.kelola_koleksi', compact('data'));
+        return $pdf->download('kelola_koleksi.pdf');
     }
 }
