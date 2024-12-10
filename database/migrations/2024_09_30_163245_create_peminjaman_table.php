@@ -20,9 +20,6 @@ return new class extends Migration
             $table->string('identitas'); // Status peminjaman
             $table->string('surat_permohonan'); // Status peminjaman
             $table->timestamps();
-            
-            // Foreign key constraint
-            // $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

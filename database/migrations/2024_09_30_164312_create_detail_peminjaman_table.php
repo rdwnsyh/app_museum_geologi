@@ -18,10 +18,6 @@ return new class extends Migration
             $table->integer('jumlah_dipinjam'); // Jumlah barang yang dipinjam
             $table->string('kondisi'); // Kondisi barang
             $table->timestamps();
-            
-            // Foreign key constraints
-            // $table->foreign('peminjaman_id')->references('id')->on('peminjaman')->onDelete('cascade');
-            // $table->foreign('koleksi_id')->references('id')->on('kelola_koleksi')->onDelete('cascade');
         });
     }
 

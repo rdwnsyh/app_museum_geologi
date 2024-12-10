@@ -39,23 +39,27 @@ class OutboundController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        // Ambil data koleksi yang tersedia untuk outbound
-        $koleksi = KelolaKoleksi::all();
+{
+    // Ambil data koleksi yang tersedia untuk outbound (hanya kolom yang dibutuhkan)
+    $koleksi = KelolaKoleksi::select('id', 'nama_koleksi', 'deskripsi_koleksi')->get();
 
-        // Ambil data peminjaman yang sedang berlangsung untuk menampilkan referensi
-        $peminjaman = Peminjaman::where('status', 'Diterima')->get(); // Peminjaman yang diterima
+    // Ambil data peminjaman yang disetujui beserta detail peminjaman dan koleksi (eager loading)
+    $peminjaman = Peminjaman::with(['detailPeminjaman.koleksi'])
+        ->where('status', 'Disetujui')
+        ->get();
 
-        // Ambil data pengguna yang sedang login
-        $user = auth()->user();
+    // Ambil data pengguna yang sedang login
+    $user = Auth::user();
 
-        // Pass data ke React component menggunakan Inertia
-        return Inertia::render('Outbound/Create', [
-            'koleksi' => $koleksi,
-            'peminjaman' => $peminjaman,
-            'user' => $user, // Mengirimkan data pengguna yang sedang login
-        ]);
-    }
+    // Kirim data langsung ke React melalui Inertia
+    return Inertia::render('Outbound/Create', [
+        'koleksi' => $koleksi,
+        'peminjaman' => $peminjaman,
+        'user' => $user, // Langsung kirim seluruh data pengguna
+        // dd($peminjaman)
+    ]);
+}
+
 
 
     /**
@@ -137,6 +141,53 @@ class OutboundController extends Controller
         return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
     }
 }
+
+public function import(Request $request)
+{
+    // dd($request->all());
+    // Debug data request untuk validasi
+    $validated = $request->validate([
+        'users_id' => 'required|exists:users,id',
+        'peminjaman_id' => 'required|exists:peminjaman,id',
+        'no_referensi' => 'required|string',
+        'keterangan' => 'required|string',
+        'pesan' => 'nullable|string',
+        'tanggal' => 'required|date',
+    ]);
+
+    // Ambil data peminjaman yang dipilih beserta detail koleksi
+    $peminjaman = Peminjaman::with('detailPeminjaman.koleksi')->find($validated['peminjaman_id']);
+    if (!$peminjaman) {
+        return back()->withErrors(['error' => 'Data peminjaman tidak ditemukan.']);
+    }
+
+    DB::beginTransaction();
+    try {
+        // Simpan data ke tabel inout_collection
+        $outbound = InOutCollection::create([
+            'users_id' => $validated['users_id'],
+            'no_referensi' => $validated['no_referensi'],
+            'keterangan' => $validated['keterangan'],
+            'pesan' => $validated['pesan'],
+            'tanggal' => $validated['tanggal'],
+            'status' => 'Outbound',
+        ]);
+
+        // Simpan koleksi dari peminjaman ke inout_collection
+        foreach ($peminjaman->detailPeminjaman as $detail) {
+            $outbound->detail_peminjaman_id = $detail->id;
+            $outbound->save();
+        }
+
+        DB::commit();
+
+        return redirect()->route('outbound')->with('success', 'Data Outbound berhasil diimpor.');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
+    }
+}
+
 
 
     /**

@@ -95,6 +95,7 @@ Route::get('peminjaman/create', [DashboardPeminjamanController::class, 'create']
 Route::post('peminjaman', [DashboardPeminjamanController::class, 'store'])
     ->name('peminjaman.store')
     ->middleware('auth');
+    
 // route ke halaman edit peminjaman
     Route::get('peminjaman/{peminjaman}/edit', [DashboardPeminjamanController::class, 'edit'])
     ->name('peminjaman.edit')
@@ -154,6 +155,9 @@ Route::get('outbound/create', [OutboundController::class, 'create'])
 // proses create outbound
 Route::post('outbound', [OutboundController::class, 'store'])
     ->name('outbound.store')
+    ->middleware('auth');
+Route::post('outbound', [OutboundController::class, 'import'])
+    ->name('outbound.import')
     ->middleware('auth');
 // route ke halaman edit outbound
     Route::get('outbound/{outbound}/edit', [OutboundController::class, 'edit'])
