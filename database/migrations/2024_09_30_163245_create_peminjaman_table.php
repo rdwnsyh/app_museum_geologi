@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('pesan')->nullable();
             $table->date('tanggal_pinjam'); // Tanggal saat barang dipinjam
             $table->date('tanggal_jatuh_tempo'); // Tanggal jatuh tempo pengembalian
-            $table->enum('status', ['Pengajuan', 'Disetujui', 'Direvisi', 'Ditolak'])->default('Pengajuan'); // Status peminjaman
+            $table->enum('status', ['Pengajuan', 'Disetujui', 'Direvisi', 'Ditolak', 'Selesai'])->default('Pengajuan'); // Status peminjaman
             $table->string('identitas'); // Status peminjaman
             $table->string('surat_permohonan'); // Status peminjaman
             $table->timestamps();

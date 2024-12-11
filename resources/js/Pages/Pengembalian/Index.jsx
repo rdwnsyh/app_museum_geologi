@@ -3,24 +3,62 @@ import { Link } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
 import Table from "@/Components/Table/Table";
 import SearchBar from "@/Components/SearchBar/SearchBar";
-import { ArrowDownToLine } from "lucide-react";
+import { ArrowDownToLine, Plus } from "lucide-react";
 
-const Index = () => {
+function Index() {
     // Static data for the table
     const staticData = [
-        { id: 1, peminjaman_id: "John Doe", tanggal_kembali: "2024-10-01", status_pengembalian: "Kembali", keterangan: "Sukses" },
-        { id: 2, peminjaman_id: "Jane Smith", tanggal_kembali: "2024-09-15", status_pengembalian: "Terlambat", keterangan: "Denda dikenakan" },
-        { id: 3, peminjaman_id: "Alice Johnson", tanggal_kembali: "2024-10-05", status_pengembalian: "Kembali", keterangan: "Sukses" },
-        { id: 4, peminjaman_id: "Bob Brown", tanggal_kembali: "2024-09-20", status_pengembalian: "Kembali", keterangan: "Sukses" },
-        { id: 5, peminjaman_id: "Charlie Davis", tanggal_kembali: "2024-10-07", status_pengembalian: "Terlambat", keterangan: "Denda dikenakan" },
+        {
+            id: 1,
+            users_id: "John Doe",
+            tanggal_pinjam: "2024-10-01",
+            tanggal_jatuh_tempo: "2024-10-15",
+            status: "Sedang dipinjam",
+        },
+        {
+            id: 2,
+            users_id: "Jane Smith",
+            tanggal_pinjam: "2024-09-20",
+            tanggal_jatuh_tempo: "2024-10-05",
+            status: "Sedang dipinjam",
+        },
+        {
+            id: 3,
+            users_id: "Alice Johnson",
+            tanggal_pinjam: "2024-09-25",
+            tanggal_jatuh_tempo: "2024-10-10",
+            status: "Sedang dipinjam",
+        },
+        {
+            id: 4,
+            users_id: "Bob Brown",
+            tanggal_pinjam: "2024-09-30",
+            tanggal_jatuh_tempo: "2024-10-14",
+            status: "Sedang dipinjam",
+        },
+        {
+            id: 5,
+            users_id: "Charlie Davis",
+            tanggal_pinjam: "2024-09-15",
+            tanggal_jatuh_tempo: "2024-09-30",
+            status: "Sedang dipinjam",
+        },
     ];
 
     return (
         <div>
-            <h1 className="mb-8 text-3xl font-bold">Pengembalian</h1>
+            <h1 className="mb-8 text-3xl font-bold">Inbound</h1>
+
             <div className="flex items-center justify-between mb-6">
                 <SearchBar />
                 <div className="flex items-center justify-end mb-2">
+                    <Link
+                        className="bg-green-600 text-white py-2 px-2 mx-2 rounded hover:bg-green-900 transition flex items-center"
+                        href={route("pengembalian.create")}
+                    >
+                        <Plus className="w-4 h-4 mr-2" />
+                        <span className="hidden md:inline">Tambah</span>
+                    </Link>
                     <Link
                         className="bg-blue-600 text-white py-2 px-4 mx-2 rounded hover:bg-blue-900 transition flex items-center"
                         href="#"
@@ -37,11 +75,15 @@ const Index = () => {
                     </Link>
                 </div>
             </div>
+
             <Table
                 columns={[
                     { label: "Nama Peminjam", name: "peminjaman_id" },
                     { label: "Tanggal Kembali", name: "tanggal_kembali" },
-                    { label: "Status Pengembalian", name: "status_pengembalian" },
+                    {
+                        label: "Status Pengembalian",
+                        name: "status_pengembalian",
+                    },
                     { label: "Keterangan", name: "keterangan" },
                     {
                         label: "Aksi",
@@ -63,13 +105,13 @@ const Index = () => {
             {/* <Pagination links={links} /> */}
         </div>
     );
-};
+}
 
 /**
  * Persistent Layout (Inertia.js)
  *
  * [Learn more](https://inertiajs.com/pages#persistent-layouts)
  */
-Index.layout = (page) => <MainLayout title="Pengembalian">{page}</MainLayout>;
+Index.layout = (page) => <MainLayout title="Kelola Koleksi">{page}</MainLayout>;
 
 export default Index;

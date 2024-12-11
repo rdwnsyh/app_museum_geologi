@@ -18,9 +18,6 @@ return new class extends Migration
             $table->string('status_pengembalian'); // Status pengembalian
             $table->string('keterangan')->nullable(); // Keterangan (misalnya denda)
             $table->timestamps();
-            
-            // Foreign key constraint
-            $table->foreign('peminjaman_id')->references('id')->on('peminjaman')->onDelete('cascade');
         });
     }
 
