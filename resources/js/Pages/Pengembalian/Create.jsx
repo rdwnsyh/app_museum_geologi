@@ -15,6 +15,7 @@ const Create = ({ peminjaman }) => {
     });
 
     const [selectedKoleksi, setSelectedKoleksi] = useState([]); // Untuk menyimpan koleksi yang dipinjam
+    const [namaPeminjam, setNamaPeminjam] = useState(""); // Untuk menyimpan nama peminjam
 
     // Fungsi untuk menangani perubahan pada peminjaman_id
     const handlePeminjamanChange = (id) => {
@@ -23,11 +24,13 @@ const Create = ({ peminjaman }) => {
         const peminjamanTerpilih = peminjaman.find(
             (item) => item.id === parseInt(id)
         );
-        // Update koleksi yang dipinjam
+        // Update koleksi yang dipinjam dan nama peminjam
         if (peminjamanTerpilih) {
             setSelectedKoleksi(peminjamanTerpilih.detail_peminjaman || []);
+            setNamaPeminjam(peminjamanTerpilih.users?.nama_lengkap || "N/A");
         } else {
             setSelectedKoleksi([]);
+            setNamaPeminjam("");
         }
     };
 
@@ -66,11 +69,17 @@ const Create = ({ peminjaman }) => {
                                 <option value="">Pilih Peminjaman</option>
                                 {peminjaman.map((item) => (
                                     <option key={item.id} value={item.id}>
-                                        {item.users?.nama_lengkap} -{" "}
-                                        {item.tanggal_pinjam}
+                                        {item.keperluan} - {item.tanggal_pinjam}
                                     </option>
                                 ))}
                             </select>
+                        </FieldGroup>
+
+                        {/* Nama Peminjam */}
+                        <FieldGroup label="Nama Peminjam" name="nama_peminjam">
+                            <div className="p-2 bg-gray-100 border rounded">
+                                {namaPeminjam || "N/A"}
+                            </div>
                         </FieldGroup>
 
                         {/* Tanggal Kembali */}

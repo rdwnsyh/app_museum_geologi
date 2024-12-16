@@ -21,17 +21,20 @@ class OutboundController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
-{
-    // Ambil data dari tabel inout_collection dengan relasi 'users'
-    $outbound = InOutCollection::with('users:id,nama_lengkap') // Muat relasi dengan kolom tertentu
-        ->paginate(10); // Paginate dengan 10 item per halaman
+    public function index(Request $request)
+    {
+        // Mengambil data outbound dengan filter pencarian
+        $outbound = InOutCollection::filter($request->only('search'))
+            ->with(['users', 'detailPeminjaman'])
+            ->where('status', 'Outbound') // Pastikan hanya mengambil data Outbound
+            ->paginate(10);
 
-    // Kirim data ke view menggunakan Inertia
-    return Inertia::render('Outbound/Index', [
-        'outbound' => $outbound, // Kirim data
-    ]);
-}
+        // Mengirim data ke frontend
+        return Inertia::render('Outbound/Index', [
+            'outbound' => $outbound,
+            'filters' => $request->only('search'),
+        ]);
+    }
 
 
 

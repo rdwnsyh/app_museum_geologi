@@ -9,7 +9,7 @@ import NotificationModal from "@/Components/Modal/notif";
 import Modal from "@/Components/Modal/Modal";
 
 function Index() {
-    const { peminjaman } = usePage().props;
+    const { peminjaman, filters } = usePage().props;
     const data = peminjaman?.data || []; // Pastikan data selalu array
     const paginationLinks = peminjaman?.meta?.links || [];
 
@@ -68,7 +68,7 @@ function Index() {
             <div className="flex items-center justify-between mb-4">
                 <SearchBar
                     onSearch={handleSearch}
-                    // initialQuery={filters?.search || ""}
+                    initialQuery={filters?.search || ""}
                 />
                 <div className="flex items-center">
                     <Link

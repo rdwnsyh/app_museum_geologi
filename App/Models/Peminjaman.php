@@ -23,6 +23,20 @@ class Peminjaman extends Model
             'identitas',
             'surat_permohonan',
         ];
+
+        public function scopeFilter($query, $filters)
+        {
+            if (!empty($filters['search'])) {
+                $query->whereHas('users', function ($query) use ($filters) {
+                    $query->where('nama_lengkap', 'like', '%' . $filters['search'] . '%');
+                })
+                ->orWhere('pesan', 'like', '%' . $filters['search'] . '%')
+                ->orWhere('tanggal_pinjam', 'like', '%' . $filters['search'] . '%')
+                ->orWhere('tanggal_jatuh_tempo', 'like', '%' . $filters['search'] . '%')
+                ->orWhere('keperluan', 'like', '%' . $filters['search'] . '%');
+            }
+        }
+
     
         // Relasi ke User
         public function users()
@@ -35,6 +49,7 @@ class Peminjaman extends Model
         {
             return $this->hasMany(DetailPeminjaman::class, 'peminjaman_id');
         }
+
     
         // Relasi ke Pengembalian
         public function pengembalian()

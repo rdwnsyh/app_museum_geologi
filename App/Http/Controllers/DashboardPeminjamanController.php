@@ -17,15 +17,17 @@ class DashboardPeminjamanController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        // Mengambil data dari tabel `peminjaman` beserta data terkait dari tabel `detail_peminjaman`
-        $peminjaman = Peminjaman::with(['detailPeminjaman.koleksi', 'users'])->paginate();
-        // Mengirim data ke frontend menggunakan Inertia
-        return Inertia::render('Peminjaman/Index', [
-            'peminjaman' => $peminjaman
-        ]);
-    }
+    public function index(Request $request)
+{
+    // Ambil data peminjaman menggunakan filter dari model
+    $peminjaman = Peminjaman::filter($request->only('search'))->with(['detailPeminjaman.koleksi', 'users'])->paginate(10);
+
+    // Kirim data ke view menggunakan Inertia
+    return Inertia::render('Peminjaman/Index', [
+        'peminjaman' => $peminjaman,
+        'filters' => $request->only('search'), // Kirim parameter filter untuk dipakai di frontend
+    ]);
+}
 
 
     /**
@@ -163,7 +165,7 @@ class DashboardPeminjamanController extends Controller
         // Validasi input dari form
         $validatedData = $request->validate([
             'pesan' => 'required|string|max:255',
-            'status' => 'required|in:Pengajuan,Disetujui,Direvisi,Ditolak',
+            'status' => 'required|in:Pengajuan,Disetujui,Direvisi,Ditolak,Selesai',
         ], [
             'status.required' => 'Status harus diisi.',
             'status.in' => 'Status harus salah satu dari: Pengajuan, Disetujui, Direvisi, Ditolak',

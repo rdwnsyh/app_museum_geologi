@@ -37,6 +37,19 @@ class RegisteredUserController extends Controller
             'role' => 'in:admin,staf,peminjam,pengunjung', // validasi role
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ], [
+            'nama_lengkap.required' => 'Nama lengkap harus diisi.',
+            'instansi.required' => 'Instansi harus diisi.',
+            'no_hp.required' => 'Nomor HP harus diisi.',
+            'no_hp.max' => 'Nomor HP tidak boleh lebih dari 15 karakter.',
+            'no_hp.unique' => 'Nomor HP sudah digunakan.',
+            'email.required' => 'Email harus diisi.',
+            'email.lowercase' => 'Email harus ditulis dalam huruf kecil.',
+            'email.email' => 'Email harus valid.',
+            'email.unique' => 'Email sudah digunakan.',
+            'password.required' => 'Password harus diisi.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
+            'password' => 'Password harus memenuhi aturan keamanan minimum.',
         ]);
 
         $user = User::create([

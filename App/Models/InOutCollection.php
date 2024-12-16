@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class InOutCollection extends Model
 {
@@ -21,6 +22,18 @@ class InOutCollection extends Model
         'lampiran',
         'detail_peminjaman_id', // Relasi ke detail peminjaman
     ];
+
+    public function scopeFilter($query, $filters)
+    {
+        if (!empty($filters['search'])) {
+            $query->where('no_referensi', 'like', '%' . $filters['search'] . '%')
+                  ->orWhere('keterangan', 'like', '%' . $filters['search'] . '%')
+                  ->orWhere('status', 'like', '%' . $filters['search'] . '%')
+                  ->orWhereHas('users', function ($subQuery) use ($filters) {
+                      $subQuery->where('nama_lengkap', 'like', '%' . $filters['search'] . '%');
+                  });
+        }
+    }
 
     public function users()
     {

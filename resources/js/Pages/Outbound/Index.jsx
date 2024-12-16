@@ -6,7 +6,7 @@ import SearchBar from "@/Components/SearchBar/SearchBar";
 import { ArrowDownToLine, Plus, Edit, Trash } from "lucide-react";
 
 function Index() {
-    const { outbound } = usePage().props;
+    const { outbound, filters } = usePage().props;
     const data = outbound?.data || []; // Ambil data dari props
 
     const handleDelete = (id) => {
@@ -18,12 +18,23 @@ function Index() {
         }
     };
 
+    const handleSearch = (query) => {
+        router.get(
+            route("outbound"),
+            { search: query },
+            { preserveState: true, replace: true }
+        );
+    };
+
     return (
         <div>
             <h1 className="mb-8 text-3xl font-bold">Outbound</h1>
 
             <div className="flex items-center justify-between mb-6">
-                <SearchBar />
+                <SearchBar
+                    onSearch={handleSearch}
+                    initialQuery={filters?.search || ""}
+                />
                 <div className="flex items-center justify-end mb-2">
                     <Link
                         className="bg-green-600 text-white py-2 px-2 mx-2 rounded hover:bg-green-900 transition flex items-center"

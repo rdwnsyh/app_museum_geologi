@@ -19,9 +19,23 @@ class Pengembalian extends Model
         'keterangan',
     ];
 
+    public function scopeFilter($query, $filters)
+    {
+        if (!empty($filters['search'])) {
+            $query->whereHas('peminjaman.users', function ($subQuery) use ($filters) {
+                $subQuery->where('nama_lengkap', 'like', '%' . $filters['search'] . '%');
+            })
+            ->orWhere('status_pengembalian', 'like', '%' . $filters['search'] . '%')
+            ->orWhere('tanggal_kembali', 'like', '%' . $filters['search'] . '%')
+            ->orWhere('keterangan', 'like', '%' . $filters['search'] . '%');
+        }
+    }
+
     // Relasi ke Peminjaman
     public function peminjaman()
     {
-        return $this->belongsTo(Peminjaman::class, 'peminjaman_id');
+        return $this->belongsTo(Peminjaman::class, 'peminjaman_id')->with('detailPeminjaman.koleksi');
     }
+    
+
 }
