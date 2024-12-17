@@ -199,6 +199,7 @@ public function checkout(Request $request)
             'tanggal_pinjam' => $request->tanggal_pinjam,
             'tanggal_jatuh_tempo' => $request->tanggal_jatuh_tempo,
             'status' => 'Pengajuan',
+            'status_pengembalian' => 'Dipinjam',
             'identitas' => $request->file('identitas')->store('identitas', 'public'),
             'surat_permohonan' => $request->file('surat_permohonan')->store('surat_permohonan', 'public'),
         ]);

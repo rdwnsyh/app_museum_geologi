@@ -1,256 +1,154 @@
 import React from "react";
-import { Head } from "@inertiajs/react";
-import { Link, usePage, useForm, router } from "@inertiajs/react";
+import { Link, useForm } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
-import DeleteButton from "@/Components/Button/DeleteButton";
 import LoadingButton from "@/Components/Button/LoadingButton";
+import FieldGroup from "@/Components/Form/FieldGroup";
 import TextInput from "@/Components/Form/TextInput";
 import SelectInput from "@/Components/Form/SelectInput";
-import TrashedMessage from "@/Components/Messages/TrashedMessage";
-import FieldGroup from "@/Components/Form/FieldGroup";
 
-const Edit = () => {
-    const { contact, organizations } = usePage().props;
-
-    const { data, setData, errors, put, processing } = useForm({
-        first_name: contact.first_name || "",
-        last_name: contact.last_name || "",
-        organization_id: contact.organization_id || "",
-        email: contact.email || "",
-        phone: contact.phone || "",
-        address: contact.address || "",
-        city: contact.city || "",
-        region: contact.region || "",
-        country: contact.country || "",
-        postal_code: contact.postal_code || "",
+const Edit = ({ pengembalian }) => {
+    const { data, setData, put, processing, errors } = useForm({
+        tanggal_kembali: pengembalian?.tanggal_kembali || "", // Tanggal pengembalian
+        status_pengembalian: pengembalian?.status_pengembalian || "", // Status pengembalian
+        keterangan: pengembalian?.keterangan || "", // Keterangan tambahan
     });
 
-    function handleSubmit(e) {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        put(route("contacts.update", contact.id));
-    }
+        put(route("pengembalian.update", pengembalian.id));
+    };
 
-    function destroy() {
-        if (confirm("Are you sure you want to delete this contact?")) {
-            router.delete(route("contacts.destroy", contact.id));
-        }
-    }
-
-    function restore() {
-        if (confirm("Are you sure you want to restore this contact?")) {
-            router.put(route("contacts.restore", contact.id));
-        }
-    }
+    const detailPeminjaman = pengembalian?.peminjaman?.detailPeminjaman || [];
 
     return (
         <div>
-            <Head title={`${data.first_name} ${data.last_name}`} />
             <h1 className="mb-8 text-3xl font-bold">
                 <Link
-                    href={route("contacts")}
+                    href={route("pengembalian")}
                     className="text-indigo-600 hover:text-indigo-700"
                 >
-                    Contacts
+                    Pengembalian
                 </Link>
-                <span className="mx-2 font-medium text-indigo-600">/</span>
-                {data.first_name} {data.last_name}
+                <span className="font-medium text-indigo-600"> /</span> Edit
             </h1>
-            {contact.deleted_at && (
-                <TrashedMessage
-                    message="This contact has been deleted."
-                    onRestore={restore}
-                />
-            )}
             <div className="max-w-3xl overflow-hidden bg-white rounded shadow">
                 <form onSubmit={handleSubmit}>
                     <div className="grid gap-8 p-8 lg:grid-cols-2">
+                        {/* Nama Peminjam */}
+                        <FieldGroup label="Nama Peminjam" name="nama_peminjam">
+                            <div className="p-2 bg-gray-100 border border-gray-300 rounded">
+                                {pengembalian?.peminjaman?.users
+                                    ?.nama_lengkap || "N/A"}
+                            </div>
+                        </FieldGroup>
+
+                        {/* Tanggal Kembali */}
                         <FieldGroup
-                            label="First Name"
-                            name="first_name"
-                            error={errors.first_name}
+                            label="Tanggal Kembali"
+                            name="tanggal_kembali"
+                            error={errors.tanggal_kembali}
                         >
                             <TextInput
-                                name="first_name"
-                                error={errors.first_name}
-                                value={data.first_name}
+                                type="date"
+                                value={data.tanggal_kembali}
                                 onChange={(e) =>
-                                    setData("first_name", e.target.value)
+                                    setData("tanggal_kembali", e.target.value)
                                 }
+                                error={errors.tanggal_kembali}
                             />
                         </FieldGroup>
 
+                        {/* Status Pengembalian */}
                         <FieldGroup
-                            label="Last Name"
-                            name="last_name"
-                            error={errors.last_name}
-                        >
-                            <TextInput
-                                name="last_name"
-                                error={errors.last_name}
-                                value={data.last_name}
-                                onChange={(e) =>
-                                    setData("last_name", e.target.value)
-                                }
-                            />
-                        </FieldGroup>
-
-                        <FieldGroup
-                            label="Organization"
-                            name="organization_id"
-                            error={errors.organization_id}
+                            label="Status Pengembalian"
+                            name="status_pengembalian"
+                            error={errors.status_pengembalian}
                         >
                             <SelectInput
-                                name="organization_id"
-                                error={errors.organization_id}
-                                value={data.organization_id}
+                                name="status_pengembalian"
+                                value={data.status_pengembalian}
                                 onChange={(e) =>
-                                    setData("organization_id", e.target.value)
+                                    setData(
+                                        "status_pengembalian",
+                                        e.target.value
+                                    )
                                 }
                                 options={[
+                                    { value: "", label: "Pilih Status" },
                                     {
-                                        value: "",
-                                        label: "",
+                                        value: "Dikembalikan",
+                                        label: "Dikembalikan",
                                     },
-                                    ...organizations.map((org) => ({
-                                        value: String(org.id),
-                                        label: org.name,
-                                    })),
+                                    { value: "Terlambat", label: "Terlambat" },
                                 ]}
+                                error={errors.status_pengembalian}
                             />
                         </FieldGroup>
 
+                        {/* Keterangan */}
                         <FieldGroup
-                            label="Email"
-                            name="email"
-                            error={errors.email}
+                            label="Keterangan"
+                            name="keterangan"
+                            error={errors.keterangan}
                         >
-                            <TextInput
-                                name="email"
-                                type="email"
-                                error={errors.email}
-                                value={data.email}
+                            <textarea
+                                value={data.keterangan}
                                 onChange={(e) =>
-                                    setData("email", e.target.value)
+                                    setData("keterangan", e.target.value)
                                 }
-                            />
-                        </FieldGroup>
-
-                        <FieldGroup
-                            label="Phone"
-                            name="phone"
-                            error={errors.phone}
-                        >
-                            <TextInput
-                                name="phone"
-                                error={errors.phone}
-                                value={data.phone}
-                                onChange={(e) =>
-                                    setData("phone", e.target.value)
-                                }
-                            />
-                        </FieldGroup>
-
-                        <FieldGroup
-                            label="Address"
-                            name="address"
-                            error={errors.address}
-                        >
-                            <TextInput
-                                name="address"
-                                error={errors.address}
-                                value={data.address}
-                                onChange={(e) =>
-                                    setData("address", e.target.value)
-                                }
-                            />
-                        </FieldGroup>
-
-                        <FieldGroup
-                            label="City"
-                            name="city"
-                            error={errors.city}
-                        >
-                            <TextInput
-                                name="city"
-                                error={errors.city}
-                                value={data.city}
-                                onChange={(e) =>
-                                    setData("city", e.target.value)
-                                }
-                            />
-                        </FieldGroup>
-
-                        <FieldGroup
-                            label="Province/State"
-                            name="region"
-                            error={errors.region}
-                        >
-                            <TextInput
-                                name="region"
-                                error={errors.region}
-                                value={data.region}
-                                onChange={(e) =>
-                                    setData("region", e.target.value)
-                                }
-                            />
-                        </FieldGroup>
-
-                        <FieldGroup
-                            label="Country"
-                            name="country"
-                            error={errors.country}
-                        >
-                            <SelectInput
-                                name="country"
-                                error={errors.country}
-                                value={data.country}
-                                onChange={(e) =>
-                                    setData("country", e.target.value)
-                                }
-                                options={[
-                                    {
-                                        value: "",
-                                        label: "",
-                                    },
-                                    {
-                                        value: "CA",
-                                        label: "Canada",
-                                    },
-                                    {
-                                        value: "US",
-                                        label: "United States",
-                                    },
-                                ]}
-                            />
-                        </FieldGroup>
-
-                        <FieldGroup
-                            label="Postal Code"
-                            name="postal_code"
-                            error={errors.postal_code}
-                        >
-                            <TextInput
-                                name="postal_code"
-                                error={errors.postal_code}
-                                value={data.postal_code}
-                                onChange={(e) =>
-                                    setData("postal_code", e.target.value)
-                                }
+                                className={`w-full p-2 border rounded ${
+                                    errors.keterangan
+                                        ? "border-red-500"
+                                        : "border-gray-300"
+                                }`}
+                                rows="4"
+                                placeholder="Tambahkan keterangan jika diperlukan"
                             />
                         </FieldGroup>
                     </div>
-                    <div className="flex items-center px-8 py-4 bg-gray-100 border-t border-gray-200">
-                        {!contact.deleted_at && (
-                            <DeleteButton onDelete={destroy}>
-                                Delete Contact
-                            </DeleteButton>
-                        )}
+
+                    {/* Koleksi yang Dipinjam */}
+                    {detailPeminjaman.length > 0 && (
+                        <div className="p-8">
+                            <h3 className="text-xl font-semibold mb-4">
+                                Koleksi yang Dipinjam
+                            </h3>
+                            <table className="min-w-full bg-white border rounded">
+                                <thead>
+                                    <tr>
+                                        <th className="px-4 py-2 border">
+                                            Nama Koleksi
+                                        </th>
+                                        <th className="px-4 py-2 border">
+                                            Jumlah
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {detailPeminjaman.map((item, index) => (
+                                        <tr key={index}>
+                                            <td className="px-4 py-2 border">
+                                                {item.koleksi?.nama_koleksi ||
+                                                    "N/A"}
+                                            </td>
+                                            <td className="px-4 py-2 border">
+                                                {item.jumlah_dipinjam}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+
+                    {/* Tombol Simpan */}
+                    <div className="flex justify-end mt-8">
                         <LoadingButton
                             loading={processing}
                             type="submit"
-                            className="ml-auto btn-indigo"
+                            className="px-4 py-2 text-white bg-blue-500 rounded"
                         >
-                            Update Contact
+                            Simpan
                         </LoadingButton>
                     </div>
                 </form>
@@ -259,11 +157,6 @@ const Edit = () => {
     );
 };
 
-/**
- * Persistent Layout (Inertia.js)
- *
- * [Learn more](https://inertiajs.com/pages#persistent-layouts)
- */
-Edit.layout = (page) => <MainLayout>{page}</MainLayout>;
+Edit.layout = (page) => <MainLayout children={page} />;
 
 export default Edit;

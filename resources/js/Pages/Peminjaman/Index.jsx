@@ -9,7 +9,7 @@ import NotificationModal from "@/Components/Modal/notif";
 import Modal from "@/Components/Modal/Modal";
 
 function Index() {
-    const { peminjaman } = usePage().props;
+    const { peminjaman, filters } = usePage().props;
     const data = peminjaman?.data || []; // Pastikan data selalu array
     const paginationLinks = peminjaman?.meta?.links || [];
 
@@ -68,7 +68,7 @@ function Index() {
             <div className="flex items-center justify-between mb-4">
                 <SearchBar
                     onSearch={handleSearch}
-                    // initialQuery={filters?.search || ""}
+                    initialQuery={filters?.search || ""}
                 />
                 <div className="flex items-center">
                     <Link
@@ -108,36 +108,51 @@ function Index() {
                         name: "tanggal_jatuh_tempo",
                     },
                     {
-                        label: "Status",
+                        label: "Status Peminjaman",
                         name: "status",
                         renderCell: (row) => {
-                            let bgColor = "";
-                            switch (row.status) {
-                                case "Pengajuan":
-                                    bgColor = "bg-yellow-500";
-                                    break;
-                                case "Disetujui":
-                                    bgColor = "bg-green-500";
-                                    break;
-                                case "Direvisi":
-                                    bgColor = "bg-orange-500";
-                                    break;
-                                case "Ditolak":
-                                    bgColor = "bg-red-600";
-                                    break;
-                                default:
-                                    bgColor = "bg-gray-400";
-                            }
+                            const statusColors = {
+                                Pengajuan: "bg-yellow-500",
+                                Disetujui: "bg-green-500",
+                                Direvisi: "bg-orange-500",
+                                Ditolak: "bg-red-600",
+                                Selesai: "bg-blue-500",
+                            };
 
                             return (
                                 <span
-                                    className={`py-1 px-3 rounded ${bgColor} text-white`}
+                                    className={`py-1 px-3 rounded ${
+                                        statusColors[row.status] ||
+                                        "bg-gray-400"
+                                    } text-white`}
                                 >
                                     {row.status}
                                 </span>
                             );
                         },
                     },
+                    {
+                        label: "Status Koleksi",
+                        name: "status_pengembalian",
+                        renderCell: (row) => {
+                            const statusColors = {
+                                Dikembalikan: "bg-green-500",
+                                Terlambat: "bg-red-600",
+                            };
+
+                            return (
+                                <span
+                                    className={`py-1 px-3 rounded ${
+                                        statusColors[row.status_pengembalian] ||
+                                        "bg-gray-400"
+                                    } text-white`}
+                                >
+                                    {row.status_pengembalian || "N/A"}
+                                </span>
+                            );
+                        },
+                    },
+
                     {
                         label: "Aksi",
                         name: "aksi",

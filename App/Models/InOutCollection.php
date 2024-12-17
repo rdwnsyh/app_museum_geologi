@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class InOutCollection extends Model
 {
@@ -19,8 +20,20 @@ class InOutCollection extends Model
         'tanggal',
         'status',
         'lampiran',
-        'detail_peminjaman_id', // Relasi ke detail peminjaman
+        'peminjaman_id', // Relasi ke detail peminjaman
     ];
+
+    public function scopeFilter($query, $filters)
+    {
+        if (!empty($filters['search'])) {
+            $query->where('no_referensi', 'like', '%' . $filters['search'] . '%')
+                  ->orWhere('keterangan', 'like', '%' . $filters['search'] . '%')
+                  ->orWhere('status', 'like', '%' . $filters['search'] . '%')
+                  ->orWhereHas('users', function ($subQuery) use ($filters) {
+                      $subQuery->where('nama_lengkap', 'like', '%' . $filters['search'] . '%');
+                  });
+        }
+    }
 
     public function users()
     {
@@ -28,12 +41,16 @@ class InOutCollection extends Model
     }
 
     public function koleksi()
-    {
-        return $this->belongsTo(kelolaKoleksi::class, 'koleksi_id');
-    }
+{
+    return $this->belongsToMany(KelolaKoleksi::class, 'detail_peminjaman')
+                ->withPivot(['jumlah_dipinjam', 'kondisi']);
+}
 
-    public function detailPeminjaman()
-    {
-        return $this->belongsTo(DetailPeminjaman::class, 'detail_peminjaman_id');
-    }
+
+    // InOutCollection.php
+public function detailPeminjaman()
+{
+    return $this->hasMany(DetailPeminjaman::class, 'peminjaman_id', 'id');
+}
+
 }

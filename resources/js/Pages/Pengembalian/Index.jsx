@@ -1,56 +1,41 @@
 import React from "react";
-import { Link } from "@inertiajs/react";
+import { Link, usePage, router } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
 import Table from "@/Components/Table/Table";
 import SearchBar from "@/Components/SearchBar/SearchBar";
-import { ArrowDownToLine, Plus } from "lucide-react";
+import { ArrowDownToLine, Plus, Edit } from "lucide-react";
 
 function Index() {
-    // Static data for the table
-    const staticData = [
-        {
-            id: 1,
-            users_id: "John Doe",
-            tanggal_pinjam: "2024-10-01",
-            tanggal_jatuh_tempo: "2024-10-15",
-            status: "Sedang dipinjam",
-        },
-        {
-            id: 2,
-            users_id: "Jane Smith",
-            tanggal_pinjam: "2024-09-20",
-            tanggal_jatuh_tempo: "2024-10-05",
-            status: "Sedang dipinjam",
-        },
-        {
-            id: 3,
-            users_id: "Alice Johnson",
-            tanggal_pinjam: "2024-09-25",
-            tanggal_jatuh_tempo: "2024-10-10",
-            status: "Sedang dipinjam",
-        },
-        {
-            id: 4,
-            users_id: "Bob Brown",
-            tanggal_pinjam: "2024-09-30",
-            tanggal_jatuh_tempo: "2024-10-14",
-            status: "Sedang dipinjam",
-        },
-        {
-            id: 5,
-            users_id: "Charlie Davis",
-            tanggal_pinjam: "2024-09-15",
-            tanggal_jatuh_tempo: "2024-09-30",
-            status: "Sedang dipinjam",
-        },
-    ];
+    const { pengembalian, filters } = usePage().props;
+
+    const data = pengembalian?.data || [];
+    const links = pengembalian?.meta?.links || [];
+
+    const handleDelete = (id) => {
+        if (window.confirm("Yakin ingin menghapus data ini?")) {
+            router.delete(route("pengembalian.destroy", id), {
+                preserveScroll: true,
+            });
+        }
+    };
+
+    const handleSearch = (query) => {
+        router.get(
+            route("pengembalian"),
+            { search: query },
+            { preserveState: true, replace: true }
+        );
+    };
 
     return (
         <div>
-            <h1 className="mb-8 text-3xl font-bold">Inbound</h1>
+            <h1 className="mb-8 text-3xl font-bold">Pengembalian</h1>
 
             <div className="flex items-center justify-between mb-6">
-                <SearchBar />
+                <SearchBar
+                    onSearch={handleSearch}
+                    initialQuery={filters?.search || ""}
+                />
                 <div className="flex items-center justify-end mb-2">
                     <Link
                         className="bg-green-600 text-white py-2 px-2 mx-2 rounded hover:bg-green-900 transition flex items-center"
@@ -61,14 +46,14 @@ function Index() {
                     </Link>
                     <Link
                         className="bg-blue-600 text-white py-2 px-4 mx-2 rounded hover:bg-blue-900 transition flex items-center"
-                        href="#"
+                        // href={route("pengembalian.exportExcel")} // Route ekspor Excel
                     >
                         <ArrowDownToLine className="w-4 h-4 mr-2" />
                         <span className="hidden md:inline">Excel</span>
                     </Link>
                     <Link
                         className="bg-blue-600 text-white py-2 px-4 mx-2 rounded hover:bg-blue-900 transition flex items-center"
-                        href="#"
+                        // href={route("pengembalian.exportPdf")} // Route ekspor PDF
                     >
                         <ArrowDownToLine className="w-4 h-4 mr-2" />
                         <span className="hidden md:inline">PDF</span>
@@ -78,20 +63,43 @@ function Index() {
 
             <Table
                 columns={[
-                    { label: "Nama Peminjam", name: "peminjaman_id" },
+                    {
+                        label: "Nama Peminjam",
+                        name: "peminjaman.users.nama_lengkap",
+                        renderCell: (row) =>
+                            row.peminjaman?.users?.nama_lengkap || "N/A",
+                    },
                     { label: "Tanggal Kembali", name: "tanggal_kembali" },
                     {
                         label: "Status Pengembalian",
                         name: "status_pengembalian",
+                        renderCell: (row) => (
+                            <span
+                                className={`py-1 px-3 rounded ${
+                                    row.status_pengembalian === "Dikembalikan"
+                                        ? "bg-green-500 text-white"
+                                        : "bg-red-500 text-white"
+                                }`}
+                            >
+                                {row.status_pengembalian}
+                            </span>
+                        ),
                     },
                     { label: "Keterangan", name: "keterangan" },
                     {
                         label: "Aksi",
-                        name: "status",
+                        name: "aksi",
                         renderCell: (row) => (
                             <div className="flex space-x-2">
+                                <Link
+                                    href={route("pengembalian.edit", row.id)} // Route untuk edit pengembalian
+                                    className="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-600 transition flex items-center"
+                                >
+                                    <Edit className="w-4 h-4 mr-1" />
+                                    Edit
+                                </Link>
                                 <button
-                                    onClick={() => handleDelete(row.id)} // Implement handleDelete function as needed
+                                    onClick={() => handleDelete(row.id)}
                                     className="bg-red-600 text-white py-1 px-3 rounded hover:bg-red-900 transition"
                                 >
                                     Hapus
@@ -100,18 +108,21 @@ function Index() {
                         ),
                     },
                 ]}
-                rows={staticData} // Use static data as rows
+                rows={data}
             />
-            {/* <Pagination links={links} /> */}
+
+            {/* Pagination */}
+            {links.length > 0 && (
+                <div className="mt-4">
+                    <Pagination links={links} />
+                </div>
+            )}
         </div>
     );
 }
 
-/**
- * Persistent Layout (Inertia.js)
- *
- * [Learn more](https://inertiajs.com/pages#persistent-layouts)
- */
-Index.layout = (page) => <MainLayout title="Kelola Koleksi">{page}</MainLayout>;
+Index.layout = (page) => (
+    <MainLayout title="Kelola Pengembalian">{page}</MainLayout>
+);
 
 export default Index;

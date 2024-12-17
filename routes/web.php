@@ -181,9 +181,6 @@ Route::delete('outbound/{outbound}', [OutboundController::class, 'destroy'])
     ->name('outbound.destroy')
     ->middleware('auth');
 
-Route::get('/kelolakoleksi/export/excel', [KelolaKoleksiController::class, 'exportExcel'])->name('kelolakoleksi.export.excel');
-Route::get('/kelolakoleksi/export/pdf', [KelolaKoleksiController::class, 'exportPdf'])->name('kelolakoleksi.export.pdf');
-
 
 // Route Inbound
 Route::get('inbound', [InboundController::class, 'index'])
@@ -196,6 +193,10 @@ Route::get('inbound/create', [InboundController::class, 'create'])
 // proses create inbound
 Route::post('inbound', [InboundController::class, 'store'])
     ->name('inbound.store')
+    ->middleware('auth');
+
+Route::post('outbound', [OutboundController::class, 'import'])
+    ->name('outbound.import')
     ->middleware('auth');
 // route ke halaman edit inbound
     Route::get('inbound/{inbound}/edit', [InboundController::class, 'edit'])
@@ -239,6 +240,9 @@ Route::put('kelolakoleksi/{kelolakoleksi}', [KelolaKoleksiController::class, 'up
 Route::delete('kelolakoleksi/{kelolakoleksi}', [KelolaKoleksiController::class, 'destroy'])
     ->name('kelolakoleksi.destroy')
     ->middleware('auth');
+
+    Route::get('/kelolakoleksi/export/excel', [KelolaKoleksiController::class, 'exportExcel'])->name('kelolakoleksi.export.excel');
+Route::get('/kelolakoleksi/export/pdf', [KelolaKoleksiController::class, 'exportPdf'])->name('kelolakoleksi.export.pdf');
 
 // // Route Kelola Koleksi Batuan
 // Route::resource('kelolakoleksibatuan', KelolaKoleksiBatuanController::class)

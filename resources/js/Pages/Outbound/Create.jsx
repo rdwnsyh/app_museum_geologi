@@ -197,6 +197,16 @@ const Create = ({ koleksi, peminjaman, user }) => {
                             />
                         </FieldGroup>
 
+                        <FieldGroup
+                            label="Status"
+                            name="status"
+                            error={errors.status}
+                        >
+                            <div className="p-2 bg-gray-100 border rounded">
+                                {data.status || "Tidak Ada Status"}
+                            </div>
+                        </FieldGroup>
+
                         {isImport ? (
                             <FieldGroup
                                 label="Pilih Peminjaman"
@@ -237,28 +247,55 @@ const Create = ({ koleksi, peminjaman, user }) => {
                             <h3 className="mb-4 text-xl font-semibold">
                                 Koleksi yang Dipinjam
                             </h3>
-                            <table className="min-w-full bg-white">
-                                <thead>
-                                    <tr>
-                                        <th className="py-2">Nama Koleksi</th>
-                                        <th className="py-2">
-                                            Jumlah Dipinjam
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {importedKoleksi.map((item, index) => (
-                                        <tr key={index} className="border-t">
-                                            <td className="py-2">
-                                                {item.nama_koleksi}
-                                            </td>
-                                            <td className="py-2">
-                                                {item.jumlah_dipinjam}
-                                            </td>
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full bg-white border border-gray-300 rounded">
+                                    <thead>
+                                        <tr className="bg-gray-100">
+                                            <th className="px-4 py-2 border border-gray-300 text-left font-semibold">
+                                                Nama Koleksi
+                                            </th>
+                                            <th className="px-4 py-2 border border-gray-300 text-left font-semibold">
+                                                Jumlah Dipinjam
+                                            </th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {importedKoleksi.length > 0 ? (
+                                            importedKoleksi.map(
+                                                (item, index) => (
+                                                    <tr
+                                                        key={index}
+                                                        className={`${
+                                                            index % 2 === 0
+                                                                ? "bg-white"
+                                                                : "bg-gray-50"
+                                                        } hover:bg-gray-100`}
+                                                    >
+                                                        <td className="px-4 py-2 border border-gray-300">
+                                                            {item.nama_koleksi}
+                                                        </td>
+                                                        <td className="px-4 py-2 border border-gray-300">
+                                                            {
+                                                                item.jumlah_dipinjam
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            )
+                                        ) : (
+                                            <tr>
+                                                <td
+                                                    colSpan="2"
+                                                    className="px-4 py-4 text-center text-gray-500"
+                                                >
+                                                    Tidak ada koleksi yang
+                                                    dipinjam.
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     ) : (
                         <div className="p-8">

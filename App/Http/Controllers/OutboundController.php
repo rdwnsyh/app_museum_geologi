@@ -21,17 +21,20 @@ class OutboundController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
-{
-    // Ambil data dari tabel inout_collection dengan relasi 'users'
-    $outbound = InOutCollection::with('users:id,nama_lengkap') // Muat relasi dengan kolom tertentu
-        ->paginate(10); // Paginate dengan 10 item per halaman
+    public function index(Request $request)
+    {
+        // Mengambil data outbound dengan filter pencarian
+        $outbound = InOutCollection::filter($request->only('search'))
+            ->with(['users', 'detailPeminjaman'])
+            ->where('status', 'Outbound') // Pastikan hanya mengambil data Outbound
+            ->paginate(10);
 
-    // Kirim data ke view menggunakan Inertia
-    return Inertia::render('Outbound/Index', [
-        'outbound' => $outbound, // Kirim data
-    ]);
-}
+        // Mengirim data ke frontend
+        return Inertia::render('Outbound/Index', [
+            'outbound' => $outbound,
+            'filters' => $request->only('search'),
+        ]);
+    }
 
 
 
@@ -203,13 +206,24 @@ public function import(Request $request)
      */
 
     public function edit(InOutCollection $outbound): Response
-    {
-        $outbound->load(['detailPeminjaman.koleksi', 'users']);
+{
+    // Muat relasi detail peminjaman, koleksi, dan pengguna
+    $outbound->load(['detailPeminjaman.koleksi', 'users']);
 
-        return inertia('Outbound/Edit', [
-            'outbound' => $outbound // Kirim data outbound beserta detailPeminjaman ke frontend
-        ]);
-    }
+    // Map data koleksi untuk memastikan struktur data lebih mudah digunakan di frontend
+    $outbound->koleksi = $outbound->detailPeminjaman->map(function ($detail) {
+        return [
+            'koleksi_id' => $detail->koleksi->id ?? null, // ID koleksi
+            'nama_koleksi' => $detail->koleksi->nama_koleksi ?? 'N/A', // Nama koleksi
+            'jumlah_dipinjam' => $detail->jumlah_dipinjam, // Jumlah dipinjam
+        ];
+    });
+
+    return inertia('Outbound/Edit', [
+        'outbound' => $outbound // Kirim data outbound dengan koleksi yang sudah diformat
+    ]);
+}
+
 
 
 

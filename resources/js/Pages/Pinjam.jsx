@@ -103,7 +103,10 @@ const Pinjam = ({ checkoutItems = [], user }) => {
                                     },
                                     { value: "Pameran", label: "Pameran" },
                                     { value: "Perbaikan", label: "Perbaikan" },
-                                    { value: "Lain-Lain", label: "Lain-Lain" },
+                                    {
+                                        value: "Dan Lain-Lain",
+                                        label: "Lain-Lain",
+                                    },
                                 ]}
                             />
                         </FieldGroup>
