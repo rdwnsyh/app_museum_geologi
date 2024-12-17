@@ -1,65 +1,74 @@
 import React, { useState, useEffect } from 'react';
+import { Link, usePage, router } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
-import { Container, Grid, Typography, TextField, MenuItem } from '@mui/material';
-import { Inertia } from '@inertiajs/inertia'; // Ensure Inertia is imported
 import Table from "@/Components/Table/Table";
+import SearchBar from "@/Components/SearchBar/SearchBar";
+import Pagination from "@/Components/Pagination/Pagination";
+import { Container, Grid, TextField, MenuItem, Typography } from '@mui/material';  
+import { Plus } from "lucide-react";
 
-function ReportsPage() {
-    const [storage, setStorage] = useState('');
-    const [floor, setFloor] = useState('');
-    const [column, setColumn] = useState('');
-    const [searchResults, setSearchResults] = useState([]);  // State to store search results
+function Storage() {
+    const { kelolakoleksi, filters } = usePage().props;
 
-    // Handle changes for storage, floor, and column (lajur)
-    const handleStorageChange = (event) => {
-        setStorage(event.target.value);
-    };
+    const data = kelolakoleksi?.data || [];
+    const links = kelolakoleksi?.links || [];
 
-    const handleFloorChange = (event) => {
-        setFloor(event.target.value);
-    };
+    // State management for filter inputs
+    const [lokasi_penyimpanan, setLokasi_penyimpanan] = useState(filters?.lokasi_penyimpanan || '');
+    const [lantai, setLantai] = useState(filters?.lantai || '');
+    const [no_lajur, setNo_lajur] = useState(filters?.no_lajur || '');
+    const [searchResults, setSearchResults] = useState(data);
 
-    const handleColumnChange = (event) => {
-        setColumn(event.target.value);
-    };
+    // Handle filter changes
+    const handleLokasi_penyimpananChange = (event) => setLokasi_penyimpanan(event.target.value);
+    const handleLantaiChange = (event) => setLantai(event.target.value);
+    const handleNo_lajurChange = (event) => setNo_lajur(event.target.value);
 
-    // Function to perform the search
-    const performSearch = () => {
-        // Example search logic (replace with real API call or filtering logic)
-        const results = [
-            { id: 1, storage: 'Storage 1', floor: 'Lantai 1', column: 'Lajur 1' },
-            { id: 2, storage: 'Storage 2', floor: 'Lantai 2', column: 'Lajur 2' },
-        ];
+    // Function to navigate to the details page
+    // const handleViewDetails = (no_lajur) => {
+    //     router.get(route("lemari.destroy", no_lajur));  // Adjust the route as needed
+    // };
 
-        // Filter results based on current filters (storage, floor, column)
-        const filteredResults = results.filter((row) => {
-            const storageMatch = storage ? row.storage.includes(storage) : true;
-            const floorMatch = floor ? row.floor.includes(floor) : true;
-            const columnMatch = column ? row.column.includes(column) : true;
-            return storageMatch && floorMatch && columnMatch;
-        });
+    // Storage and floor options
+    const storageOptions = [
+        { value: "", label: "" },
+        { value: "S1", label: "Storage 1" },
+        { value: "S2", label: "Storage 2" },
+        { value: "S3", label: "Storage 3" },
+        { value: "S4", label: "Storage 4" },
+        { value: "S5", label: "Storage 5" },
+        { value: "S6", label: "Storage 6" },
+        { value: "S7", label: "Storage 7" },
+        { value: "S8", label: "Storage 8" },
+        { value: "S9", label: "Storage 9" },
+        { value: "S10", label: "Storage 10" },
+        { value: "S11", label: "Storage 11" },
+    ];
 
-        // Set search results to state
-        setSearchResults(filteredResults);
-    };
+    const lantaiOptions = [
+        { value: "", label: "" },
+        { value: "L1", label: "Lantai 1" },
+        { value: "L2", label: "Lantai 2" },
+        { value: "L3", label: "Lantai 3" },
+    ];
 
-    // Use useEffect to trigger search whenever the filter changes
+    // Filter results based on selected filters
     useEffect(() => {
-        performSearch();
-    }, [storage, floor, column]); // Trigger search when storage, floor, or column changes
-
-    // Function to navigate to the details page for a specific row
-    const handleViewDetails = (id) => {
-        // Use Inertia to navigate to the details page
-        Inertia.get(`/lemari/${id}`);  // Adjust this route to match your actual routing
-    };
+        const filtered = data.filter((row) => {
+            const lokasi_penyimpananMatch = lokasi_penyimpanan ? row.lokasi_penyimpanan.includes(lokasi_penyimpanan) : true;
+            const lantaiMatch = lantai ? row.lantai.includes(lantai) : true;
+            const no_lajurMatch = no_lajur ? row.no_lajur === no_lajur || no_lajur === "non" : true;  // Check if it's "non" or a specific number
+            return lokasi_penyimpananMatch && lantaiMatch && no_lajurMatch;
+        });
+        setSearchResults(filtered);
+    }, [lokasi_penyimpanan, lantai, no_lajur, data]);
 
     return (
         <Container maxWidth="xl" className="py-6">
             <Typography variant="h4" sx={{ mb: 6 }}>
                 Tata Letak
             </Typography>
-            
+
             {/* Filter Search Bar */}
             <Grid container spacing={2} justifyContent="space-between" alignItems="center" className="mb-6">
                 {/* Storage Dropdown */}
@@ -68,12 +77,14 @@ function ReportsPage() {
                         select
                         fullWidth
                         label="Pilih Storage"
-                        value={storage}
-                        onChange={handleStorageChange}
+                        value={lokasi_penyimpanan}
+                        onChange={handleLokasi_penyimpananChange}
                         variant="outlined"
                     >
-                        {[...Array(11).keys()].map(i => (
-                            <MenuItem key={i + 1} value={`Storage ${i + 1}`}>Storage {i + 1}</MenuItem>
+                        {storageOptions.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </MenuItem>
                         ))}
                     </TextField>
                 </Grid>
@@ -84,12 +95,14 @@ function ReportsPage() {
                         select
                         fullWidth
                         label="Pilih Lantai"
-                        value={floor}
-                        onChange={handleFloorChange}
+                        value={lantai}
+                        onChange={handleLantaiChange}
                         variant="outlined"
                     >
-                        {[...Array(3).keys()].map(i => (
-                            <MenuItem key={i + 1} value={`Lantai ${i + 1}`}>Lantai {i + 1}</MenuItem>
+                        {lantaiOptions.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </MenuItem>
                         ))}
                     </TextField>
                 </Grid>
@@ -100,12 +113,12 @@ function ReportsPage() {
                         select
                         fullWidth
                         label="Pilih Lajur"
-                        value={column}
-                        onChange={handleColumnChange}
+                        value={no_lajur}
+                        onChange={handleNo_lajurChange}
                         variant="outlined"
                     >
                         {[...Array(25).keys()].map(i => (
-                            <MenuItem key={i + 1} value={`Lajur ${i + 1}`}>Lajur {i + 1}</MenuItem>
+                            <MenuItem key={i + 1} value={`${i + 1}`}> {i + 1}</MenuItem>
                         ))}
                         <MenuItem value="non">Non Lajur</MenuItem>
                     </TextField>
@@ -113,53 +126,51 @@ function ReportsPage() {
             </Grid>
 
             {/* Display search results */}
-            {searchResults.length > 0 && (
+            {searchResults.length > 0 ? (
                 <Grid container spacing={2} mt={4}>
                     <Grid item xs={12}>
                         <Typography variant="h5">Hasil Pencarian</Typography>
-                        <Table 
+                        <Table
                             columns={[
-                                { label: "Storage", name: "storage" },
-                                { label: "Lantai", name: "floor" },
-                                { label: "Lajur", name: "column" },
+                                { label: "Storage", name: "lokasi_penyimpanan" },
+                                { label: "Lantai", name: "lantai" },
+                                { label: "Lajur", name: "no_lajur" },
                                 {
                                     label: "Aksi",
                                     name: "aksi",
                                     renderCell: (row) => (
                                         <div className="flex space-x-2">
-                                            <button
-                                                onClick={() => handleViewDetails(row.id)} // Navigate to detail page
-                                                className="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-700 transition"
+                                            <Link
+                                                href={route(
+                                                    "storage.lemari",
+                                                    row.id
+                                                )}
+                                                className="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-600 transition"
                                             >
                                                 Selengkapnya
-                                            </button>
+                                            </Link>
                                         </div>
                                     ),
                                 },
                             ]}
-                            rows={searchResults} // Pass searchResults to the table
+                            rows={searchResults}
                         />
                     </Grid>
                 </Grid>
-            )}
-
-            {/* If no search results */}
-            {searchResults.length === 0 && (
+            ) : (
                 <Grid container justifyContent="center" mt={4}>
                     <Typography variant="h6" color="textSecondary">
                         Tidak ada data yang sesuai dengan kriteria pencarian.
                     </Typography>
                 </Grid>
             )}
+
+            {/* Pagination */}
+            {links.length > 0 && <Pagination links={links} />}
         </Container>
     );
 }
 
-/**
- * Persistent Layout (Inertia.js)
- *
- * [Learn more](https://inertiajs.com/pages#persistent-layouts)
- */
-ReportsPage.layout = (page) => <MainLayout title="Reports">{page}</MainLayout>;
+Storage.layout = (page) => <MainLayout title="Reports">{page}</MainLayout>;
 
-export default ReportsPage;
+export default Storage;

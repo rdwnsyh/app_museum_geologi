@@ -57,6 +57,15 @@ Route::get('/dashboard', function () {
 Route::get('storage', [StorageController::class, 'index'])
     ->name('storage')
     ->middleware('auth');
+
+Route::get('/storage/lemari', [StorageController::class, 'showLemari'])
+    ->name('storage.lemari')
+    ->middleware('auth');
+
+Route::get('/storage/detail', [StorageController::class, 'showDetail'])
+    ->name('storage.detail')
+    ->middleware('auth');
+
 // Route ke halaman create storage
 Route::get('storage/create', [StorageController::class, 'create'])
     ->name('storage.create')
