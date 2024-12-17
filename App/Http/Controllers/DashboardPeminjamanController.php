@@ -106,6 +106,7 @@ class DashboardPeminjamanController extends Controller
             'tanggal_pinjam' => $validated['tanggal_pinjam'],
             'tanggal_jatuh_tempo' => $validated['tanggal_jatuh_tempo'],
             'status' => 'Pengajuan',
+            'status_pengembalian' => 'Dipinjam',
             'identitas' => $identitasPath, // Simpan path file identitas
             'surat_permohonan' => $suratPermohonanPath, // Simpan path file surat permohonan
         ]);

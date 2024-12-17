@@ -197,6 +197,16 @@ const Create = ({ koleksi, peminjaman, user }) => {
                             />
                         </FieldGroup>
 
+                        <FieldGroup
+                            label="Status"
+                            name="status"
+                            error={errors.status}
+                        >
+                            <div className="p-2 bg-gray-100 border rounded">
+                                {data.status || "Tidak Ada Status"}
+                            </div>
+                        </FieldGroup>
+
                         {isImport ? (
                             <FieldGroup
                                 label="Pilih Peminjaman"

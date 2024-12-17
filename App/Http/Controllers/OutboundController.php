@@ -206,13 +206,24 @@ public function import(Request $request)
      */
 
     public function edit(InOutCollection $outbound): Response
-    {
-        $outbound->load(['detailPeminjaman.koleksi', 'users']);
+{
+    // Muat relasi detail peminjaman, koleksi, dan pengguna
+    $outbound->load(['detailPeminjaman.koleksi', 'users']);
 
-        return inertia('Outbound/Edit', [
-            'outbound' => $outbound // Kirim data outbound beserta detailPeminjaman ke frontend
-        ]);
-    }
+    // Map data koleksi untuk memastikan struktur data lebih mudah digunakan di frontend
+    $outbound->koleksi = $outbound->detailPeminjaman->map(function ($detail) {
+        return [
+            'koleksi_id' => $detail->koleksi->id ?? null, // ID koleksi
+            'nama_koleksi' => $detail->koleksi->nama_koleksi ?? 'N/A', // Nama koleksi
+            'jumlah_dipinjam' => $detail->jumlah_dipinjam, // Jumlah dipinjam
+        ];
+    });
+
+    return inertia('Outbound/Edit', [
+        'outbound' => $outbound // Kirim data outbound dengan koleksi yang sudah diformat
+    ]);
+}
+
 
 
 

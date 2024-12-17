@@ -125,7 +125,6 @@ const Create = ({ user, pengembalian, koleksiBaru }) => {
                                 {user?.nama_lengkap || "N/A"}
                             </div>
                         </FieldGroup>
-
                         {/* No Referensi */}
                         <FieldGroup
                             label="No Referensi"
@@ -140,7 +139,36 @@ const Create = ({ user, pengembalian, koleksiBaru }) => {
                                 error={errors.no_referensi}
                             />
                         </FieldGroup>
-
+                        {/* Keterangan */}
+                        <FieldGroup
+                            label="Keterangan"
+                            name="keterangan"
+                            error={errors.keterangan}
+                        >
+                            <TextInput
+                                value={data.keterangan}
+                                onChange={(e) =>
+                                    setData("keterangan", e.target.value)
+                                }
+                                className="w-full p-2 border rounded"
+                                rows="4"
+                            />
+                        </FieldGroup>
+                        {/* Pesan */}
+                        <FieldGroup
+                            label="Pesan"
+                            name="pesan"
+                            error={errors.pesan}
+                        >
+                            <textarea
+                                value={data.pesan}
+                                onChange={(e) =>
+                                    setData("pesan", e.target.value)
+                                }
+                                className="w-full p-2 border rounded"
+                                rows="4"
+                            />
+                        </FieldGroup>
                         {/* Tanggal */}
                         <FieldGroup
                             label="Tanggal"
@@ -156,37 +184,14 @@ const Create = ({ user, pengembalian, koleksiBaru }) => {
                                 error={errors.tanggal}
                             />
                         </FieldGroup>
-
-                        {/* Keterangan */}
                         <FieldGroup
-                            label="Keterangan"
-                            name="keterangan"
-                            error={errors.keterangan}
+                            label="Status"
+                            name="status"
+                            error={errors.status}
                         >
-                            <textarea
-                                value={data.keterangan}
-                                onChange={(e) =>
-                                    setData("keterangan", e.target.value)
-                                }
-                                className="w-full p-2 border rounded"
-                                rows="4"
-                            />
-                        </FieldGroup>
-
-                        {/* Pesan */}
-                        <FieldGroup
-                            label="Pesan"
-                            name="pesan"
-                            error={errors.pesan}
-                        >
-                            <textarea
-                                value={data.pesan}
-                                onChange={(e) =>
-                                    setData("pesan", e.target.value)
-                                }
-                                className="w-full p-2 border rounded"
-                                rows="4"
-                            />
+                            <div className="p-2 bg-gray-100 border rounded">
+                                {data.status || "Tidak Ada Status"}
+                            </div>
                         </FieldGroup>
 
                         {isImport ? (
