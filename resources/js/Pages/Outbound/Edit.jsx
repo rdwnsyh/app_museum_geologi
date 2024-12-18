@@ -181,14 +181,14 @@ const Edit = () => {
                                                         <option value="">
                                                             Pilih Koleksi
                                                         </option>
-                                                        {koleksi.map((k) => (
+                                                        {/* {koleksi.map((k) => (
                                                             <option
                                                                 key={k.id}
                                                                 value={k.id}
                                                             >
                                                                 {k.nama_koleksi}
                                                             </option>
-                                                        ))}
+                                                        ))} */}
                                                     </select>
                                                 </td>
                                                 <td className="px-4 py-2 border">

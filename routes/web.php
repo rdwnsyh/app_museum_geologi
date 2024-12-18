@@ -54,7 +54,7 @@ Route::get('/dashboard', function () {
 
 
 // Route Storage
-Route::get('storage', [StorageController::class, 'index'])
+Route::get('storagee', [StorageController::class, 'index'])
     ->name('storage')
     ->middleware('auth');
 
@@ -191,12 +191,12 @@ Route::get('inbound/create', [InboundController::class, 'create'])
     ->name('inbound.create')
     ->middleware('auth');
 // proses create inbound
-Route::post('inbound', [InboundController::class, 'store'])
+Route::post('inbound/store', [InboundController::class, 'store'])
     ->name('inbound.store')
     ->middleware('auth');
 
-Route::post('outbound', [OutboundController::class, 'import'])
-    ->name('outbound.import')
+Route::post('inbound/import', [InboundController::class, 'import'])
+    ->name('inbound.import')
     ->middleware('auth');
 // route ke halaman edit inbound
     Route::get('inbound/{inbound}/edit', [InboundController::class, 'edit'])

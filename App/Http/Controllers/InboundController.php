@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use App\Models\Inbound;
+use App\Models\Peminjaman;
 use App\Models\Pengembalian;
 use Illuminate\Http\Request;
 use App\Models\KelolaKoleksi;
@@ -11,6 +12,7 @@ use App\Models\InOutCollection;
 use App\Models\DetailPeminjaman;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Response;
 
 class InboundController extends Controller
 {
@@ -40,19 +42,37 @@ class InboundController extends Controller
     // Ambil pengguna yang sedang login
     $user = auth()->user();
 
-    // Ambil data pengembalian beserta detail peminjaman dan koleksi
-    $pengembalian = Pengembalian::with('peminjaman.detailPeminjaman.koleksi')
-        ->get();
+    // Ambil koleksi yang tersedia untuk input manual
+    $koleksiBaru = KelolaKoleksi::select('id', 'nama_koleksi', 'deskripsi_koleksi')->get();
 
-    // Koleksi baru untuk input masnual
-    $koleksiBaru = KelolaKoleksi::all();
+    // Ambil data pengembalian dengan status 'Selesai'
+    $pengembalian = Peminjaman::with(['detailPeminjaman.koleksi', 'users'])
+        ->where('status', 'Selesai') // Filter hanya yang selesai
+        ->get()
+        ->map(function ($peminjaman) {
+            return [
+                'id' => $peminjaman->id,
+                'nama_peminjam' => $peminjaman->users->nama_lengkap ?? 'N/A',
+                'tanggal_pinjam' => $peminjaman->tanggal_pinjam,
+                'tanggal_jatuh_tempo' => $peminjaman->tanggal_jatuh_tempo,
+                'status' => $peminjaman->status,
+                'detail_peminjaman' => $peminjaman->detailPeminjaman->map(function ($detail) {
+                    return [
+                        'koleksi_id' => $detail->koleksi->id ?? null,
+                        'nama_koleksi' => $detail->koleksi->nama_koleksi ?? 'N/A',
+                        'jumlah_dipinjam' => $detail->jumlah_dipinjam,
+                    ];
+                }),
+            ];
+        });
 
     return Inertia::render('Inbound/Create', [
         'user' => $user, // Data pengguna
-        'pengembalian' => $pengembalian, // Data pengembalian dengan detail
-        'koleksiBaru' => $koleksiBaru, // Koleksi yang bisa dipilih manual
+        'pengembalian' => $pengembalian, // Data pengembalian dengan detail yang sudah selesai
+        'koleksiBaru' => $koleksiBaru, // Koleksi baru untuk input manual
     ]);
 }
+
 
 
 
@@ -127,61 +147,69 @@ class InboundController extends Controller
     }
 
 
-public function import(Request $request)
-{
-    // Validasi input data
-    $validated = $request->validate([
-        'users_id' => 'required|exists:users,id',
-        'pengembalian_id' => 'required|exists:pengembalian,id',
-        'no_referensi' => 'required|string',
-        'keterangan' => 'required|string',
-        'pesan' => 'nullable|string',
-        'tanggal' => 'required|date',
-    ], [
-        'users_id.required' => 'User ID harus diisi.',
-        'pengembalian_id.required' => 'Pengembalian ID harus diisi.',
-        'pengembalian_id.exists' => 'Data pengembalian tidak ditemukan.',
-        'no_referensi.required' => 'Nomor referensi harus diisi.',
-        'keterangan.required' => 'Keterangan harus diisi.',
-        'tanggal.required' => 'Tanggal harus diisi.',
-    ]);
-
-    // Ambil data pengembalian beserta detail peminjaman dan koleksi
-    $pengembalian = Pengembalian::with('peminjaman.detailPeminjaman.koleksi')->find($validated['pengembalian_id']);
-    if (!$pengembalian) {
-        return back()->withErrors(['error' => 'Data pengembalian tidak ditemukan.']);
-    }
-
-    DB::beginTransaction();
-    try {
-        // Simpan data ke tabel inout_collection
-        $inbound = InOutCollection::create([
-            'users_id' => $validated['users_id'],
-            'no_referensi' => $validated['no_referensi'],
-            'keterangan' => $validated['keterangan'],
-            'pesan' => $validated['pesan'],
-            'tanggal' => $validated['tanggal'],
-            'status' => 'Inbound',
+    public function import(Request $request)
+    {
+        // dd($request->all());
+        // Validasi input data
+        $validated = $request->validate([
+            'users_id' => 'required|exists:users,id',
+            'pengembalian_id' => 'required|exists:peminjaman,id', // Mengacu ke tabel peminjaman
+            'no_referensi' => 'required|string',
+            'keterangan' => 'required|string',
+            'pesan' => 'nullable|string',
+            'tanggal' => 'required|date',
+        ], [
+            'users_id.required' => 'User ID harus diisi.',
+            'pengembalian_id.required' => 'ID Pengembalian harus diisi.',
+            'pengembalian_id.exists' => 'Data pengembalian tidak valid.',
+            'no_referensi.required' => 'Nomor referensi harus diisi.',
+            'keterangan.required' => 'Keterangan harus diisi.',
+            'tanggal.required' => 'Tanggal harus diisi.',
         ]);
-
-        // Simpan koleksi dari pengembalian ke inout_collection
-        foreach ($pengembalian->peminjaman->detailPeminjaman as $detail) {
-            DetailPeminjaman::create([
-                'peminjaman_id' => $inbound->id,
-                'koleksi_id' => $detail->koleksi_id,
-                'jumlah_dipinjam' => $detail->jumlah_dipinjam,
-                'kondisi' => 'Baik', // Default kondisi
+    
+        DB::beginTransaction();
+    
+        try {
+            // Ambil data peminjaman dengan status Selesai
+            $peminjaman = Peminjaman::with('detailPeminjaman.koleksi')
+                ->where('id', $validated['pengembalian_id'])
+                ->where('status', 'Selesai') // Hanya data dengan status "Selesai"
+                ->first();
+    
+            if (!$peminjaman) {
+                return back()->withErrors(['error' => 'Data pengembalian tidak valid atau belum selesai.']);
+            }
+    
+            // Simpan data inbound ke tabel InOutCollection
+            $inbound = InOutCollection::create([
+                'users_id' => $validated['users_id'],
+                'no_referensi' => $validated['no_referensi'],
+                'keterangan' => $validated['keterangan'],
+                'pesan' => $validated['pesan'] ?? null,
+                'tanggal' => $validated['tanggal'],
+                'status' => 'Inbound', // Status Inbound
             ]);
+    
+            // Looping koleksi dari peminjaman untuk ditambahkan ke detail inbound
+            foreach ($peminjaman->detailPeminjaman as $detail) {
+                DetailPeminjaman::create([
+                    'peminjaman_id' => $inbound->id, // ID dari inbound yang baru dibuat
+                    'koleksi_id' => $detail->koleksi_id,
+                    'jumlah_dipinjam' => $detail->jumlah_dipinjam,
+                    'kondisi' => 'Baik', // Default kondisi
+                ]);
+            }
+    
+            DB::commit();
+    
+            return redirect()->route('inbound')->with('success', 'Data Inbound berhasil diimpor dari pengembalian.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+    
+            return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
-
-        DB::commit();
-
-        return redirect()->route('inbound')->with('success', 'Data Inbound berhasil diimpor dari pengembalian.');
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
     }
-}
+    
 
 
     /**
@@ -195,10 +223,24 @@ public function import(Request $request)
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(InOutCollection $inbound)
-    {
-        //
-    }
+    public function edit(InOutCollection $inbound): Response
+{
+    // Muat relasi detail peminjaman, koleksi, dan pengguna
+    $inbound->load(['detailPeminjaman.koleksi', 'users']);
+
+    // Map data koleksi untuk memastikan struktur data lebih mudah digunakan di frontend
+    $inbound->koleksi = $inbound->detailPeminjaman->map(function ($detail) {
+        return [
+            'koleksi_id' => $detail->koleksi->id ?? null, // ID koleksi
+            'nama_koleksi' => $detail->koleksi->nama_koleksi ?? 'N/A', // Nama koleksi
+            'jumlah_dipinjam' => $detail->jumlah_dipinjam, // Jumlah dipinjam
+        ];
+    });
+
+    return inertia('Inbound/Edit', [
+        'inbound' => $inbound // Kirim data outbound dengan koleksi yang sudah diformat
+    ]);
+}
 
     /**
      * Update the specified resource in storage.

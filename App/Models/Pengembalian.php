@@ -15,7 +15,6 @@ class Pengembalian extends Model
     protected $fillable = [
         'peminjaman_id',
         'tanggal_kembali',
-        'status_pengembalian',
         'keterangan',
     ];
 
@@ -25,7 +24,6 @@ class Pengembalian extends Model
             $query->whereHas('peminjaman.users', function ($subQuery) use ($filters) {
                 $subQuery->where('nama_lengkap', 'like', '%' . $filters['search'] . '%');
             })
-            ->orWhere('status_pengembalian', 'like', '%' . $filters['search'] . '%')
             ->orWhere('tanggal_kembali', 'like', '%' . $filters['search'] . '%')
             ->orWhere('keterangan', 'like', '%' . $filters['search'] . '%');
         }

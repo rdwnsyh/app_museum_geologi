@@ -6,12 +6,12 @@ import SearchBar from "@/Components/SearchBar/SearchBar";
 import { ArrowDownToLine, Plus, Edit, Trash } from "lucide-react";
 
 function Index() {
-    const { outbound, filters } = usePage().props;
-    const data = outbound?.data || []; // Ambil data dari props
+    const { inbound, filters } = usePage().props;
+    const data = inbound?.data || []; // Ambil data dari props
 
     const handleDelete = (id) => {
         if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
-            router.delete(route("outbound.destroy", id), {
+            router.delete(route("inbound.destroy", id), {
                 onSuccess: () => alert("Data berhasil dihapus."),
                 onError: (errors) => console.error("Errors:", errors),
             });
@@ -70,7 +70,7 @@ function Index() {
                         renderCell: (row) => (
                             <div className="flex space-x-2">
                                 <Link
-                                    href={route("outbound.edit", row.id)} // Link ke halaman edit
+                                    href={route("inbound.edit", row.id)} // Link ke halaman edit
                                     className="bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-900 transition flex items-center"
                                 >
                                     <Edit className="w-4 h-4 mr-1" />
@@ -98,6 +98,6 @@ function Index() {
  *
  * [Learn more](https://inertiajs.com/pages#persistent-layouts)
  */
-Index.layout = (page) => <MainLayout title="Outbound">{page}</MainLayout>;
+Index.layout = (page) => <MainLayout title="inbound">{page}</MainLayout>;
 
 export default Index;

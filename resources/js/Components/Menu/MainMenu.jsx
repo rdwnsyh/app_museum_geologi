@@ -47,13 +47,13 @@ export default function MainMenu({ className }) {
                 link="outbound"
                 icon={<ArrowBigLeftDash size={12} />}
             />
-           
-           <MainMenuItem
+
+            <MainMenuItem
                 text={<span className="text-sm">Kelola Koleksi</span>}
                 link="kelolakoleksi"
                 icon={<Package size={12} />}
             />
-                
+
             <MainMenuItem
                 text={<span className="text-sm">Manajemen Admin</span>}
                 link="manajemenadmin"

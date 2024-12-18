@@ -78,10 +78,13 @@ function Index() {
                                 className={`py-1 px-3 rounded ${
                                     row.status_pengembalian === "Dikembalikan"
                                         ? "bg-green-500 text-white"
+                                        : row.status_pengembalian ===
+                                          "Terlambat"
+                                        ? "bg-yellow-500 text-white"
                                         : "bg-red-500 text-white"
                                 }`}
                             >
-                                {row.status_pengembalian}
+                                {row.status_pengembalian || "N/A"}
                             </span>
                         ),
                     },
@@ -92,7 +95,7 @@ function Index() {
                         renderCell: (row) => (
                             <div className="flex space-x-2">
                                 <Link
-                                    href={route("pengembalian.edit", row.id)} // Route untuk edit pengembalian
+                                    href={route("pengembalian.edit", row.id)}
                                     className="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-600 transition flex items-center"
                                 >
                                     <Edit className="w-4 h-4 mr-1" />

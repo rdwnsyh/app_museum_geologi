@@ -157,6 +157,6 @@ const Edit = ({ pengembalian }) => {
     );
 };
 
-Edit.layout = (page) => <MainLayout children={page} />;
+Edit.layout = (page) => <MainLayout>{page}</MainLayout>;
 
 export default Edit;

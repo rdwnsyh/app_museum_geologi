@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('peminjaman_id'); // Foreign key ke tabel Peminjaman
             $table->date('tanggal_kembali'); // Tanggal pengembalian barang
-            $table->string('status_pengembalian'); // Status pengembalian
             $table->string('keterangan')->nullable(); // Keterangan (misalnya denda)
             $table->timestamps();
         });

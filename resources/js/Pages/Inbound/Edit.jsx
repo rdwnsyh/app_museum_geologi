@@ -1,231 +1,246 @@
 import React from "react";
-import { Head, Link, usePage, useForm, router } from "@inertiajs/react";
+import { usePage, Head, Link, useForm } from "@inertiajs/react";
 import MainLayout from "@/Layouts/MainLayout";
-import DeleteButton from "@/Components/Button/DeleteButton";
 import LoadingButton from "@/Components/Button/LoadingButton";
 import TextInput from "@/Components/Form/TextInput";
-import SelectInput from "@/Components/Form/SelectInput";
-import TrashedMessage from "@/Components/Messages/TrashedMessage";
-import Table from "@/Components/Table/Table";
 import FieldGroup from "@/Components/Form/FieldGroup";
+import FileInput from "@/Components/Form/FileInput";
 
 const Edit = () => {
-    const { organization } = usePage().props;
+    const { inbound, koleksi } = usePage().props || {}; // Data dari server
     const { data, setData, errors, put, processing } = useForm({
-        name: organization.name || "",
-        email: organization.email || "",
-        phone: organization.phone || "",
-        address: organization.address || "",
-        city: organization.city || "",
-        region: organization.region || "",
-        country: organization.country || "",
-        postal_code: organization.postal_code || "",
+        users_id: inbound?.users_id || [],
+        no_referensi: inbound?.no_referensi || null,
+        keterangan: inbound?.keterangan || "",
+        pesan: inbound?.pesan || "",
+        tanggal: inbound?.tanggal || "",
+        status: inbound?.status || "",
+        lampiran: inbound?.lampiran || null,
+        koleksi: inbound?.koleksi || [], // Default ke array kosong
     });
+    // console.log("Data Koleksi:", data.koleksi);
 
-    function handleSubmit(e) {
+    const handleKoleksiChange = (index, field, value) => {
+        const updatedKoleksi = [...data.koleksi];
+        updatedKoleksi[index][field] = value;
+        setData("koleksi", updatedKoleksi);
+    };
+
+    const handleFileChange = (name, file) => {
+        setData(name, file || null);
+    };
+
+    const handleSubmit = (e) => {
         e.preventDefault();
-        put(route("organizations.update", organization.id));
-    }
-
-    function destroy() {
-        if (confirm("Are you sure you want to delete this organization?")) {
-            router.delete(route("organizations.destroy", organization.id));
-        }
-    }
-
-    function restore() {
-        if (confirm("Are you sure you want to restore this organization?")) {
-            router.put(route("organizations.restore", organization.id));
-        }
-    }
+        put(route("inbound.update", inbound.id));
+    };
 
     return (
         <div>
-            <Head title={data.name} />
+            <Head title={`Edit inbound: ${inbound?.users?.nama_lengkap}`} />
+
             <h1 className="mb-8 text-3xl font-bold">
                 <Link
-                    href={route("organizations")}
+                    href={route("inbound")}
                     className="text-indigo-600 hover:text-indigo-700"
                 >
-                    Organizations
+                    inbound
                 </Link>
-                <span className="mx-2 font-medium text-indigo-600">/</span>
-                {data.name}
+                <span className="font-medium text-indigo-600"> / </span> Edit
             </h1>
-            {organization.deleted_at && (
-                <TrashedMessage
-                    message="This organization has been deleted."
-                    onRestore={restore}
-                />
-            )}
+
             <div className="max-w-3xl overflow-hidden bg-white rounded shadow">
                 <form onSubmit={handleSubmit}>
                     <div className="grid gap-8 p-8 lg:grid-cols-2">
+                        {/* Nama Pembuat */}
+                        <FieldGroup label="Nama Pembuat" name="users_id">
+                            <div className="p-2 bg-gray-100 border rounded">
+                                {inbound?.users?.nama_lengkap || "N/A"}
+                            </div>
+                        </FieldGroup>
+
+                        {/* Input untuk No Referensi */}
                         <FieldGroup
-                            label="Name"
-                            name="name"
-                            error={errors.name}
+                            label="No Referensi"
+                            name="no_referensi"
+                            error={errors.no_referensi}
                         >
                             <TextInput
-                                name="name"
-                                error={errors.name}
-                                value={data.name}
+                                value={data.no_referensi}
                                 onChange={(e) =>
-                                    setData("name", e.target.value)
+                                    setData("no_referensi", e.target.value)
                                 }
+                                error={errors.no_referensi}
                             />
                         </FieldGroup>
 
+                        {/* Input untuk Keterangan */}
                         <FieldGroup
-                            label="Email"
-                            name="email"
-                            error={errors.email}
+                            label="Keterangan"
+                            name="keterangan"
+                            error={errors.keterangan}
                         >
-                            <TextInput
-                                name="email"
-                                type="email"
-                                error={errors.email}
-                                value={data.email}
+                            <textarea
+                                value={data.keterangan}
                                 onChange={(e) =>
-                                    setData("email", e.target.value)
+                                    setData("keterangan", e.target.value)
                                 }
+                                className="w-full p-2 border rounded"
+                                rows="4"
                             />
                         </FieldGroup>
 
+                        {/* Input untuk Pesan */}
                         <FieldGroup
-                            label="Phone"
-                            name="phone"
-                            error={errors.phone}
+                            label="Pesan"
+                            name="pesan"
+                            error={errors.pesan}
                         >
-                            <TextInput
-                                name="phone"
-                                error={errors.phone}
-                                value={data.phone}
+                            <textarea
+                                value={data.pesan}
                                 onChange={(e) =>
-                                    setData("phone", e.target.value)
+                                    setData("pesan", e.target.value)
                                 }
+                                className="w-full p-2 border rounded"
+                                rows="4"
                             />
                         </FieldGroup>
 
+                        {/* Input untuk Tanggal */}
                         <FieldGroup
-                            label="Address"
-                            name="address"
-                            error={errors.address}
+                            label="Tanggal"
+                            name="tanggal"
+                            error={errors.tanggal}
                         >
                             <TextInput
-                                name="address"
-                                error={errors.address}
-                                value={data.address}
+                                type="date"
+                                value={data.tanggal}
                                 onChange={(e) =>
-                                    setData("address", e.target.value)
+                                    setData("tanggal", e.target.value)
                                 }
+                                error={errors.tanggal}
                             />
                         </FieldGroup>
 
-                        <FieldGroup
-                            label="City"
-                            name="city"
-                            error={errors.city}
-                        >
-                            <TextInput
-                                name="city"
-                                error={errors.city}
-                                value={data.city}
-                                onChange={(e) =>
-                                    setData("city", e.target.value)
-                                }
-                            />
+                        {/* Input untuk Status */}
+                        <FieldGroup label="Status" name="status">
+                            <div className="p-2 bg-gray-100 border rounded">
+                                {data.status}
+                            </div>
                         </FieldGroup>
 
+                        {/* Input untuk Lampiran */}
                         <FieldGroup
-                            label="Province/State"
-                            name="region"
-                            error={errors.region}
+                            label="Lampiran"
+                            name="lampiran"
+                            error={errors.lampiran}
                         >
-                            <TextInput
-                                name="region"
-                                error={errors.region}
-                                value={data.region}
-                                onChange={(e) =>
-                                    setData("region", e.target.value)
+                            <FileInput
+                                onFileChange={(file) =>
+                                    handleFileChange("lampiran", file)
                                 }
-                            />
-                        </FieldGroup>
-
-                        <FieldGroup
-                            label="Country"
-                            name="country"
-                            error={errors.country}
-                        >
-                            <SelectInput
-                                name="country"
-                                error={errors.country}
-                                value={data.country}
-                                onChange={(e) =>
-                                    setData("country", e.target.value)
-                                }
-                                options={[
-                                    {
-                                        value: "",
-                                        label: "",
-                                    },
-                                    {
-                                        value: "CA",
-                                        label: "Canada",
-                                    },
-                                    {
-                                        value: "US",
-                                        label: "United States",
-                                    },
-                                ]}
-                            />
-                        </FieldGroup>
-
-                        <FieldGroup
-                            label="Postal Code"
-                            name="postal_code"
-                            error={errors.postal_code}
-                        >
-                            <TextInput
-                                name="postal_code"
-                                error={errors.postal_code}
-                                value={data.postal_code}
-                                onChange={(e) =>
-                                    setData("postal_code", e.target.value)
-                                }
+                                error={errors.lampiran}
                             />
                         </FieldGroup>
                     </div>
-                    <div className="flex items-center px-8 py-4 bg-gray-100 border-t border-gray-200">
-                        {!organization.deleted_at && (
-                            <DeleteButton onDelete={destroy}>
-                                Delete Organization
-                            </DeleteButton>
-                        )}
+
+                    {/* Tabel Koleksi */}
+                    <div className="p-8">
+                        <h3 className="text-xl font-semibold mb-4">Koleksi</h3>
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full bg-white border border-gray-300 rounded">
+                                <thead>
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600 border-b">
+                                            Koleksi
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600 border-b">
+                                            Jumlah Dipinjam
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {data.koleksi && data.koleksi.length > 0 ? (
+                                        data.koleksi.map((item, index) => (
+                                            <tr key={index}>
+                                                <td className="px-4 py-2 border">
+                                                    <select
+                                                        className="w-full p-2 border rounded"
+                                                        value={
+                                                            item.koleksi_id ||
+                                                            ""
+                                                        }
+                                                        onChange={(e) =>
+                                                            handleKoleksiChange(
+                                                                index,
+                                                                "koleksi_id",
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                    >
+                                                        <option value="">
+                                                            Pilih Koleksi
+                                                        </option>
+                                                        {koleksi.map((k) => (
+                                                            <option
+                                                                key={k.id}
+                                                                value={k.id}
+                                                            >
+                                                                {k.nama_koleksi}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </td>
+                                                <td className="px-4 py-2 border">
+                                                    <input
+                                                        type="number"
+                                                        min="1"
+                                                        value={
+                                                            item.jumlah_dipinjam ||
+                                                            ""
+                                                        }
+                                                        onChange={(e) =>
+                                                            handleKoleksiChange(
+                                                                index,
+                                                                "jumlah_dipinjam",
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        className="w-full p-2 border rounded"
+                                                    />
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td
+                                                colSpan="2"
+                                                className="text-center px-4 py-2 text-gray-500"
+                                            >
+                                                Tidak ada data koleksi yang
+                                                tersedia
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="flex justify-end mt-8 px-8">
                         <LoadingButton
                             loading={processing}
                             type="submit"
-                            className="ml-auto btn-indigo"
+                            className="px-4 py-2 text-white bg-blue-500 rounded"
                         >
-                            Update Organization
+                            Simpan
                         </LoadingButton>
                     </div>
                 </form>
             </div>
-            <h2 className="mt-12 mb-6 text-2xl font-bold">Contacts</h2>
-            <Table
-                columns={[
-                    { label: "Name", name: "name" },
-                    { label: "City", name: "city" },
-                    { label: "Phone", name: "phone", colSpan: 2 },
-                ]}
-                rows={organization.contacts}
-                getRowDetailsUrl={(row) => route("contacts.edit", row.id)}
-            />
         </div>
     );
 };
 
-Edit.layout = (page) => <MainLayout children={page} />;
+Edit.layout = (page) => <MainLayout>{page}</MainLayout>;
 
 export default Edit;
