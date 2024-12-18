@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import Navbar from "@/Components/Navbar/Navbar";
 
@@ -15,6 +15,8 @@ const DetailKoleksi = () => {
         koleksi_id: item.id || "",
         jumlah_dipinjam: 1, // default quantity
     });
+
+    const scrollContainerRef = useRef(null);
 
     const handleAddToCart = (e) => {
         e.preventDefault();
@@ -68,6 +70,19 @@ const DetailKoleksi = () => {
         }
     };
 
+    const handleScrollLeft = () => {
+        if (scrollContainerRef.current) {
+            scrollContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
+        }
+    };
+
+    // Scroll images right
+    const handleScrollRight = () => {
+        if (scrollContainerRef.current) {
+            scrollContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+        }
+    };
+
     return (
         <div className="bg-gray-100 min-h-screen">
             <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
@@ -75,30 +90,54 @@ const DetailKoleksi = () => {
             <div className="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <div className="md:grid md:grid-cols-3 md:gap-6">
                     <div className="md:col-span-1">
-                        <div className="flex flex-col items-center">
-                            <div className="overflow-x-auto whitespace-nowrap mb-8">
-                                {[
-                                    item.gambar_satu,
-                                    item.gambar_dua,
-                                    item.gambar_tiga,
-                                ].map((gambar, index) => (
-                                    <img
+                    <div className="relative">
+                            {/* Left Arrow Button */}
+                            <button
+                                onClick={handleScrollLeft}
+                                className="absolute left-0 top-1/2 transform -translate-y-1/2 text-gray-800 p-4 rounded-full shadow-md hover:bg-gray-100 focus:outline-none z-10 text-3xl"
+                            >
+                                &larr; {/* Left Arrow */}
+                            </button>
+
+                            {/* Scrollable Image Container */}
+                            <div
+                                ref={scrollContainerRef}
+                                className="overflow-x-auto mb-8"
+                                style={{
+                                    display: "flex",
+                                    scrollSnapType: "x mandatory",
+                                    scrollbarWidth: "thin",  // This controls the size of the scrollbar
+                                }}
+                            >
+                                {[item.gambar_satu, item.gambar_dua, item.gambar_tiga].map((gambar, index) => (
+                                    <div
                                         key={index}
-                                        src={
-                                            gambar
-                                                ? `/storage/${gambar}`
-                                                : "/batu.png"
-                                        }
-                                        alt={item.nama_koleksi}
-                                        className="inline-block w-full h-auto rounded-md"
-                                    />
+                                        className="inline-block w-full flex-shrink-0 p-2"
+                                        style={{ scrollSnapAlign: "start" }}
+                                    >
+                                        <img
+                                            src={gambar ? `/storage/${gambar}` : "/batu.png"}
+                                            alt={item.nama_koleksi}
+                                            className="w-full h-auto object-contain rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-xl"
+                                        />
+                                    </div>
                                 ))}
                             </div>
+
+                            {/* Right Arrow Button */}
+                            <button
+                                onClick={handleScrollRight}
+                                className="absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-800 p-4 rounded-full shadow-md hover:bg-gray-100 focus:outline-none z-10 text-3xl"
+                            >
+                                &rarr; {/* Right Arrow */}
+                            </button>
+                        </div>
                             <h3 className="text-lg font-medium leading-6 text-gray-900 text-center">
                                 {item.nama_koleksi}
                             </h3>
                         </div>
-                    </div>
+                        
+                    
                     <div className="mt-5 md:mt-0 md:col-span-2">
                         <form onSubmit={handleAddToCart}>
                             <div className="shadow overflow-hidden sm:rounded-md">
@@ -114,8 +153,8 @@ const DetailKoleksi = () => {
                                                 value: item.tipe_bmn || "-",
                                             },
                                             {
-                                                label: "Dimensi:",
-                                                value: item.dimensions || "-",
+                                                label: "Satuan:",
+                                                value: item.satuan || "-",
                                             },
                                             {
                                                 label: "Lokasi Temuan:",

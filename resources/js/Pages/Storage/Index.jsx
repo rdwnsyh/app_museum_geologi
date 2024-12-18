@@ -2,13 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link, usePage, router } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
 import Table from "@/Components/Table/Table";
-import SearchBar from "@/Components/SearchBar/SearchBar";
 import Pagination from "@/Components/Pagination/Pagination";
 import { Container, Grid, TextField, MenuItem, Typography } from '@mui/material';  
-import { Plus } from "lucide-react";
 
 function Storage() {
-    const { kelolakoleksi, filters } = usePage().props;
+    const { kelolakoleksi, filters, lokasi_penyimpanan_options, lantai_options, no_lajur_options } = usePage().props;
 
     const data = kelolakoleksi?.data || [];
     const links = kelolakoleksi?.links || [];
@@ -24,33 +22,33 @@ function Storage() {
     const handleLantaiChange = (event) => setLantai(event.target.value);
     const handleNo_lajurChange = (event) => setNo_lajur(event.target.value);
 
-    // Function to navigate to the details page
-    // const handleViewDetails = (no_lajur) => {
-    //     router.get(route("lemari.destroy", no_lajur));  // Adjust the route as needed
-    // };
+    // // Function to navigate to the details page
+    // // const handleViewDetails = (no_lajur) => {
+    // //     router.get(route("lemari.destroy", no_lajur));  // Adjust the route as needed
+    // // };
 
-    // Storage and floor options
-    const storageOptions = [
-        { value: "", label: "" },
-        { value: "S1", label: "Storage 1" },
-        { value: "S2", label: "Storage 2" },
-        { value: "S3", label: "Storage 3" },
-        { value: "S4", label: "Storage 4" },
-        { value: "S5", label: "Storage 5" },
-        { value: "S6", label: "Storage 6" },
-        { value: "S7", label: "Storage 7" },
-        { value: "S8", label: "Storage 8" },
-        { value: "S9", label: "Storage 9" },
-        { value: "S10", label: "Storage 10" },
-        { value: "S11", label: "Storage 11" },
-    ];
+    // // Storage and floor options
+    // const storageOptions = [
+    //     { value: "", label: "" },
+    //     { value: "S1", label: "Storage 1" },
+    //     { value: "S2", label: "Storage 2" },
+    //     { value: "S3", label: "Storage 3" },
+    //     { value: "S4", label: "Storage 4" },
+    //     { value: "S5", label: "Storage 5" },
+    //     { value: "S6", label: "Storage 6" },
+    //     { value: "S7", label: "Storage 7" },
+    //     { value: "S8", label: "Storage 8" },
+    //     { value: "S9", label: "Storage 9" },
+    //     { value: "S10", label: "Storage 10" },
+    //     { value: "S11", label: "Storage 11" },
+    // ];
 
-    const lantaiOptions = [
-        { value: "", label: "" },
-        { value: "L1", label: "Lantai 1" },
-        { value: "L2", label: "Lantai 2" },
-        { value: "L3", label: "Lantai 3" },
-    ];
+    // const lantaiOptions = [
+    //     { value: "", label: "" },
+    //     { value: "L1", label: "Lantai 1" },
+    //     { value: "L2", label: "Lantai 2" },
+    //     { value: "L3", label: "Lantai 3" },
+    // ];
 
     // Filter results based on selected filters
     useEffect(() => {
@@ -81,9 +79,9 @@ function Storage() {
                         onChange={handleLokasi_penyimpananChange}
                         variant="outlined"
                     >
-                        {storageOptions.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
+                        {lokasi_penyimpanan_options.map((option) => (
+                            <MenuItem key={option} value={option}>
+                                {option}
                             </MenuItem>
                         ))}
                     </TextField>
@@ -99,9 +97,9 @@ function Storage() {
                         onChange={handleLantaiChange}
                         variant="outlined"
                     >
-                        {lantaiOptions.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
+                        {lantai_options.map((option) => (
+                            <MenuItem key={option} value={option}>
+                                {option}
                             </MenuItem>
                         ))}
                     </TextField>
@@ -117,10 +115,11 @@ function Storage() {
                         onChange={handleNo_lajurChange}
                         variant="outlined"
                     >
-                        {[...Array(25).keys()].map(i => (
-                            <MenuItem key={i + 1} value={`${i + 1}`}> {i + 1}</MenuItem>
+                        {no_lajur_options.map((option) => (
+                            <MenuItem key={option} value={option}>
+                                {option === "non" ? "Non Lajur" : option}
+                            </MenuItem>
                         ))}
-                        <MenuItem value="non">Non Lajur</MenuItem>
                     </TextField>
                 </Grid>
             </Grid>
@@ -142,7 +141,7 @@ function Storage() {
                                         <div className="flex space-x-2">
                                             <Link
                                                 href={route(
-                                                    "storage.lemari",
+                                                    "storage.Lemari",
                                                     row.id
                                                 )}
                                                 className="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-600 transition"
@@ -171,6 +170,6 @@ function Storage() {
     );
 }
 
-Storage.layout = (page) => <MainLayout title="Reports">{page}</MainLayout>;
+Storage.layout = (page) => <MainLayout title="Storage">{page}</MainLayout>;
 
 export default Storage;

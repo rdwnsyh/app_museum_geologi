@@ -54,15 +54,15 @@ Route::get('/dashboard', function () {
 
 
 // Route Storage
-Route::get('storagee', [StorageController::class, 'index'])
+Route::get('storage', [StorageController::class, 'index'])
     ->name('storage')
     ->middleware('auth');
 
-Route::get('/storage/lemari', [StorageController::class, 'showLemari'])
-    ->name('storage.lemari')
+Route::get('/storage/{storage}/lemari', [StorageController::class, 'showLemari'])
+    ->name('storage.Lemari')
     ->middleware('auth');
 
-Route::get('/storage/detail', [StorageController::class, 'showDetail'])
+Route::get('/storage/{storage}/detail', [StorageController::class, 'showDetail'])
     ->name('storage.detail')
     ->middleware('auth');
 
